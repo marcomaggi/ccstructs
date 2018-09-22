@@ -63,20 +63,9 @@ AC_SUBST(AX_CFLAGS)
 AM_PROG_AS
 AM_PROG_CC_C_O
 AC_HEADER_STDC
-AC_CHECK_HEADERS([assert.h stdint.h strings.h stddef.h])
+dnl AC_CHECK_HEADERS([assert.h stdint.h strings.h stddef.h])
 
 AC_CACHE_SAVE
-
-dnl page
-#### checks for library functions
-
-dnl AC_FUNC_MALLOC
-dnl AC_FUNC_MEMCMP
-dnl AC_CHECK_FUNCS([memmove memset strerror])
-dnl AC_CHECK_FUNCS([mmap munmap msync mremap madvise mlock munlock mlockall munlockall mprotect])
-dnl AC_CHECK_FUNCS([getenv])
-
-dnl AC_CACHE_SAVE
 
 dnl page
 #### external libraries

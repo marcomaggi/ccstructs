@@ -10,10 +10,10 @@
 This  package  installs  a  C11  language  library  implementing  common
 interfaces to handle C structs.
 
-This  package supports  POSIX platforms.   This package  depends on  the
-package CCExceptions,  at least version  0.7.2.  To run the  test suite:
-this  package  depends  upon  the  package  CCTests,  at  least  version
-0.2.0-devel.0.
+The  library  targets  POSIX  systems.   This  package  depends  on  the
+packages:  CCExceptions,  at least  version  0.8.0;  CCMemory, at  least
+version 0.2.0.   To run the  test suite:  this package depends  upon the
+package CCTests, at least version 0.3.0.
 
 The package uses the GNU Autotools and it is tested, using Travis CI, on
 both Ubuntu GNU+Linux systems and OS X systems.
@@ -161,6 +161,18 @@ the documentation is available online:
 
 [http://marcomaggi.github.io/docs/ccstructs.html](http://marcomaggi.github.io/docs/ccstructs.html)
 
+the package CCExceptions is available at:
+
+[https://github.com/marcomaggi/ccexceptions/](https://github.com/marcomaggi/ccexceptions/)
+
+the package CCMemory is available at:
+
+[https://github.com/marcomaggi/ccmemory/](https://github.com/marcomaggi/ccmemory/)
+
+the package CCTests is available at:
+
+[https://github.com/marcomaggi/cctests/](https://github.com/marcomaggi/cctests/)
+
 the GNU Project software can be found here:
 
 [http://www.gnu.org/](http://www.gnu.org/)
@@ -178,18 +190,6 @@ project's dashboard at:
 
 Usage of this  service is configured through the  file `.travis.yml` and
 additional scripts are under the directory `meta/travis-ci`.
-
-
-### Coverity Scan
-
-Coverity Scan is  a service providing the results of  static analysis on
-open source coding projects.  We can find this project's dashboard at:
-
-[https://scan.coverity.com/projects/marcomaggi-ccstructs](https://scan.coverity.com/projects/marcomaggi-ccstructs)
-
-Usage of this  service is implemented with make rules;  see the relevant
-section in the file `Makefile.am`.  To access the service a unique token
-is needed: this token is private and is owned by the current maintainer.
 
 
 ### Clang's Static Analyzer

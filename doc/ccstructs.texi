@@ -38,7 +38,8 @@
 @c ------------------------------------------------------------
 
 @set CCEXCEPTIONS_VERSION       0.7.2
-@set CCTESTS_VERSION            0.2.0
+@set CCMEMORY_VERSION           0.2.0
+@set CCTESTS_VERSION            0.3.0
 
 @set GITHUB_URL                 @url{https://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
 @set BITBUCKET_URL              @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}}
@@ -53,6 +54,11 @@
 @copying
 This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library
 implementing common interface for C structs.
+
+This package supports @posix{} platforms.  This package depends on the packages: CCExceptions, at
+least version @value{CCEXCEPTIONS_VERSION}; CCMemory, at least version @value{CCMEMORY_VERSION}.  To
+run the test suite: this package depends upon the package CCTests, at least version
+@value{CCTESTS_VERSION}.
 
 The package is distributed under the terms of the @gnu{} Lesser General Public License (@lgpl{}).
 
@@ -149,6 +155,11 @@ Indexes
 This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library
 implementing common interfaces for C structs.
 
+This package supports @posix{} platforms.  This package depends on the packages: CCExceptions, at
+least version @value{CCEXCEPTIONS_VERSION}; CCMemory, at least version @value{CCMEMORY_VERSION}.  To
+run the test suite: this package depends upon the package CCTests, at least version
+@value{CCTESTS_VERSION}.
+
 @value{PACKAGE} installs the single header file @file{ccstructs.h}.  All the function names in the
 @api{} are prefixed with @code{ccstructs_}; all the preprocessor symbol names are prefixed with
 @code{CCSTRUCTS_}; all the type names are prefixed with @code{ccstructs_} and suffixed with
@@ -167,7 +178,7 @@ This package installs a data file for @command{pkg-config}, so when searching fo
 library with the @gnu{} Autotools, we can add the following macro use to @file{configure.ac}:
 
 @example
-PKG_CHECK_MODULES([CCSTRUCTS],[ccstructs >= 0.1])
+PKG_CHECK_MODULES([CCSTRUCTS],[ccstructs >= 0.1.0])
 @end example
 
 @noindent
@@ -560,6 +571,21 @@ development takes place at:
 and as backup at:
 
 @center @value{BITBUCKET_URL}
+
+@noindent
+the package CCExceptions is available at:
+
+@center @url{https://github.com/marcomaggi/ccexceptions/}
+
+@noindent
+the package CCMemory is available at:
+
+@center @url{https://github.com/marcomaggi/ccmemory/}
+
+@noindent
+the package CCTests is available at:
+
+@center @url{https://github.com/marcomaggi/cctests/}
 
 @c page
 @node concept index
