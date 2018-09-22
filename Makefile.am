@@ -47,7 +47,8 @@ libccstructs_la_SOURCES		= \
 #### tests
 
 check_PROGRAMS	= \
-	tests/version
+	tests/version			\
+	tests/writable-interface
 
 if MMUX_TESTING_ENABLED
 TESTS				= $(check_PROGRAMS)
@@ -58,8 +59,11 @@ ccstructs_tests_ldadd		= libccstructs.la $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS) $
 
 ## --------------------------------------------------------------------
 
-tests_version_CPPFLAGS		= $(ccstructs_tests_cppflags)
-tests_version_LDADD		= $(ccstructs_tests_ldadd)
+tests_version_CPPFLAGS			= $(ccstructs_tests_cppflags)
+tests_version_LDADD			= $(ccstructs_tests_ldadd)
+
+tests_writable_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
+tests_writable_interface_LDADD		= $(ccstructs_tests_ldadd)
 
 ## --------------------------------------------------------------------
 
