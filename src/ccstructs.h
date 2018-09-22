@@ -443,7 +443,7 @@ struct ccstructs_writable_iface_methods_t {
 
 __attribute__((__nonnull__(1,2),__always_inline__))
 static inline void
-ccstructs_writable_iface_fwrite (cce_destination_t L, FILE * stream, ccstructs_writable_iface_t const I)
+ccstructs_writable_fwrite (cce_destination_t L, FILE * stream, ccstructs_writable_iface_t const I)
 {
   I.methods->fwrite(L, stream, I);
 }
