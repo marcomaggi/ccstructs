@@ -342,9 +342,7 @@ ccstructs_ascii_free (ccstructs_memory_allocator_t allocator, ccstructs_ascii_t 
 
 typedef struct ccstructs_core_t		ccstructs_core_t;
 
-struct ccstructs_core_t {
-  char	dummy;
-};
+struct ccstructs_core_t;
 
 
 /** --------------------------------------------------------------------
