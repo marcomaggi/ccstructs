@@ -1,7 +1,7 @@
 \input texinfo.tex
 @c %**start of header
 @setfilename ccstructs.info
-@settitle Ccstructs
+@settitle CCStructs
 @c %**end of header
 
 @include version.texi
@@ -123,6 +123,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 @menu
 * overview::                    Overview of the package.
 * version::                     Version functions.
+* memory::                      Memory handling.
 * utils::                       Utility definitions.
 
 Appendices
@@ -231,6 +232,261 @@ number.
 @deftypefun int ccstructs_version_interface_age (void)
 Return an integer representing the library interface current age.
 @end deftypefun
+
+@c page
+@node memory
+@chapter Memory handling
+
+
+@menu
+* memory blocks::               Memory blocks.
+* memory ascii::                Handling @ascii{} strings.
+@end menu
+
+@c page
+@node memory blocks
+@section Memory blocks
+
+
+This module offers a set of functions to handle memory blocks; its purpose is to provide a small
+data structure (@code{ccstructs_block_t}) which can be used directly as argument to function and
+return value from function, instead of the couple: pointer to memory block, block length in bytes.
+All the functions are defined in the header @file{ccstructs.h} and declared as @code{__inline__}.
+
+
+@deftp {Struct Typedef} ccstructs_block_t
+The type of memory block; fields description follows:
+
+@table @code
+@item size_t len
+The number of bytes in the block; can be zero.
+
+@item uint8_t * ptr
+Pointer to the memory block or @cnull{}.
+@end table
+
+To initialise a block to empty state do this:
+
+@example
+ccstructs_block_t     B = @{ .ptr = NULL, .len = 0 @};
+@end example
+
+@noindent
+or this:
+
+@example
+ccstructs_block_t     B;
+ccstructs_block_reset(&B);
+@end example
+@end deftp
+
+@c ------------------------------------------------------------
+
+@subsubheading Memory allocation
+
+
+@deftypefun ccstructs_block_t ccstructs_block_alloc (ccstructs_memory_allocator_t @var{allocator}, size_t @var{dim})
+@deftypefunx ccstructs_block_t ccstructs_block_realloc (ccstructs_memory_allocator_t @var{allocator}, ccstructs_block_t @var{block}, size_t @var{new_dim})
+Allocate or reallocate a memory block using the @var{allocator} and
+return the resulting block.
+@end deftypefun
+
+
+@deftypefun void ccstructs_block_free (ccstructs_memory_allocator_t @var{allocator}, ccstructs_block_t @var{block})
+If the @code{ptr} field of @var{block} is not @cnull{}: free the
+referenced memory block using @var{allocator}.
+@end deftypefun
+
+
+@subsubheading Setting
+
+@deftypefun void ccstructs_block_set (ccstructs_block_t * @var{block}, void * @var{ptr}, size_t @var{len})
+Set the fields of the block structure.
+@end deftypefun
+
+
+@deftypefun void ccstructs_block_reset (ccstructs_block_t * @var{block})
+Reset to zero all the fields of the block.
+@end deftypefun
+
+
+@subsubheading Inspection
+
+
+@deftypefun bool ccstructs_block_is_null (ccstructs_block_t @var{block})
+Return true if the @code{ptr} field of @var{block} is @cnull{}.
+@end deftypefun
+
+
+@subsubheading Memory operations
+
+
+@deftypefun void ccstructs_block_clean_memory (ccstructs_block_t @var{block})
+Reset to zero all the bytes in the memory block.
+@end deftypefun
+
+
+@subsubheading Block operations
+
+
+@deftypefun void ccstructs_block_shift_x (ccstructs_block_t * @var{block}, ssize_t @var{offset}, size_t @var{dim})
+Shift the memory reference in @var{block} by @var{offset} slots each of
+@var{dim} bytes.  @var{offset} can be zero, positive or negative.
+@end deftypefun
+
+
+@deftypefun ccstructs_block_t ccstructs_block_shift (ccstructs_block_t @var{block}, ssize_t @var{offset}, size_t @var{dim})
+Like @cfunc{ccstructs_block_shift_x}, but produce a new block.
+@end deftypefun
+
+
+@deftypefun ccstructs_block_t ccstructs_block_difference (ccstructs_block_t @var{a}, ccstructs_block_t @var{b})
+This function assumes that @var{b} is contiguous to or included in
+@var{a}; return a new block @var{c} referencing the first portion of
+@var{a} not in @var{b}.
+
+@example
+          @var{c}.len             @var{b}.len
+  |.........................|.................|
+
+@var{c}.ptr                     @var{b}.ptr
+  v                         v
+  |-------------------------|---------------------|
+  ^
+@var{a}.ptr
+
+  |...............................................|
+                       @var{a}.len
+
+@end example
+@end deftypefun
+
+@c page
+@node memory ascii
+@section Handling @ascii{} strings
+
+
+This module offers a set of functions to handle @ascii{} coded, zero
+terminated strings; its purpose is to provide a small data structure
+(@code{ccstructs_ascii_t}) which can be used directly as argument to function
+and return value from function, instead of the couple: pointer to memory
+block, block length in bytes.  All the functions are defined in the
+header @file{ccstructs.h} and declared as @code{__inline__}.
+
+
+@deftp {Struct Typedef} ccstructs_ascii_t
+The type of zero--terminated @ascii{} strings; fields description
+follows:
+
+@table @code
+@item size_t len
+The number of characters in the block; can be zero; it does @strong{not}
+include the terminating null character.
+
+@item char * ptr
+Pointer to the memory block or @cnull{}; the last @code{char} must be
+zero.
+@end table
+
+To initialise an ascii to empty state do this:
+
+@example
+ccstructs_ascii_t     A = @{ .ptr = NULL, .len = 0 @};
+@end example
+
+@noindent
+or this:
+
+@example
+ccstructs_ascii_t     A;
+ccstructs_ascii_reset(&A);
+@end example
+
+@noindent
+or this:
+
+@example
+ccstructs_ascii_t     A = ccstructs_ascii_empty;
+@end example
+@end deftp
+
+
+@deftp {Struct Typedef} ccstructs_ascii_list_t
+Holds an array of @code{char *}.  Fields:
+
+@table @code
+@item size_t len
+the number of strings;
+@item char ** ptr
+the array of pointers.
+@end table
+@end deftp
+
+
+@deftypevar {const ccstructs_ascii_t} ccstructs_ascii_empty
+Represent an empty string.  It is a statically allocated structure,
+referencing a zero--terminated empty string.
+@end deftypevar
+
+
+@deftypefun void ccstructs_ascii_set (ccstructs_ascii_t * @var{ascii}, void * @var{ptr}, size_t @var{len})
+Initialise the fields of a structure.
+@end deftypefun
+
+
+@deftypefun void ccstructs_ascii_reset (ccstructs_ascii_t * @var{ascii})
+Reset to zero the fields.
+@end deftypefun
+
+
+@deftypefun ccstructs_ascii_t ccstructs_ascii_const (char * @var{string})
+Build and return a structure initialised with @var{string}.  The length
+is determined with the standard @cfunc{strlen} function.
+@end deftypefun
+
+
+@deftypefun bool ccstructs_ascii_is_null (ccstructs_ascii_t @var{ascii})
+Return true if the pointer field is set to @cnull{}.
+@end deftypefun
+
+
+@deftypefun ccstructs_bool_t ccstructs_ascii_is_terminated (ccstructs_ascii_t @var{ascii})
+Return true if the string referenced by @var{ascii} is zero--terminated.
+@end deftypefun
+
+
+@deftypefun void ccstructs_ascii_clean_memory (ccstructs_ascii_t @var{ascii})
+Reset the block of memory to zero bytes.
+@end deftypefun
+
+
+@deftypefun void ccstructs_ascii_terminate (ccstructs_ascii_t @var{ascii})
+Make sure that the string referenced by @var{ascii} is zero--terminated.
+@end deftypefun
+
+
+@deftypefun ccstructs_block_t ccstructs_block_from_ascii (ccstructs_ascii_t @var{ascii})
+Return a block initialised with the fields of an @ascii{} block.
+@end deftypefun
+
+@deftypefun ccstructs_ascii_t ccstructs_ascii_from_block (ccstructs_block_t @var{block})
+Return an @ascii{} block initialised with the fields of a block.
+@end deftypefun
+
+
+@deftypefun ccstructs_ascii_t ccstructs_ascii_alloc (ccstructs_memory_allocator_t @var{allocator}, size_t @var{dim})
+@deftypefunx ccstructs_ascii_t ccstructs_ascii_realloc (ccstructs_memory_allocator_t @var{allocator}, ccstructs_ascii_t @var{ascii}, size_t @var{new_dim})
+Allocate or reallocate an @ascii{} block using @var{allocator};
+@var{dim} and @var{new_dim} are the number of characters to be stored in
+the block, with the @strong{exclusion} of the terminating zero.
+@end deftypefun
+
+
+@deftypefun void ccstructs_ascii_free (ccstructs_memory_allocator_t @var{allocator}, ccstructs_ascii_t @var{ascii})
+If the @code{ptr} field of @var{ascii} is not @cnull{}: free the
+referenced memory block using @var{allocator}.
+@end deftypefun
+
 
 @c page
 @node utils

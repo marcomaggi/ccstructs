@@ -2,7 +2,7 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.69])
-AC_INIT([Ccstructs],[0.1.0-devel.0],
+AC_INIT([CCStructs],[0.1.0-devel.0],
   [marco.maggi-ipsu@poste.it],
   [ccstructs],[http://github.com/marcomaggi/ccstructs])
 dnl This is the revision number of this configure.ac
@@ -82,10 +82,11 @@ dnl page
 #### external libraries
 
 MMUX_CHECK_PKG_CONFIG_MACROS
-PKG_CHECK_MODULES([CCEXCEPTIONS],[ccexceptions >= 0.7.2])
-PKG_CHECK_MODULES([CCTESTS],[cctests >= 0.2.0])
+PKG_CHECK_MODULES([CCEXCEPTIONS],[ccexceptions >= 0.8.0])
+PKG_CHECK_MODULES([CCMEMORY],[ccmemory >= 0.2.0])
+PKG_CHECK_MODULES([CCTESTS],[cctests >= 0.3.0],,[AC_MSG_WARN([package CCTests not found])])
 
-AM_CONDITIONAL([CCSEMVER_TESTING_ENABLED],[test -n "$CCTESTS_LIBS"])
+AM_CONDITIONAL([MMUX_TESTING_ENABLED],[test -n "$CCTESTS_LIBS"])
 
 AC_CACHE_SAVE
 
