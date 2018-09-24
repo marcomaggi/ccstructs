@@ -48,7 +48,7 @@ struct one_one_t {
 };
 
 static void
-one_one_fwrite_method (cce_destination_t L, FILE * stream, ccstructs_writable_iface_t I)
+one_one_fwrite_method (cce_destination_t L, FILE * stream, ccstructs_writable_I I)
 {
   CCSTRUCTS_PC(one_one_t, S, I.self);
   int	rv;
@@ -60,20 +60,15 @@ one_one_fwrite_method (cce_destination_t L, FILE * stream, ccstructs_writable_if
   }
 }
 
-static ccstructs_writable_iface_methods_t const one_one_writable_iface_methods =
-  {
-   .fwrite = one_one_fwrite_method
-  };
+static ccstructs_writable_I_methods_t const one_one_writable_iface_methods = {
+  .fwrite = one_one_fwrite_method
+};
 
-static ccstructs_writable_iface_t
-one_one_writable_iface (one_one_t * S)
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccstructs_writable_I
+one_one_new_iface_writable (one_one_t * S)
 {
-  ccstructs_writable_iface_t	I =
-    {
-     .methods	= &one_one_writable_iface_methods,
-     .self	= (ccstructs_core_t *)S
-    };
-  return I;
+  return ccstructs_new_writable((ccstructs_core_t *)S, &one_one_writable_iface_methods);
 }
 
 void
@@ -84,12 +79,11 @@ test_1_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    one_one_t	S =
-      {
-       .alpha	= 1,
-       .beta	= 2
-      };
-    ccstructs_writable_iface_t	I = one_one_writable_iface(&S);
+    one_one_t	S = {
+      .alpha	= 1,
+      .beta	= 2
+    };
+    ccstructs_writable_I	I = one_one_new_iface_writable(&S);
 
     ccstructs_writable_fwrite(L, stderr, I);
     fprintf(stderr, "\n");

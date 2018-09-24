@@ -349,22 +349,22 @@ struct ccstructs_core_t;
  ** Generic struct handling: core interface.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccstructs_core_iface_methods_t		ccstructs_core_iface_methods_t;
-typedef struct ccstructs_core_iface_t			ccstructs_core_iface_t;
+typedef struct ccstructs_core_I_methods_t	ccstructs_core_I_methods_t;
+typedef struct ccstructs_core_I			ccstructs_core_I;
 
-struct ccstructs_core_iface_t {
-  ccstructs_core_iface_methods_t const	* methods;
+struct ccstructs_core_I {
+  ccstructs_core_I_methods_t const	* methods;
   ccstructs_core_t			* self;
 };
 
 /* Release the memory allocated for the struct, if needed. */
-typedef void ccstructs_core_iface_delete_fun_t (ccstructs_core_iface_t I);
+typedef void ccstructs_core_iface_delete_fun_t (ccstructs_core_I I);
 
 /* Release all  the asynchronous  resources owned by  the fields  of the
    struct, if any. */
-typedef void ccstructs_core_iface_final_fun_t (ccstructs_core_iface_t I);
+typedef void ccstructs_core_iface_final_fun_t (ccstructs_core_I I);
 
-struct ccstructs_core_iface_methods_t {
+struct ccstructs_core_I_methods_t {
   ccstructs_core_iface_delete_fun_t	* delete;
   ccstructs_core_iface_final_fun_t	* final;
 };
@@ -373,14 +373,14 @@ struct ccstructs_core_iface_methods_t {
 
 __attribute__((__always_inline__))
 static inline void
-ccstructs_core_final (ccstructs_core_iface_t I)
+ccstructs_core_final (ccstructs_core_I I)
 {
   I.methods->final(I);
 }
 
 __attribute__((__always_inline__))
 static inline void
-ccstructs_core_delete (ccstructs_core_iface_t I)
+ccstructs_core_delete (ccstructs_core_I I)
 {
   I.methods->final(I);
   I.methods->delete(I);
@@ -396,18 +396,18 @@ typedef struct ccstructs_error_handler_t	ccstructs_error_handler_t;
 
 struct ccstructs_clean_handler_t {
   cce_clean_handler_t		handler;
-  ccstructs_core_iface_t	core;
+  ccstructs_core_I	core;
 };
 
 struct ccstructs_error_handler_t {
   cce_error_handler_t		handler;
-  ccstructs_core_iface_t	core;
+  ccstructs_core_I	core;
 };
 
-ccstructs_decl void ccstructs_clean_handler_init (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_core_iface_t I)
+ccstructs_decl void ccstructs_clean_handler_init (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_core_I I)
   __attribute__((__nonnull__(1,2)));
 
-ccstructs_decl void ccstructs_error_handler_init (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_core_iface_t I)
+ccstructs_decl void ccstructs_error_handler_init (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_core_I I)
   __attribute__((__nonnull__(1,2)));
 
 #define ccstructs_handler_init(L,S_H,S)		\
@@ -420,28 +420,38 @@ ccstructs_decl void ccstructs_error_handler_init (cce_destination_t L, ccstructs
  ** Generic struct handling: input/output writability.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccstructs_writable_iface_t		ccstructs_writable_iface_t;
-typedef struct ccstructs_writable_iface_methods_t	ccstructs_writable_iface_methods_t;
+typedef struct ccstructs_writable_I		ccstructs_writable_I;
+typedef struct ccstructs_writable_I_methods_t	ccstructs_writable_I_methods_t;
 
-struct ccstructs_writable_iface_t {
-  ccstructs_writable_iface_methods_t const	* methods;
-  ccstructs_core_t const			* self;
+struct ccstructs_writable_I {
+  ccstructs_writable_I_methods_t const	* methods;
+  ccstructs_core_t const		* self;
 };
 
 /* Serialise the struct  to the stream.  Raise an exception  if an error
    occurs. */
-typedef void ccstructs_writable_iface_fwrite_fun_t (cce_destination_t, FILE *, ccstructs_writable_iface_t const);
+typedef void ccstructs_writable_iface_fwrite_fun_t (cce_destination_t, FILE *, ccstructs_writable_I const);
 
-struct ccstructs_writable_iface_methods_t {
+struct ccstructs_writable_I_methods_t {
   ccstructs_writable_iface_fwrite_fun_t		* fwrite;
 };
 
 /* ------------------------------------------------------------------ */
 
+__attribute__((__always_inline__,__nonnull__(1,2)))
+static inline ccstructs_writable_I
+ccstructs_new_writable (ccstructs_core_t * S, ccstructs_writable_I_methods_t const * const M)
+{
+  ccstructs_writable_I	I = {
+    .methods	= M,
+    .self	= S
+  };
+  return I;
+}
 
 __attribute__((__nonnull__(1,2),__always_inline__))
 static inline void
-ccstructs_writable_fwrite (cce_destination_t L, FILE * stream, ccstructs_writable_iface_t const I)
+ccstructs_writable_fwrite (cce_destination_t L, FILE * stream, ccstructs_writable_I const I)
 {
   I.methods->fwrite(L, stream, I);
 }

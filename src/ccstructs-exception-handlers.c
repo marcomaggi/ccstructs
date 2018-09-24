@@ -49,7 +49,7 @@ ccstructs_clean_handler_function (cce_condition_t const * C CCSTRUCTS_UNUSED, cc
 }
 
 void
-ccstructs_clean_handler_init (cce_location_t * L, ccstructs_clean_handler_t * I_H, ccstructs_core_iface_t I)
+ccstructs_clean_handler_init (cce_location_t * L, ccstructs_clean_handler_t * I_H, ccstructs_core_I I)
 {
   I_H->handler.handler.function	= ccstructs_clean_handler_function;
   I_H->core			= I;
@@ -69,7 +69,7 @@ ccstructs_error_handler_function (cce_condition_t const * C CCSTRUCTS_UNUSED, cc
 }
 
 void
-ccstructs_error_handler_init (cce_location_t * L, ccstructs_error_handler_t * I_H, ccstructs_core_iface_t I)
+ccstructs_error_handler_init (cce_location_t * L, ccstructs_error_handler_t * I_H, ccstructs_core_I I)
 {
   I_H->handler.handler.function	= ccstructs_error_handler_function;
   I_H->core			= I;
