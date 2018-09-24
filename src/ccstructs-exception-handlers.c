@@ -44,15 +44,15 @@ ccstructs_clean_handler_function (cce_condition_t const * C CCSTRUCTS_UNUSED, cc
 {
   CCSTRUCTS_PC(ccstructs_clean_handler_t, S_H, H);
 
-  ccstructs_core_delete(S_H->core);
+  ccstructs_dtors_delete(S_H->dtors);
   if (0) { fprintf(stderr, "%s: done releasing '%p'\n", __func__, (void *)(H->pointer)); }
 }
 
 void
-ccstructs_clean_handler_init (cce_location_t * L, ccstructs_clean_handler_t * I_H, ccstructs_core_I I)
+ccstructs_clean_handler_init (cce_location_t * L, ccstructs_clean_handler_t * I_H, ccstructs_dtors_I I)
 {
   I_H->handler.handler.function	= ccstructs_clean_handler_function;
-  I_H->core			= I;
+  I_H->dtors			= I;
   cce_register_clean_handler(L, &(I_H->handler));
 }
 
@@ -64,15 +64,15 @@ ccstructs_error_handler_function (cce_condition_t const * C CCSTRUCTS_UNUSED, cc
 {
   CCSTRUCTS_PC(ccstructs_error_handler_t, S_H, H);
 
-  ccstructs_core_delete(S_H->core);
+  ccstructs_dtors_delete(S_H->dtors);
   if (0) { fprintf(stderr, "%s: done releasing '%p'\n", __func__, (void *)(H->pointer)); }
 }
 
 void
-ccstructs_error_handler_init (cce_location_t * L, ccstructs_error_handler_t * I_H, ccstructs_core_I I)
+ccstructs_error_handler_init (cce_location_t * L, ccstructs_error_handler_t * I_H, ccstructs_dtors_I I)
 {
   I_H->handler.handler.function	= ccstructs_error_handler_function;
-  I_H->core			= I;
+  I_H->dtors			= I;
   cce_register_error_handler(L, &(I_H->handler));
 }
 

@@ -37,7 +37,7 @@
 
 
 /** --------------------------------------------------------------------
- ** Writable interface: fprintf method.
+ ** Writable interface: fwrite method.
  ** ----------------------------------------------------------------- */
 
 typedef struct one_one_t	one_one_t;
@@ -50,7 +50,7 @@ struct one_one_t {
 static void
 one_one_fwrite_method (cce_destination_t L, FILE * stream, ccstructs_writable_I I)
 {
-  CCSTRUCTS_PC(one_one_t, S, I.self);
+  CCSTRUCTS_PC(one_one_t const, S, ccstructs_writable_self(I));
   int	rv;
 
   errno = 0;
@@ -98,7 +98,7 @@ main (void)
 {
   cctests_init("tests writable interface");
   {
-    cctests_begin_group("condition objects");
+    cctests_begin_group("fwrite method");
     {
       cctests_run(test_1_1);
     }

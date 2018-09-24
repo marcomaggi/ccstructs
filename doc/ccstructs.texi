@@ -130,6 +130,8 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * overview::                    Overview of the package.
 * version::                     Version functions.
 * memory::                      Memory handling.
+* core::                        Core type definitions.
+* dtors::                       The @emph{destructors} interface.
 * writable::                    The @emph{writable} interface.
 * utils::                       Utility definitions.
 
@@ -501,6 +503,242 @@ referenced memory block using @var{allocator}.
 
 
 @c page
+@node core
+@chapter Core type definitions
+
+
+@value{PACKAGE} offers an @api{} to handle @struct{} values.  The library cannot reference the
+concrete types of @struct{} the client libraries will use, so it just defines a placeholder for
+them.
+
+
+@deftp {Struct Typedef} ccstructs_core_t
+Type of @struct{} values used as argument to @value{PACKAGE} functions.  This is just a forward type
+declaration: there is no actual declaration of this type.
+@end deftp
+
+
+When using this type we need to explicitly cast a pointer to client @struct{} values to a pointer to
+@objtype{ccstruct_core_t}.  For example, when defining a constructor for the @emph{writable}
+interface:
+
+@example
+ccstructs_writable_I
+spiffy_new_iface_writable (spiffy_t * S)
+@{
+  return ccstructs_new_writable((ccstructs_core_t *)S,
+     &spiffy_writable_iface_methods);
+@}
+@end example
+
+@c page
+@node dtors
+@chapter The @emph{destructors} interface
+
+
+The @emph{destructors} interface provides a uniform way to call a @struct{} destructors.
+
+@menu
+* dtors api::                   @emph{destructors} interface @api{}.
+* dtors sample empty::          Example of @emph{destructors} interface
+                                with empty @code{delete} method.
+* dtors sample non-empty::      Example of @emph{destructors} interface
+                                with empty @code{delete} method.
+@end menu
+
+@c page
+@node dtors api
+@section @emph{destructors} interface @api{}
+
+
+@deftp {Struct Typedef} ccstructs_dtors_I
+Type of the @emph{destructors} interface.  Instances of this type are meant to be handed by value to
+function calls.
+@end deftp
+
+
+@deftp {Struct Typedef} ccstructs_dtors_I_methods_t
+Type of methods table for the @emph{destructors} interface.  It has the following fields:
+
+@table @code
+@item ccstructs_dtors_iface_delete_fun_t * delete
+Pointer to function implementing the @code{delete} method.  This method releases the memory
+allocated for the @struct{} itself, if needed.
+
+@item ccstructs_dtors_iface_final_fun_t * final
+Pointer to function implementing the @code{final} method.  Release all the asynchronous resources
+owned by the fields of the @struct{}, if any.  The @struct{} itself is left alone.
+@end table
+@end deftp
+
+
+@deftypefn {Function Prototype} void ccstructs_dtors_iface_delete_fun_t (ccstructs_dtors_I @var{I})
+Type of functions implementing the @code{delete} method.  This method releases the memory allocated
+for the @struct{} itself, if needed; if a @struct{} is allocated on the stack or embedded into an
+enclosing @struct{}: this method should do nothing.
+@end deftypefn
+
+
+@deftypefn {Function Prototype} void ccstructs_dtors_iface_final_fun_t (ccstructs_dtors_I @var{I})
+Type of functions implementing the @code{final} method.  Release all the asynchronous resources
+owned by the fields of the @struct{}, if any.  The @struct{} itself is left alone.
+@end deftypefn
+
+
+@deftypefun ccstructs_dtors_I ccstructs_new_dtors (ccstructs_core_t * @var{S}, ccstructs_dtors_I_methods_t const * @var{M})
+Build and return a new @emph{destructors} interface.
+@end deftypefun
+
+
+@deftypefun {ccstructs_core_t const *} ccstructs_dtors_self (ccstructs_dtors_I @var{I})
+Return a pointer to the @struct{} to which the interface belongs.
+@end deftypefun
+
+
+@deftypefun void ccstructs_dtors_final (ccstructs_dtors_I @var{I})
+Apply the @code{final} method to the @struct{}.  This function is the faster destructor for a
+@struct{} allocated on the stack or embedded in an enclosing @struct{}.
+@end deftypefun
+
+
+@deftypefun void ccstructs_dtors_delete (ccstructs_dtors_I @var{I})
+Apply the @code{final} method to the @struct{}, then apply the @code{delete} method to the
+@struct{}.  This function is always a correct destructor for a @struct{}.
+@end deftypefun
+
+@c page
+@node dtors sample empty
+@section Example of @emph{destructors} interface with empty @code{delete} method
+
+
+Let's consider a @struct{} with the following definition:
+
+@example
+typedef struct one_t    one_t;
+
+struct one_t @{
+  void *  pointer;
+@};
+@end example
+
+@noindent
+we assume instances of this type are always allocated on the stack or embedded in an enclosing
+@struct{}.  We can implement the @emph{destructor} interface as follows:
+
+@example
+static void
+one_dtors_method_delete (ccstructs_dtors_I I)
+@{
+@}
+
+static void
+one_dtors_method_final (ccstructs_dtors_I I)
+@{
+  CCSTRUCTS_PC(one_t, S, ccstructs_dtors_self(I));
+
+  ccmem_free(ccmem_standard_allocator, S->pointer);
+@}
+
+static ccstructs_dtors_I_methods_t const one_dtors_iface_methods = @{
+  .delete       = one_dtors_method_delete,
+  .final        = one_dtors_method_final
+@};
+
+ccstructs_dtors_I
+one_new_iface_dtors (one_t * S)
+@{
+  return ccstructs_new_dtors((ccstructs_core_t *)S, &one_dtors_iface_methods);
+@}
+@end example
+
+@noindent
+and we can use the interface as follows:
+
+@example
+cce_location_t        L[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_raise(L, upper_L);
+@} else @{
+  one_t       S = @{
+    .pointer  = ccmem_malloc(L, ccmem_standard_allocator, 256)
+  @};
+  ccstructs_dtors_I   I = one_new_iface_dtors(&S);
+
+  ...
+  ccstructs_dtors_delete(I);
+  cce_run_body_handlers(L);
+@}
+@end example
+
+@c page
+@node dtors sample non-empty
+@section Example of @emph{destructors} interface with empty @code{delete} method
+
+
+Let's consider a @struct{} with the following definition:
+
+@example
+typedef struct two_t    two_t;
+
+struct two_t @{
+  void *  pointer;
+@};
+@end example
+
+@noindent
+we assume instances of this type are always allocated on the heap.  We can implement the
+@emph{destructor} interface as follows:
+
+@example
+static void
+two_dtors_method_delete (ccstructs_dtors_I I)
+@{
+  CCSTRUCTS_PC(two_t, S, ccstructs_dtors_self(I));
+
+  ccmem_free(ccmem_standard_allocator, S);
+@}
+
+static void
+two_dtors_method_final (ccstructs_dtors_I I)
+@{
+  CCSTRUCTS_PC(two_t, S, ccstructs_dtors_self(I));
+
+  ccmem_free(ccmem_standard_allocator, S->pointer);
+@}
+
+static ccstructs_dtors_I_methods_t const two_dtors_iface_methods = @{
+  .delete       = two_dtors_method_delete,
+  .final        = two_dtors_method_final
+@};
+
+ccstructs_dtors_I
+two_new_iface_dtors (two_t * S)
+@{
+  return ccstructs_new_dtors((ccstructs_core_t *)S, &two_dtors_iface_methods);
+@}
+@end example
+
+@noindent
+and we can use the interface as follows:
+
+@example
+cce_location_t        L[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_raise(L, upper_L);
+@} else @{
+  two_t * S = ccmem_malloc(L, ccmem_standard_allocator, sizeof(two_t));
+  S->pointer = ccmem_malloc(L, ccmem_standard_allocator, 256)
+  ccstructs_dtors_I   I = two_new_iface_dtors(&S);
+
+  ...
+  ccstructs_dtors_delete(I);
+  cce_run_body_handlers(L);
+@}
+@end example
+
+@c page
 @node writable
 @chapter The @emph{writable} interface
 
@@ -538,6 +776,11 @@ the given stream.
 @deftypefun ccstructs_writable_I ccstructs_new_writable (ccstructs_core_t * @var{S}, ccstructs_writable_I_methods_t const * @var{M})
 Interface constructor.  Return a new interface @struct{} given a pointer to the source @struct{} and
 a pointer to the interface methods.
+@end deftypefun
+
+
+@deftypefun {ccstructs_core_t const *} ccstructs_writable_self (ccstructs_writable_I @var{I})
+Return a pointer to the @struct{} to which the interface belongs.
 @end deftypefun
 
 

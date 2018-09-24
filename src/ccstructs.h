@@ -346,41 +346,59 @@ struct ccstructs_core_t;
 
 
 /** --------------------------------------------------------------------
- ** Generic struct handling: core interface.
+ ** Generic struct handling: destructors interface.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccstructs_core_I_methods_t	ccstructs_core_I_methods_t;
-typedef struct ccstructs_core_I			ccstructs_core_I;
+typedef struct ccstructs_dtors_I_methods_t	ccstructs_dtors_I_methods_t;
+typedef struct ccstructs_dtors_I		ccstructs_dtors_I;
 
-struct ccstructs_core_I {
-  ccstructs_core_I_methods_t const	* methods;
+struct ccstructs_dtors_I {
+  ccstructs_dtors_I_methods_t const	* methods;
   ccstructs_core_t			* self;
 };
 
 /* Release the memory allocated for the struct, if needed. */
-typedef void ccstructs_core_iface_delete_fun_t (ccstructs_core_I I);
+typedef void ccstructs_dtors_iface_delete_fun_t (ccstructs_dtors_I I);
 
 /* Release all  the asynchronous  resources owned by  the fields  of the
    struct, if any. */
-typedef void ccstructs_core_iface_final_fun_t (ccstructs_core_I I);
+typedef void ccstructs_dtors_iface_final_fun_t (ccstructs_dtors_I I);
 
-struct ccstructs_core_I_methods_t {
-  ccstructs_core_iface_delete_fun_t	* delete;
-  ccstructs_core_iface_final_fun_t	* final;
+struct ccstructs_dtors_I_methods_t {
+  ccstructs_dtors_iface_delete_fun_t	* delete;
+  ccstructs_dtors_iface_final_fun_t	* final;
 };
 
 /* ------------------------------------------------------------------ */
 
+__attribute__((__always_inline__,__nonnull__(1,2)))
+static inline ccstructs_dtors_I
+ccstructs_new_dtors (ccstructs_core_t * S, ccstructs_dtors_I_methods_t const * const M)
+{
+  ccstructs_dtors_I	I = {
+    .methods	= M,
+    .self	= S
+  };
+  return I;
+}
+
+__attribute__((__always_inline__,__pure__))
+static inline ccstructs_core_t *
+ccstructs_dtors_self (ccstructs_dtors_I I)
+{
+  return I.self;
+}
+
 __attribute__((__always_inline__))
 static inline void
-ccstructs_core_final (ccstructs_core_I I)
+ccstructs_dtors_final (ccstructs_dtors_I I)
 {
   I.methods->final(I);
 }
 
 __attribute__((__always_inline__))
 static inline void
-ccstructs_core_delete (ccstructs_core_I I)
+ccstructs_dtors_delete (ccstructs_dtors_I I)
 {
   I.methods->final(I);
   I.methods->delete(I);
@@ -395,19 +413,19 @@ typedef struct ccstructs_clean_handler_t	ccstructs_clean_handler_t;
 typedef struct ccstructs_error_handler_t	ccstructs_error_handler_t;
 
 struct ccstructs_clean_handler_t {
-  cce_clean_handler_t		handler;
-  ccstructs_core_I	core;
+  cce_clean_handler_t	handler;
+  ccstructs_dtors_I	dtors;
 };
 
 struct ccstructs_error_handler_t {
-  cce_error_handler_t		handler;
-  ccstructs_core_I	core;
+  cce_error_handler_t	handler;
+  ccstructs_dtors_I	dtors;
 };
 
-ccstructs_decl void ccstructs_clean_handler_init (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_core_I I)
+ccstructs_decl void ccstructs_clean_handler_init (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_dtors_I I)
   __attribute__((__nonnull__(1,2)));
 
-ccstructs_decl void ccstructs_error_handler_init (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_core_I I)
+ccstructs_decl void ccstructs_error_handler_init (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_dtors_I I)
   __attribute__((__nonnull__(1,2)));
 
 #define ccstructs_handler_init(L,S_H,S)		\
@@ -447,6 +465,13 @@ ccstructs_new_writable (ccstructs_core_t * S, ccstructs_writable_I_methods_t con
     .self	= S
   };
   return I;
+}
+
+__attribute__((__always_inline__,__pure__))
+static inline ccstructs_core_t const *
+ccstructs_writable_self (ccstructs_writable_I I)
+{
+  return I.self;
 }
 
 __attribute__((__nonnull__(1,2),__always_inline__))
