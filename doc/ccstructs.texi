@@ -132,6 +132,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * memory::                      Memory handling.
 * core::                        Core type definitions.
 * dtors::                       The @emph{destructors} interface.
+* handlers::                    Exception handlers.
 * writable::                    The @emph{writable} interface.
 * utils::                       Utility definitions.
 
@@ -736,6 +737,160 @@ if (cce_location(L)) @{
   ccstructs_dtors_delete(I);
   cce_run_body_handlers(L);
 @}
+@end example
+
+@c page
+@node handlers
+@chapter Exception handlers
+
+
+The best way to use the @emph{destructors} interface is through the exception handlers @api{}.
+
+
+@deftp {Struct Typedef} ccstructs_clean_handler_t
+Type of @struct{} usable has clean handler with the facilities of the CCExceptions library.
+@end deftp
+
+
+@deftp {Struct Typedef} ccstructs_error_handler_t
+Type of @struct{} usable has error handler with the facilities of the CCExceptions library.
+@end deftp
+
+
+@deftypefun void ccstructs_clean_handler_init (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, ccstructs_dtors_I @var{I})
+Initialise the exception handler @var{H} to use the @code{delete} method of the @emph{destructors}
+interface @var{I}, in the context of the location @var{L}.
+@end deftypefun
+
+
+@deftypefun void ccstructs_error_handler_init (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccstructs_dtors_I @var{I})
+Initialise the exception handler @var{H} to use the @code{delete} method of the @emph{destructors}
+interface @var{I}, in the context of the location @var{L}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} ccstructs_handler_init (cce_destination_t @var{L}, @var{H}, ccstructs_dtors_I @var{I})
+Initialise the exception handler @var{H} to use the @code{delete} method of the @emph{destructors}
+interface @var{I}, in the context of the location @var{L}.  If @var{H} is a pointer of type:
+
+@table @code
+@item ccstructs_clean_handler_t
+The macro use expands to a call to @cfunc{ccstructs_clean_handler_init}.
+
+@item ccstructs_error_handler_t
+The macro use expands to a call to @cfunc{ccstructs_error_handler_init}.
+@end table
+@end deftypefn
+
+
+As example, let's consider this @struct{} definition:
+
+@example
+typedef struct two_t    two_t;
+
+struct two_t @{
+  void *  pointer;
+@};
+@end example
+
+@noindent
+for it we define a constructor as follows:
+
+@example
+two_t *
+two_new (cce_destination_t upper_L, int init)
+@{
+  cce_location_t        L[1];
+  cce_error_handler_t   S_H[1];
+  two_t *               S;
+
+  if (cce_location(L)) @{
+    cce_run_catch_handlers_raise(L, upper_L);
+  @} else @{
+    S           = cce_sys_malloc_guarded(L, S_H, sizeof(two_t));
+    S->pointer  = cce_sys_malloc(L, 256);
+    memset(S->pointer, init, 256);
+    cce_run_body_handlers(L);
+  @}
+  return S;
+@}
+@end example
+
+@noindent
+we can implement the @emph{destructors} interface as follows:
+
+@example
+static void
+two_dtors_method_delete (ccstructs_dtors_I I)
+@{
+  CCSTRUCTS_PC(two_t, S, ccstructs_dtors_self(I));
+
+  free(S);
+@}
+
+static void
+two_dtors_method_final (ccstructs_dtors_I I)
+@{
+  CCSTRUCTS_PC(two_t, S, ccstructs_dtors_self(I));
+
+  free(S->pointer);
+@}
+
+static ccstructs_dtors_I_methods_t const two_dtors_iface_methods = @{
+  .delete       = two_dtors_method_delete,
+  .final        = two_dtors_method_final
+@};
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccstructs_dtors_I
+two_new_iface_dtors (two_t * S)
+@{
+  return ccstructs_new_dtors((ccstructs_core_t *)S, &two_dtors_iface_methods);
+@}
+@end example
+
+@noindent
+and we can use it with the exception handlers as follows:
+
+@example
+cce_location_t                L[1];
+ccstructs_clean_handler_t     I_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_raise(L, upper_L);
+@} else @{
+  two_t * S = two_new(L, 123);
+  ccstructs_handler_init(L, I_H, two_new_iface_dtors(S));
+
+  cce_run_body_handlers(L);
+@}
+@end example
+
+Now we can easily define a guarded constructor:
+
+@example
+two_t *
+two_new_guarded_clean (cce_destination_t L,
+                       ccstructs_clean_handler_t * I_H, int init)
+@{
+  two_t * S = two_new(L, init);
+  ccstructs_handler_init(L, I_H, two_new_iface_dtors(S));
+  return S;
+@}
+
+two_t *
+two_new_guarded_error (cce_destination_t L,
+                       ccstructs_error_handler_t * I_H, int init)
+@{
+  two_t * S = two_new(L, init);
+  ccstructs_handler_init(L, I_H, two_new_iface_dtors(S));
+  return S;
+@}
+
+#define two_new_guarded(L,I_H,S)                           \
+  _Generic((I_H),                                          \
+    ccstructs_clean_handler_t *: two_new_guarded_clean,    \
+    ccstructs_error_handler_t *: two_new_guarded_error)(L,I_H,S)
 @end example
 
 @c page

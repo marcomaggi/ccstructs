@@ -45,7 +45,7 @@ ccstructs_clean_handler_function (cce_condition_t const * C CCSTRUCTS_UNUSED, cc
   CCSTRUCTS_PC(ccstructs_clean_handler_t, S_H, H);
 
   ccstructs_dtors_delete(S_H->dtors);
-  if (0) { fprintf(stderr, "%s: done releasing '%p'\n", __func__, (void *)(H->pointer)); }
+  if (0) { fprintf(stderr, "%s: done releasing '%p'\n", __func__, (void *)(ccstructs_dtors_self(S_H->dtors))); }
 }
 
 void
@@ -65,7 +65,7 @@ ccstructs_error_handler_function (cce_condition_t const * C CCSTRUCTS_UNUSED, cc
   CCSTRUCTS_PC(ccstructs_error_handler_t, S_H, H);
 
   ccstructs_dtors_delete(S_H->dtors);
-  if (0) { fprintf(stderr, "%s: done releasing '%p'\n", __func__, (void *)(H->pointer)); }
+  if (0) { fprintf(stderr, "%s: done releasing '%p'\n", __func__, (void *)(ccstructs_dtors_self(S_H->dtors))); }
 }
 
 void

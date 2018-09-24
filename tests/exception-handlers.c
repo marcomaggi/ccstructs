@@ -1,6 +1,6 @@
 /*
   Part of: CCStructs
-  Contents: tests for the destructors interface
+  Contents: tests for the exception handlers
   Date: Sep 24, 2018
 
   Abstract
@@ -35,7 +35,7 @@
 
 
 /** --------------------------------------------------------------------
- ** Destructors interface: empty delete method.
+ ** Exception handlers: empty delete method.
  ** ----------------------------------------------------------------- */
 
 typedef struct one_t	one_t;
@@ -77,7 +77,8 @@ void
 test_1_1 (cce_destination_t upper_L)
 /* Call the delete method. */
 {
-  cce_location_t	L[1];
+  cce_location_t		L[1];
+  ccstructs_clean_handler_t	I_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
@@ -85,37 +86,16 @@ test_1_1 (cce_destination_t upper_L)
     one_t	S = {
       .pointer	= ccmem_malloc(L, ccmem_standard_allocator, 256)
     };
-    ccstructs_dtors_I	I = one_new_iface_dtors(&S);
+    ccstructs_handler_init(L, I_H, one_new_iface_dtors(&S));
 
     memset(S.pointer, 123, 256);
-    ccstructs_dtors_delete(I);
-    cce_run_body_handlers(L);
-  }
-}
-
-void
-test_1_2 (cce_destination_t upper_L)
-/* Call the final method. */
-{
-  cce_location_t	L[1];
-
-  if (cce_location(L)) {
-    cce_run_catch_handlers_raise(L, upper_L);
-  } else {
-    one_t	S = {
-      .pointer	= ccmem_malloc(L, ccmem_standard_allocator, 256)
-    };
-    ccstructs_dtors_I	I = one_new_iface_dtors(&S);
-
-    memset(S.pointer, 123, 256);
-    ccstructs_dtors_final(I);
     cce_run_body_handlers(L);
   }
 }
 
 
 /** --------------------------------------------------------------------
- ** Destructors interface: non-empty delete method.
+ ** Exception handlers: non-empty delete method.
  ** ----------------------------------------------------------------- */
 
 typedef struct two_t	two_t;
@@ -124,12 +104,33 @@ struct two_t {
   void *	pointer;
 };
 
+two_t *
+two_new (cce_destination_t upper_L, int init)
+{
+  cce_location_t	L[1];
+  cce_error_handler_t	S_H[1];
+  two_t *		S;
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    S		= cce_sys_malloc_guarded(L, S_H, sizeof(two_t));
+    S->pointer	= cce_sys_malloc(L, 256);
+    memset(S->pointer, init, 256);
+    cce_run_body_handlers(L);
+  }
+  return S;
+}
+
+/* ------------------------------------------------------------------ */
+/* Destructors interface implementation. */
+
 static void
 two_dtors_method_delete (ccstructs_dtors_I I)
 {
   CCSTRUCTS_PC(two_t, S, ccstructs_dtors_self(I));
 
-  ccmem_free(ccmem_standard_allocator, S);
+  free(S);
   fprintf(stderr, "%s: delete method for %p\n", __func__, (void *)S);
 }
 
@@ -138,7 +139,7 @@ two_dtors_method_final (ccstructs_dtors_I I)
 {
   CCSTRUCTS_PC(two_t, S, ccstructs_dtors_self(I));
 
-  ccmem_free(ccmem_standard_allocator, S->pointer);
+  free(S->pointer);
   fprintf(stderr, "%s: final method for %p\n", __func__, (void *)S);
 }
 
@@ -154,46 +155,59 @@ two_new_iface_dtors (two_t * S)
   return ccstructs_new_dtors((ccstructs_core_t *)S, &two_dtors_iface_methods);
 }
 
+/* ------------------------------------------------------------------ */
+
+two_t *
+two_new_guarded_clean (cce_destination_t L, ccstructs_clean_handler_t * I_H, int init)
+{
+  two_t * S = two_new(L, init);
+  ccstructs_handler_init(L, I_H, two_new_iface_dtors(S));
+  return S;
+}
+
+two_t *
+two_new_guarded_error (cce_destination_t L, ccstructs_error_handler_t * I_H, int init)
+{
+  two_t * S = two_new(L, init);
+  ccstructs_handler_init(L, I_H, two_new_iface_dtors(S));
+  return S;
+}
+
+#define two_new_guarded(L,I_H,S)		\
+  _Generic((I_H),						  \
+	   ccstructs_clean_handler_t	*: two_new_guarded_clean, \
+	   ccstructs_error_handler_t	*: two_new_guarded_error)(L,I_H,S)
+
+/* ------------------------------------------------------------------ */
+
 void
 test_2_1 (cce_destination_t upper_L)
-/* Call the delete method. */
 {
-  cce_location_t	L[1];
+  cce_location_t		L[1];
+  ccstructs_clean_handler_t	I_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    two_t * S = ccmem_malloc(L, ccmem_standard_allocator, sizeof(two_t));
+    two_t * S = two_new(L, 123);
+    ccstructs_handler_init(L, I_H, two_new_iface_dtors(S));
 
-    S->pointer = ccmem_malloc(L, ccmem_standard_allocator, 256);
-    memset(S->pointer, 123, 256);
-
-    {
-      ccstructs_dtors_I	I = two_new_iface_dtors(S);
-      ccstructs_dtors_delete(I);
-    }
     cce_run_body_handlers(L);
   }
 }
 
 void
 test_2_2 (cce_destination_t upper_L)
-/* Call the final method. */
 {
-  cce_location_t	L[1];
+  cce_location_t		L[1];
+  ccstructs_clean_handler_t	I_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    two_t * S = ccmem_malloc(L, ccmem_standard_allocator, sizeof(two_t));
+    two_t * S = two_new_guarded(L, I_H, 123);
 
-    S->pointer = ccmem_malloc(L, ccmem_standard_allocator, 256);
-    memset(S->pointer, 123, 256);
-
-    {
-      ccstructs_dtors_I	I = two_new_iface_dtors(S);
-      ccstructs_dtors_final(I);
-    }
+    fprintf(stderr, "%s: %p\n", __func__, (void *)S);
     cce_run_body_handlers(L);
   }
 }
@@ -202,12 +216,11 @@ test_2_2 (cce_destination_t upper_L)
 int
 main (void)
 {
-  cctests_init("tests destructors interface");
+  cctests_init("tests exception handlers");
   {
     cctests_begin_group("empty delete method");
     {
       cctests_run(test_1_1);
-      cctests_run(test_1_2);
     }
     cctests_end_group();
 

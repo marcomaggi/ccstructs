@@ -49,6 +49,7 @@ libccstructs_la_SOURCES		= \
 check_PROGRAMS	= \
 	tests/version			\
 	tests/destructors-interface	\
+	tests/exception-handlers	\
 	tests/writable-interface
 
 if MMUX_TESTING_ENABLED
@@ -65,6 +66,9 @@ tests_version_LDADD			= $(ccstructs_tests_ldadd)
 
 tests_destructors_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
 tests_destructors_interface_LDADD	= $(ccstructs_tests_ldadd)
+
+tests_exception_handlers_CPPFLAGS	= $(ccstructs_tests_cppflags)
+tests_exception_handlers_LDADD		= $(ccstructs_tests_ldadd)
 
 tests_writable_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
 tests_writable_interface_LDADD		= $(ccstructs_tests_ldadd)
