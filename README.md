@@ -12,7 +12,7 @@ interfaces to handle C structs.
 
 The  library  targets  POSIX  systems.   This  package  depends  on  the
 packages:  CCExceptions,  at least  version  0.8.0;  CCMemory, at  least
-version 0.2.0.   To run the  test suite:  this package depends  upon the
+version 0.2.1.   To run the  test suite:  this package depends  upon the
 package CCTests, at least version 0.3.0.
 
 The package uses the GNU Autotools and it is tested, using Travis CI, on
