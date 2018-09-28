@@ -1,7 +1,6 @@
 # ccstructs
 
 [![Build Status](https://travis-ci.org/marcomaggi/ccstructs.svg?branch=master)](https://travis-ci.org/marcomaggi/ccstructs)
-[![Coverity passed](https://scan.coverity.com/projects/12801/badge.svg)](https://scan.coverity.com/projects/marcomaggi-ccstructs)
 [![codecov](https://codecov.io/gh/marcomaggi/ccstructs/branch/master/graph/badge.svg)](https://codecov.io/gh/marcomaggi/ccstructs)
 
 
