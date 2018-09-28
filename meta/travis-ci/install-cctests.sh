@@ -1,13 +1,13 @@
 #!/bin/bash
 #
-# Installation script to run from the Travis CI config file before
+# Installation  script to  run from  the  Travis CI  config file  before
 # attempting a build.
 #
-# Install CCTests under the directory "/tmp/mine".
-# We assume the script is run from the top directory of the build tree.
+# Install CCTests under the directory "/tmp/mine".  We assume the script
+# is run from the top directory of the build tree.
 
 PROGNAME=install-cctests.sh
-VERSION=0.2.0-devel.0
+VERSION=0.3.0-devel.2
 STEM="cctests-${VERSION}"
 ARCHIVE="${STEM}.tar.gz"
 SOURCE_URI="https://github.com/marcomaggi/cctests/archive/v${VERSION}.tar.gz"
