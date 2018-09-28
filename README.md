@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/marcomaggi/ccstructs.svg?branch=master)](https://travis-ci.org/marcomaggi/ccstructs)
 [![codecov](https://codecov.io/gh/marcomaggi/ccstructs/branch/master/graph/badge.svg)](https://codecov.io/gh/marcomaggi/ccstructs)
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4df43e2b64ce4235bda1211282500241)](https://www.codacy.com/app/marcomaggi/ccstructs?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=marcomaggi/ccstructs&amp;utm_campaign=Badge_Grade)
 
 ## Introduction
 
