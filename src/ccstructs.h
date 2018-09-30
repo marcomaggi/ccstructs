@@ -214,8 +214,8 @@ typedef struct ccstructs_writable_I		ccstructs_writable_I;
 typedef struct ccstructs_writable_I_methods_t	ccstructs_writable_I_methods_t;
 
 struct ccstructs_writable_I {
-  ccstructs_writable_I_methods_t const	* methods;
-  ccstructs_core_t const		* self;
+  ccstructs_writable_I_methods_t	const * methods;
+  ccstructs_core_t			const * self;
 };
 
 /* Serialise the struct  to the stream.  Raise an exception  if an error
@@ -258,31 +258,64 @@ ccstructs_writable_fwrite (cce_destination_t L, FILE * stream, ccstructs_writabl
  ** Interface: serialisable.
  ** ----------------------------------------------------------------- */
 
-#if 0
+typedef struct ccstructs_serialisable_I			ccstructs_serialisable_I;
+typedef struct ccstructs_serialisable_I_methods_t	ccstructs_serialisable_I_methods_t;
 
-typedef struct ccstructs_serialisable_t		ccstructs_serialisable_t;
-typedef struct ccstructs_serialisable_methods_t	ccstructs_serialisable_methods_t;
-
-typedef void ccstructs_serialise_to_buffer_fun_t (cce_destination_t L, ccstructs_serialisable_t const * S, uint8_t * buf, size_t len);
-typedef void ccstructs_serialise_to_ascii_fun_t  (cce_destination_t L, ccstructs_serialisable_t const * S, uint8_t * buf, size_t len);
-typedef void ccstructs_serialise_to_asciiz_fun_t (cce_destination_t L, ccstructs_serialisable_t const * S, uint8_t * buf, size_t len);
-
-struct ccstructs_serialisable_methods_t {
-  ccstructs_serialise_to_buffer_fun_t *		serialise_to_buffer;
-  ccstructs_serialise_to_ascii_fun_t *		serialise_to_ascii;
-  ccstructs_serialise_to_asciiz_fun_t *		serialise_to_asciiz;
+struct ccstructs_serialisable_I {
+  ccstructs_serialisable_I_methods_t	const *	methods;
+  ccstructs_core_t			const * self;
 };
 
-struct ccstructs_serialisable_t {
-  ccstructs_serialisable_methods_t *	methods;
-  void *				stru;
+typedef size_t ccstructs_serialisable_iface_minimum_size_fun_t (ccstructs_serialisable_I const I);
+typedef ccmem_block_t ccstructs_serialisable_iface_to_block_fun_t (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B);
+typedef ccmem_block_t ccstructs_serialisable_iface_from_block_fun_t (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B);
+
+struct ccstructs_serialisable_I_methods_t {
+  ccstructs_serialisable_iface_minimum_size_fun_t *	minimum_size;
+  ccstructs_serialisable_iface_to_block_fun_t *		to_block;
+  ccstructs_serialisable_iface_from_block_fun_t *	from_block;
 };
 
-ccstructs_decl void ccstructs_serialise_to_buffer (cce_destination_t L, ccstructs_serialisable_t const * const S,
-						   uint8_t * buf, size_t len)
-  __attribute__((__nonnull__(1,2,3)));
+/* ------------------------------------------------------------------ */
 
-#endif
+__attribute__((__always_inline__,__nonnull__(1,2)))
+static inline ccstructs_serialisable_I
+ccstructs_new_serialisable (ccstructs_core_t * S, ccstructs_serialisable_I_methods_t const * const M)
+{
+  ccstructs_serialisable_I	I = {
+    .methods	= M,
+    .self	= S
+  };
+  return I;
+}
+
+__attribute__((__always_inline__,__pure__))
+static inline ccstructs_core_t const *
+ccstructs_serialisable_self (ccstructs_serialisable_I const I)
+{
+  return I.self;
+}
+
+__attribute__((__always_inline__))
+static inline size_t
+ccstructs_serialisable_minimum_size (ccstructs_serialisable_I const I)
+{
+  return I.methods->minimum_size(I);
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccmem_block_t
+ccstructs_serialisable_to_block (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B)
+{
+  return I.methods->to_block(L, I, B);
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccmem_block_t
+ccstructs_serialisable_from_block (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B)
+{
+  return I.methods->from_block(L, I, B);
+}
 
 
 /** --------------------------------------------------------------------

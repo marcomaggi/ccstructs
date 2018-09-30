@@ -50,7 +50,8 @@ check_PROGRAMS	= \
 	tests/version			\
 	tests/destructors-interface	\
 	tests/exception-handlers	\
-	tests/writable-interface
+	tests/writable-interface	\
+	tests/serialisable-interface
 
 if MMUX_TESTING_ENABLED
 TESTS				= $(check_PROGRAMS)
@@ -72,6 +73,9 @@ tests_exception_handlers_LDADD		= $(ccstructs_tests_ldadd)
 
 tests_writable_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
 tests_writable_interface_LDADD		= $(ccstructs_tests_ldadd)
+
+tests_serialisable_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
+tests_serialisable_interface_LDADD	= $(ccstructs_tests_ldadd)
 
 ## --------------------------------------------------------------------
 
