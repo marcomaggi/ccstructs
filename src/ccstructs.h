@@ -267,7 +267,7 @@ struct ccstructs_serialisable_I {
 };
 
 typedef size_t ccstructs_serialisable_iface_minimum_size_fun_t (ccstructs_serialisable_I const I);
-typedef ccmem_block_t ccstructs_serialisable_iface_to_block_fun_t (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B);
+typedef ccmem_block_t ccstructs_serialisable_iface_to_block_fun_t   (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B);
 typedef ccmem_block_t ccstructs_serialisable_iface_from_block_fun_t (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B);
 
 struct ccstructs_serialisable_I_methods_t {
