@@ -277,10 +277,15 @@ interface:
 ccstructs_writable_I
 spiffy_new_iface_writable (spiffy_t * S)
 @{
-  return ccstructs_new_writable((ccstructs_core_t *)S,
+  return ccstructs_new_writable(ccstructs_core(S),
      &spiffy_writable_iface_methods);
 @}
 @end example
+
+
+@deftypefn {Preprocessor Macro} {ccstructs_core_t *} ccstructs_core (@var{S})
+Cast the pointer @var{S} to @code{ccstructs_core_t *}.
+@end deftypefn
 
 @c page
 @node dtors
@@ -398,7 +403,7 @@ static ccstructs_dtors_I_methods_t const one_dtors_iface_methods = @{
 ccstructs_dtors_I
 one_new_iface_dtors (one_t * S)
 @{
-  return ccstructs_new_dtors((ccstructs_core_t *)S, &one_dtors_iface_methods);
+  return ccstructs_new_dtors(ccstructs_core(S), &one_dtors_iface_methods);
 @}
 @end example
 
@@ -466,7 +471,7 @@ static ccstructs_dtors_I_methods_t const two_dtors_iface_methods = @{
 ccstructs_dtors_I
 two_new_iface_dtors (two_t * S)
 @{
-  return ccstructs_new_dtors((ccstructs_core_t *)S, &two_dtors_iface_methods);
+  return ccstructs_new_dtors(ccstructs_core(S), &two_dtors_iface_methods);
 @}
 @end example
 
@@ -595,7 +600,7 @@ __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_dtors_I
 two_new_iface_dtors (two_t * S)
 @{
-  return ccstructs_new_dtors((ccstructs_core_t *)S, &two_dtors_iface_methods);
+  return ccstructs_new_dtors(ccstructs_core(S), &two_dtors_iface_methods);
 @}
 @end example
 
@@ -729,7 +734,7 @@ ccstructs_writable_I_methods_t const spiffy_writable_iface_methods = @{
 ccstructs_writable_I
 spiffy_new_iface_writable (spiffy_t * S)
 @{
-  return ccstructs_new_writable((ccstructs_core_t *)S,
+  return ccstructs_new_writable(ccstructs_core(S),
             &spiffy_writable_iface_methods);
 @}
 @end smallexample
@@ -920,7 +925,7 @@ __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_serialisable_I
 spiffy_new_iface_serialisable (spiffy_t * S)
 @{
-  return ccstructs_new_serialisable((ccstructs_core_t *)S,
+  return ccstructs_new_serialisable(ccstructs_core(S),
      &spiffy_serialisable_iface_methods);
 @}
 @end smallexample

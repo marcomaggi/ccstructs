@@ -115,6 +115,8 @@ typedef struct ccstructs_core_t		ccstructs_core_t;
 
 struct ccstructs_core_t;
 
+#define ccstructs_core(S)	((ccstructs_core_t *)(S))
+
 
 /** --------------------------------------------------------------------
  ** Generic struct handling: destructors interface.

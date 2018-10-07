@@ -3,6 +3,12 @@
 			News file for CCStructs
 			=======================
 
+Revision 0.1.0-devel.2
+----------------------
+
+* Added macro "ccstructs_core()".
+
+
 Revision 0.1.0-devel.1
 ----------------------
 

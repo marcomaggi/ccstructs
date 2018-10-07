@@ -70,7 +70,7 @@ __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_dtors_I
 one_new_iface_dtors (one_t * S)
 {
-  return ccstructs_new_dtors((ccstructs_core_t *)S, &one_dtors_iface_methods);
+  return ccstructs_new_dtors(ccstructs_core(S), &one_dtors_iface_methods);
 }
 
 void
@@ -152,7 +152,7 @@ __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_dtors_I
 two_new_iface_dtors (two_t * S)
 {
-  return ccstructs_new_dtors((ccstructs_core_t *)S, &two_dtors_iface_methods);
+  return ccstructs_new_dtors(ccstructs_core(S), &two_dtors_iface_methods);
 }
 
 /* ------------------------------------------------------------------ */

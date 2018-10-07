@@ -98,7 +98,7 @@ __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_serialisable_I
 one_one_new_iface_serialisable (one_one_t * S)
 {
-  return ccstructs_new_serialisable((ccstructs_core_t *)S, &one_one_serialisable_iface_methods);
+  return ccstructs_new_serialisable(ccstructs_core(S), &one_one_serialisable_iface_methods);
 }
 
 void
