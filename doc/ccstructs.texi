@@ -648,10 +648,9 @@ two_new_guarded_error (cce_destination_t L,
 @chapter The @emph{writable} interface
 
 
-The @emph{writable} interface, represented by the type @objtype{ccstructs_writable_I}, allows us to
-write an object to a standard stream of type @objtype{FILE}; it is meant to be used mostly for
-inspection and debugging purposes, neither for presentation to the end user of a program, nor for
-memorisation on a storage device.
+The @emph{writable} interface, represented by the type @objtype{ccstructs_writable_I}, is meant to
+write an object to some output channel, mostly for inspection and debugging purposes; this interface
+is neither for presentation to the end user of a program, nor for memorisation on a storage device.
 
 
 @deftp {Struct Typedef} ccstructs_writable_I
@@ -664,17 +663,17 @@ function calls.
 Type of methods table for the @emph{writable} interface.  It has the following fields:
 
 @table @code
-@item ccstructs_writable_iface_fwrite_fun_t * fwrite
-Pointer to function implementing the @method{fwrite} method.  This method writes a representation of
-the object to a standard stream.  If an error occurs: raise an exception by performing a non--local
-exit to @var{L}.
+@item ccstructs_writable_iface_write_fun_t * write
+Pointer to function implementing the @method{write} method.
 @end table
 @end deftp
 
 
-@deftypefn {Function Prototype} void ccstructs_writable_iface_fwrite_fun_t (cce_destination_t @var{L}, FILE * @var{stream}, ccstructs_writable_I @var{I})
-Type of functions implementing the @method{fwrite} method.  Write a representation of the object to
-the given stream.
+@deftypefn {Function Prototype} void ccstructs_writable_iface_write_fun_t (cce_destination_t @var{L}, ccstructs_writable_I @var{I})
+Type of functions implementing the @method{write} method.  Functions of this type write a
+representation of the object to an output channel; it is responsibility of this method to select
+which output channel to use.  If an error occurs: raise an exception by performing a non--local exit
+to @var{L}.
 @end deftypefn
 
 
@@ -689,9 +688,9 @@ Return a pointer to the @struct{} to which the interface belongs.
 @end deftypefun
 
 
-@deftypefun void ccstructs_writable_fwrite (cce_destination_t @var{L}, FILE * @var{stream}, ccstructs_writable_I @var{I})
-Apply the method @method{fwrite} to the @struct{} and the given @var{stream}.  If an error occurs:
-raise an exception by performing a non--local exit to @var{L}.
+@deftypefun void ccstructs_writable_write (cce_destination_t @var{L}, ccstructs_writable_I @var{I})
+Apply the method @method{write} to the @struct{}.  If an error occurs: raise an exception by
+performing a non--local exit to @var{L}.
 @end deftypefun
 
 
@@ -711,20 +710,20 @@ we can implement a @emph{writable} interface as follows:
 
 @smallexample
 void
-spiffy_fwrite_method (cce_destination_t L, FILE * stream, ccstructs_writable_I I)
+spiffy_write_method (cce_destination_t L, ccstructs_writable_I I)
 @{
   CCSTRUCTS_PC(spiffy_t, S, I.self);
   int   rv;
 
   errno = 0;
-  rv = fprintf(stream, "spiffy_t: alpha=%d, beta=%d", S->alpha, S->beta);
+  rv = fprintf(stderr, "spiffy_t: alpha=%d, beta=%d\n", S->alpha, S->beta);
   if (0 > rv) @{
     cce_raise(L, cce_condition_new_errno_clear());
   @}
 @}
 
 ccstructs_writable_I_methods_t const spiffy_writable_iface_methods = @{
-  .fwrite = spiffy_fwrite_method
+  .write = spiffy_write_method
 @};
 
 ccstructs_writable_I
@@ -750,8 +749,7 @@ if (cce_location(L)) @{
   @};
   ccstructs_writable_I  I = spiffy_new_iface_writable(&S);
 
-  ccstructs_writable_fwrite(L, stderr, I);
-  fprintf(stderr, "\n");
+  ccstructs_writable_write(L, I);
   cce_run_body_handlers(L);
 @}
 @end example

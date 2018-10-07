@@ -3,6 +3,13 @@
 			News file for CCStructs
 			=======================
 
+Revision 0.1.0-devel.1
+----------------------
+
+* BACKWARDS INCOMPATIBILITY Rewritten the "writable" interface to not be
+  tied to standard streams for output.
+
+
 Revision 0.1.0-devel.0
 ----------------------
 

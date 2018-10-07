@@ -87,7 +87,6 @@ extern "C" {
 
 #include <ccexceptions.h>
 #include <ccmemory.h>
-#include <stdio.h>
 
 
 /** --------------------------------------------------------------------
@@ -218,12 +217,12 @@ struct ccstructs_writable_I {
   ccstructs_core_t			const * self;
 };
 
-/* Serialise the struct  to the stream.  Raise an exception  if an error
-   occurs. */
-typedef void ccstructs_writable_iface_fwrite_fun_t (cce_destination_t, FILE *, ccstructs_writable_I const);
+/* Write the  struct to some output  channel.  Raise an exception  if an
+   error occurs. */
+typedef void ccstructs_writable_iface_write_fun_t (cce_destination_t, ccstructs_writable_I const);
 
 struct ccstructs_writable_I_methods_t {
-  ccstructs_writable_iface_fwrite_fun_t		* fwrite;
+  ccstructs_writable_iface_write_fun_t		* write;
 };
 
 /* ------------------------------------------------------------------ */
@@ -246,11 +245,11 @@ ccstructs_writable_self (ccstructs_writable_I I)
   return I.self;
 }
 
-__attribute__((__nonnull__(1,2),__always_inline__))
+__attribute__((__nonnull__(1),__always_inline__))
 static inline void
-ccstructs_writable_fwrite (cce_destination_t L, FILE * stream, ccstructs_writable_I const I)
+ccstructs_writable_write (cce_destination_t L, ccstructs_writable_I const I)
 {
-  I.methods->fwrite(L, stream, I);
+  I.methods->write(L, I);
 }
 
 

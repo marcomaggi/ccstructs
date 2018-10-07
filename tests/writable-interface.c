@@ -48,20 +48,20 @@ struct one_one_t {
 };
 
 static void
-one_one_fwrite_method (cce_destination_t L, FILE * stream, ccstructs_writable_I I)
+one_one_write_method (cce_destination_t L, ccstructs_writable_I I)
 {
   CCSTRUCTS_PC(one_one_t const, S, ccstructs_writable_self(I));
   int	rv;
 
   errno = 0;
-  rv = fprintf(stream, "serialisation of one_one_t: alpha=%d, beta=%d", S->alpha, S->beta);
+  rv = fprintf(stderr, "serialisation of one_one_t: alpha=%d, beta=%d\n", S->alpha, S->beta);
   if (0 > rv) {
     cce_raise(L, cce_condition_new_errno_clear());
   }
 }
 
 static ccstructs_writable_I_methods_t const one_one_writable_iface_methods = {
-  .fwrite = one_one_fwrite_method
+  .write = one_one_write_method
 };
 
 __attribute__((__always_inline__,__nonnull__(1)))
@@ -85,8 +85,7 @@ test_1_1 (cce_destination_t upper_L)
     };
     ccstructs_writable_I	I = one_one_new_iface_writable(&S);
 
-    ccstructs_writable_fwrite(L, stderr, I);
-    fprintf(stderr, "\n");
+    ccstructs_writable_write(L, I);
 
     cce_run_body_handlers(L);
   }
