@@ -318,6 +318,70 @@ ccstructs_serialisable_from_block (cce_destination_t L, ccstructs_serialisable_I
 
 
 /** --------------------------------------------------------------------
+ ** Interface: pathname.
+ ** ----------------------------------------------------------------- */
+
+typedef struct ccstructs_pathname_I		ccstructs_pathname_I;
+typedef struct ccstructs_pathname_I_methods_t	ccstructs_pathname_I_methods_t;
+
+struct ccstructs_pathname_I {
+  ccstructs_pathname_I_methods_t	const *	methods;
+  ccstructs_core_t			const * self;
+};
+
+typedef bool		ccstructs_pathname_iface_length_fun_t (ccstructs_pathname_I const I);
+typedef size_t		ccstructs_pathname_iface_is_persistent_fun_t (ccstructs_pathname_I const I);
+typedef char const *	ccstructs_pathname_iface_asciiz_fun_t (ccstructs_pathname_I const I);
+
+struct ccstructs_pathname_I_methods_t {
+  ccstructs_pathname_iface_length_fun_t		* length;
+  ccstructs_pathname_iface_asciiz_fun_t		* asciiz;
+  ccstructs_pathname_iface_is_persistent_fun_t	* is_persistent;
+};
+
+/* ------------------------------------------------------------------ */
+
+__attribute__((__always_inline__,__nonnull__(1,2)))
+static inline ccstructs_pathname_I
+ccstructs_new_pathname (ccstructs_core_t * S, ccstructs_pathname_I_methods_t const * const M)
+{
+  ccstructs_pathname_I	I = {
+    .methods	= M,
+    .self	= S
+  };
+  return I;
+}
+
+__attribute__((__always_inline__,__pure__))
+static inline ccstructs_core_t const *
+ccstructs_pathname_self (ccstructs_pathname_I const I)
+{
+  return I.self;
+}
+
+__attribute__((__always_inline__))
+static inline size_t
+ccstructs_pathname_length (ccstructs_pathname_I const I)
+{
+  return I.methods->length(I);
+}
+
+__attribute__((__always_inline__))
+static inline char const *
+ccstructs_pathname_asciiz (ccstructs_pathname_I const I)
+{
+  return I.methods->asciiz(I);
+}
+
+__attribute__((__always_inline__,__pure__))
+static inline bool
+ccstructs_pathname_is_persistent (ccstructs_pathname_I const I)
+{
+  return I.methods->is_persistent(I);
+}
+
+
+/** --------------------------------------------------------------------
  ** Done.
  ** ----------------------------------------------------------------- */
 
