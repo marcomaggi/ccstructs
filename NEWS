@@ -8,6 +8,10 @@ Revision 0.1.0-devel.2
 
 * Added macro "ccstructs_core()".
 
+* Added "pathname" interface.
+
+* BACKWARDS INCOMPATIBILITY Renamed some types from "_iface_" to "_I_".
+
 
 Revision 0.1.0-devel.1
 ----------------------

@@ -53,13 +53,13 @@ struct serialised_one_one_t {
 };
 
 static size_t
-one_one_serialisable_iface_minimum_size_method (ccstructs_serialisable_I I CCSTRUCTS_UNUSED)
+one_one_serialisable_I_minimum_size_method (ccstructs_serialisable_I I CCSTRUCTS_UNUSED)
 {
   return sizeof(serialised_one_one_t);
 }
 
 static ccmem_block_t
-one_one_serialisable_iface_to_block_method (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialisable_I I, ccmem_block_t B)
+one_one_serialisable_I_to_block_method (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialisable_I I, ccmem_block_t B)
 {
   CCSTRUCTS_PC(one_one_t const, S, ccstructs_serialisable_self(I));
   CCSTRUCTS_PC(serialised_one_one_t, W, B.ptr);
@@ -74,7 +74,7 @@ one_one_serialisable_iface_to_block_method (cce_destination_t L CCSTRUCTS_UNUSED
 }
 
 static ccmem_block_t
-one_one_serialisable_iface_from_block_method (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialisable_I I, ccmem_block_t B)
+one_one_serialisable_I_from_block_method (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialisable_I I, ccmem_block_t B)
 {
   CCSTRUCTS_PC(one_one_t, S, ccstructs_serialisable_self(I));
   CCSTRUCTS_PC(serialised_one_one_t const, W, B.ptr);
@@ -88,17 +88,17 @@ one_one_serialisable_iface_from_block_method (cce_destination_t L CCSTRUCTS_UNUS
   return N;
 }
 
-static ccstructs_serialisable_I_methods_t const one_one_serialisable_iface_methods = {
-  .minimum_size	= one_one_serialisable_iface_minimum_size_method,
-  .to_block	= one_one_serialisable_iface_to_block_method,
-  .from_block	= one_one_serialisable_iface_from_block_method
+static ccstructs_serialisable_I_methods_t const one_one_serialisable_I_methods = {
+  .minimum_size	= one_one_serialisable_I_minimum_size_method,
+  .to_block	= one_one_serialisable_I_to_block_method,
+  .from_block	= one_one_serialisable_I_from_block_method
 };
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_serialisable_I
-one_one_new_iface_serialisable (one_one_t * S)
+one_one_new_I_serialisable (one_one_t * S)
 {
-  return ccstructs_new_serialisable(ccstructs_core(S), &one_one_serialisable_iface_methods);
+  return ccstructs_new_serialisable(ccstructs_core(S), &one_one_serialisable_I_methods);
 }
 
 void
@@ -121,8 +121,8 @@ test_1_1 (cce_destination_t upper_L)
       .len	= 256
     };
     ccmem_block_t	N;
-    ccstructs_serialisable_I	IS = one_one_new_iface_serialisable(&S);
-    ccstructs_serialisable_I	IR = one_one_new_iface_serialisable(&R);
+    ccstructs_serialisable_I	IS = one_one_new_I_serialisable(&S);
+    ccstructs_serialisable_I	IR = one_one_new_I_serialisable(&R);
 
     N = ccstructs_serialisable_to_block(L, IS, B);
     cctests_assert_equal_size    (L, N.len, B.len - sizeof(serialised_one_one_t));

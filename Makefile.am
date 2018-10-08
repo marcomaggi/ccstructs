@@ -41,7 +41,8 @@ libccstructs_la_SOURCES		= \
 	src/ccstructs.h				\
 	src/ccstructs-internals.h		\
 	src/ccstructs-version.c			\
-	src/ccstructs-exception-handlers.c
+	src/ccstructs-exception-handlers.c	\
+	src/ccstructs-pathname.c
 
 
 #### tests

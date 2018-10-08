@@ -60,15 +60,15 @@ one_one_write_method (cce_destination_t L, ccstructs_writable_I I)
   }
 }
 
-static ccstructs_writable_I_methods_t const one_one_writable_iface_methods = {
+static ccstructs_writable_I_methods_t const one_one_writable_I_methods = {
   .write = one_one_write_method
 };
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_writable_I
-one_one_new_iface_writable (one_one_t * S)
+one_one_new_I_writable (one_one_t * S)
 {
-  return ccstructs_new_writable(ccstructs_core(S), &one_one_writable_iface_methods);
+  return ccstructs_new_writable(ccstructs_core(S), &one_one_writable_I_methods);
 }
 
 void
@@ -83,7 +83,7 @@ test_1_1 (cce_destination_t upper_L)
       .alpha	= 1,
       .beta	= 2
     };
-    ccstructs_writable_I	I = one_one_new_iface_writable(&S);
+    ccstructs_writable_I	I = one_one_new_I_writable(&S);
 
     ccstructs_writable_write(L, I);
 

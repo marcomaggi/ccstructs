@@ -61,16 +61,16 @@ one_dtors_method_final (ccstructs_dtors_I I)
   fprintf(stderr, "%s: final method for %p\n", __func__, (void *)S);
 }
 
-static ccstructs_dtors_I_methods_t const one_dtors_iface_methods = {
+static ccstructs_dtors_I_methods_t const one_dtors_I_methods = {
   .delete	= one_dtors_method_delete,
   .final	= one_dtors_method_final
 };
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_dtors_I
-one_new_iface_dtors (one_t * S)
+one_new_I_dtors (one_t * S)
 {
-  return ccstructs_new_dtors(ccstructs_core(S), &one_dtors_iface_methods);
+  return ccstructs_new_dtors(ccstructs_core(S), &one_dtors_I_methods);
 }
 
 void
@@ -85,7 +85,7 @@ test_1_1 (cce_destination_t upper_L)
     one_t	S = {
       .pointer	= ccmem_malloc(L, ccmem_standard_allocator, 256)
     };
-    ccstructs_dtors_I	I = one_new_iface_dtors(&S);
+    ccstructs_dtors_I	I = one_new_I_dtors(&S);
 
     memset(S.pointer, 123, 256);
     ccstructs_dtors_delete(I);
@@ -105,7 +105,7 @@ test_1_2 (cce_destination_t upper_L)
     one_t	S = {
       .pointer	= ccmem_malloc(L, ccmem_standard_allocator, 256)
     };
-    ccstructs_dtors_I	I = one_new_iface_dtors(&S);
+    ccstructs_dtors_I	I = one_new_I_dtors(&S);
 
     memset(S.pointer, 123, 256);
     ccstructs_dtors_final(I);
@@ -142,16 +142,16 @@ two_dtors_method_final (ccstructs_dtors_I I)
   fprintf(stderr, "%s: final method for %p\n", __func__, (void *)S);
 }
 
-static ccstructs_dtors_I_methods_t const two_dtors_iface_methods = {
+static ccstructs_dtors_I_methods_t const two_dtors_I_methods = {
   .delete	= two_dtors_method_delete,
   .final	= two_dtors_method_final
 };
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_dtors_I
-two_new_iface_dtors (two_t * S)
+two_new_I_dtors (two_t * S)
 {
-  return ccstructs_new_dtors(ccstructs_core(S), &two_dtors_iface_methods);
+  return ccstructs_new_dtors(ccstructs_core(S), &two_dtors_I_methods);
 }
 
 void
@@ -169,7 +169,7 @@ test_2_1 (cce_destination_t upper_L)
     memset(S->pointer, 123, 256);
 
     {
-      ccstructs_dtors_I	I = two_new_iface_dtors(S);
+      ccstructs_dtors_I	I = two_new_I_dtors(S);
       ccstructs_dtors_delete(I);
     }
     cce_run_body_handlers(L);
@@ -191,7 +191,7 @@ test_2_2 (cce_destination_t upper_L)
     memset(S->pointer, 123, 256);
 
     {
-      ccstructs_dtors_I	I = two_new_iface_dtors(S);
+      ccstructs_dtors_I	I = two_new_I_dtors(S);
       ccstructs_dtors_final(I);
     }
     cce_run_body_handlers(L);

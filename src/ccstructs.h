@@ -131,15 +131,15 @@ struct ccstructs_dtors_I {
 };
 
 /* Release the memory allocated for the struct, if needed. */
-typedef void ccstructs_dtors_iface_delete_fun_t (ccstructs_dtors_I I);
+typedef void ccstructs_dtors_I_delete_fun_t (ccstructs_dtors_I I);
 
 /* Release all  the asynchronous  resources owned by  the fields  of the
    struct, if any. */
-typedef void ccstructs_dtors_iface_final_fun_t (ccstructs_dtors_I I);
+typedef void ccstructs_dtors_I_final_fun_t (ccstructs_dtors_I I);
 
 struct ccstructs_dtors_I_methods_t {
-  ccstructs_dtors_iface_delete_fun_t	* delete;
-  ccstructs_dtors_iface_final_fun_t	* final;
+  ccstructs_dtors_I_delete_fun_t	* delete;
+  ccstructs_dtors_I_final_fun_t	* final;
 };
 
 /* ------------------------------------------------------------------ */
@@ -221,10 +221,10 @@ struct ccstructs_writable_I {
 
 /* Write the  struct to some output  channel.  Raise an exception  if an
    error occurs. */
-typedef void ccstructs_writable_iface_write_fun_t (cce_destination_t, ccstructs_writable_I const);
+typedef void ccstructs_writable_I_write_fun_t (cce_destination_t, ccstructs_writable_I const);
 
 struct ccstructs_writable_I_methods_t {
-  ccstructs_writable_iface_write_fun_t		* write;
+  ccstructs_writable_I_write_fun_t		* write;
 };
 
 /* ------------------------------------------------------------------ */
@@ -267,14 +267,14 @@ struct ccstructs_serialisable_I {
   ccstructs_core_t			const * self;
 };
 
-typedef size_t ccstructs_serialisable_iface_minimum_size_fun_t (ccstructs_serialisable_I const I);
-typedef ccmem_block_t ccstructs_serialisable_iface_to_block_fun_t   (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B);
-typedef ccmem_block_t ccstructs_serialisable_iface_from_block_fun_t (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B);
+typedef size_t ccstructs_serialisable_I_minimum_size_fun_t (ccstructs_serialisable_I const I);
+typedef ccmem_block_t ccstructs_serialisable_I_to_block_fun_t   (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B);
+typedef ccmem_block_t ccstructs_serialisable_I_from_block_fun_t (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B);
 
 struct ccstructs_serialisable_I_methods_t {
-  ccstructs_serialisable_iface_minimum_size_fun_t *	minimum_size;
-  ccstructs_serialisable_iface_to_block_fun_t *		to_block;
-  ccstructs_serialisable_iface_from_block_fun_t *	from_block;
+  ccstructs_serialisable_I_minimum_size_fun_t *	minimum_size;
+  ccstructs_serialisable_I_to_block_fun_t *	to_block;
+  ccstructs_serialisable_I_from_block_fun_t *	from_block;
 };
 
 /* ------------------------------------------------------------------ */
@@ -331,14 +331,14 @@ struct ccstructs_pathname_I {
   ccstructs_core_t			const * self;
 };
 
-typedef bool		ccstructs_pathname_iface_length_fun_t (ccstructs_pathname_I const I);
-typedef size_t		ccstructs_pathname_iface_is_persistent_fun_t (ccstructs_pathname_I const I);
-typedef char const *	ccstructs_pathname_iface_asciiz_fun_t (ccstructs_pathname_I const I);
+typedef size_t		ccstructs_pathname_I_length_fun_t		(ccstructs_pathname_I const I);
+typedef char const *	ccstructs_pathname_I_pointer_fun_t		(ccstructs_pathname_I const I);
+typedef bool		ccstructs_pathname_I_is_persistent_fun_t	(ccstructs_pathname_I const I);
 
 struct ccstructs_pathname_I_methods_t {
-  ccstructs_pathname_iface_length_fun_t		* length;
-  ccstructs_pathname_iface_asciiz_fun_t		* asciiz;
-  ccstructs_pathname_iface_is_persistent_fun_t	* is_persistent;
+  ccstructs_pathname_I_length_fun_t		* length;
+  ccstructs_pathname_I_pointer_fun_t		* pointer;
+  ccstructs_pathname_I_is_persistent_fun_t	* is_persistent;
 };
 
 /* ------------------------------------------------------------------ */
@@ -370,9 +370,9 @@ ccstructs_pathname_length (ccstructs_pathname_I const I)
 
 __attribute__((__always_inline__))
 static inline char const *
-ccstructs_pathname_asciiz (ccstructs_pathname_I const I)
+ccstructs_pathname_pointer (ccstructs_pathname_I const I)
 {
-  return I.methods->asciiz(I);
+  return I.methods->pointer(I);
 }
 
 __attribute__((__always_inline__,__pure__))
@@ -381,6 +381,14 @@ ccstructs_pathname_is_persistent (ccstructs_pathname_I const I)
 {
   return I.methods->is_persistent(I);
 }
+
+/* ------------------------------------------------------------------ */
+/* simple implementation for statically allocated strings */
+
+ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_static_string (const char * ptn)
+  __attribute__((__nonnull__(1)));
+
+ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_asciiz (ccmem_ascii_t ptn);
 
 
 /** --------------------------------------------------------------------
