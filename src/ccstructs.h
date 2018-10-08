@@ -331,14 +331,14 @@ struct ccstructs_pathname_I {
   ccstructs_core_t			const * self;
 };
 
-typedef size_t		ccstructs_pathname_I_length_fun_t		(ccstructs_pathname_I const I);
-typedef char const *	ccstructs_pathname_I_pointer_fun_t		(ccstructs_pathname_I const I);
-typedef bool		ccstructs_pathname_I_is_persistent_fun_t	(ccstructs_pathname_I const I);
+typedef size_t		ccstructs_pathname_I_length_fun_t	(ccstructs_pathname_I const I);
+typedef char const *	ccstructs_pathname_I_pointer_fun_t	(ccstructs_pathname_I const I);
+typedef bool		ccstructs_pathname_I_is_static_fun_t	(ccstructs_pathname_I const I);
 
 struct ccstructs_pathname_I_methods_t {
   ccstructs_pathname_I_length_fun_t		* length;
   ccstructs_pathname_I_pointer_fun_t		* pointer;
-  ccstructs_pathname_I_is_persistent_fun_t	* is_persistent;
+  ccstructs_pathname_I_is_static_fun_t	* is_static;
 };
 
 /* ------------------------------------------------------------------ */
@@ -377,9 +377,9 @@ ccstructs_pathname_pointer (ccstructs_pathname_I const I)
 
 __attribute__((__always_inline__,__pure__))
 static inline bool
-ccstructs_pathname_is_persistent (ccstructs_pathname_I const I)
+ccstructs_pathname_is_static (ccstructs_pathname_I const I)
 {
-  return I.methods->is_persistent(I);
+  return I.methods->is_static(I);
 }
 
 /* ------------------------------------------------------------------ */
@@ -388,7 +388,12 @@ ccstructs_pathname_is_persistent (ccstructs_pathname_I const I)
 ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_static_string (const char * ptn)
   __attribute__((__nonnull__(1)));
 
-ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_asciiz (ccmem_ascii_t ptn);
+ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_dynamic_string (const char * ptn)
+  __attribute__((__nonnull__(1)));
+
+ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_static_asciiz (ccmem_ascii_t ptn);
+
+ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_dynamic_asciiz (ccmem_ascii_t ptn);
 
 
 /** --------------------------------------------------------------------

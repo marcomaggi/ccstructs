@@ -1002,8 +1002,8 @@ Pointer to function implementing the @method{length} method.
 @item ccstructs_pathname_I_pointer_fun_t * pointer
 Pointer to function implementing the @method{pointer} method.
 
-@item ccstructs_pathname_I_is_persistent_fun_t * is_persistent
-Pointer to function implementing the @method{is_persistent} method.
+@item ccstructs_pathname_I_is_static_fun_t * is_static
+Pointer to function implementing the @method{is_static} method.
 @end table
 @end deftp
 
@@ -1016,15 +1016,15 @@ the pathname representation as @asciiz{} string, @strong{not} including the term
 
 @deftypefn {Function Prototype} {char const *} ccstructs_pathname_I_pointer_fun_t (ccstructs_pathname_I @var{I})
 Type of functions implementing the @method{pointer} method.  Return a pointer to an @asciiz{}
-representation of the pathname.  For ownership handling: see the @method{is_persistent} method.
+representation of the pathname.  For ownership handling: see the @method{is_static} method.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} bool ccstructs_pathname_I_is_persistent_fun_t (ccstructs_pathname_I @var{I})
-Type of functions implementing the @method{is_persistent} method.  In general, the user of @var{I}
+@deftypefn {Function Prototype} bool ccstructs_pathname_I_is_static_fun_t (ccstructs_pathname_I @var{I})
+Type of functions implementing the @method{is_static} method.  In general, the user of @var{I}
 should make a copy of the pathname representation if it needs to keep it independently from the
 extent (the lifetime) of @var{I}; but if this function returns @ctrue{}: it can rely on the
-existence of the representation for the time it needs.
+existence of the representation for the time it needs it.
 @end deftypefn
 
 @c page
@@ -1053,8 +1053,8 @@ Apply the method @method{pointer} to the given argument.
 @end deftypefun
 
 
-@deftypefun bool ccstructs_pathname_is_persistent (ccstructs_pathname_I const @var{I})
-Apply the method @method{is_persistent} to the given argument.
+@deftypefun bool ccstructs_pathname_is_static (ccstructs_pathname_I const @var{I})
+Apply the method @method{is_static} to the given argument.
 @end deftypefun
 
 @c page
