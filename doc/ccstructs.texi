@@ -999,7 +999,7 @@ Type of methods table for the @emph{pathname} interface.  It has the following f
 @item ccstructs_pathname_I_length_fun_t * length
 Pointer to function implementing the @method{length} method.
 
-@item ccstructs_pathname_I_pointer_fun_t * @var{pointer}
+@item ccstructs_pathname_I_pointer_fun_t * pointer
 Pointer to function implementing the @method{pointer} method.
 
 @item ccstructs_pathname_I_is_persistent_fun_t * is_persistent
