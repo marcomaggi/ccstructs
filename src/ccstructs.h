@@ -331,13 +331,13 @@ struct ccstructs_pathname_I {
   ccstructs_core_t			const * self;
 };
 
-typedef size_t		ccstructs_pathname_I_length_fun_t	(ccstructs_pathname_I const I);
-typedef char const *	ccstructs_pathname_I_pointer_fun_t	(ccstructs_pathname_I const I);
+typedef size_t		ccstructs_pathname_I_length_fun_t	(cce_destination_t L, ccstructs_pathname_I const I);
+typedef char const *	ccstructs_pathname_I_pointer_fun_t	(cce_destination_t L, ccstructs_pathname_I const I);
 typedef bool		ccstructs_pathname_I_is_static_fun_t	(ccstructs_pathname_I const I);
 
 struct ccstructs_pathname_I_methods_t {
-  ccstructs_pathname_I_length_fun_t		* length;
-  ccstructs_pathname_I_pointer_fun_t		* pointer;
+  ccstructs_pathname_I_length_fun_t	* length;
+  ccstructs_pathname_I_pointer_fun_t	* pointer;
   ccstructs_pathname_I_is_static_fun_t	* is_static;
 };
 
@@ -345,7 +345,7 @@ struct ccstructs_pathname_I_methods_t {
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
 static inline ccstructs_pathname_I
-ccstructs_new_pathname (ccstructs_core_t * S, ccstructs_pathname_I_methods_t const * const M)
+ccstructs_new_pathname (ccstructs_core_t const * S, ccstructs_pathname_I_methods_t const * const M)
 {
   ccstructs_pathname_I	I = {
     .methods	= M,
@@ -363,16 +363,16 @@ ccstructs_pathname_self (ccstructs_pathname_I const I)
 
 __attribute__((__always_inline__))
 static inline size_t
-ccstructs_pathname_length (ccstructs_pathname_I const I)
+ccstructs_pathname_length (cce_destination_t L, ccstructs_pathname_I const I)
 {
-  return I.methods->length(I);
+  return I.methods->length(L, I);
 }
 
 __attribute__((__always_inline__))
 static inline char const *
-ccstructs_pathname_pointer (ccstructs_pathname_I const I)
+ccstructs_pathname_pointer (cce_destination_t L, ccstructs_pathname_I const I)
 {
-  return I.methods->pointer(I);
+  return I.methods->pointer(L, I);
 }
 
 __attribute__((__always_inline__,__pure__))
@@ -391,9 +391,9 @@ ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_static_string (c
 ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_dynamic_string (const char * ptn)
   __attribute__((__nonnull__(1)));
 
-ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_static_asciiz (ccmem_ascii_t ptn);
+ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_static_asciiz (ccmem_asciiz_t const * ptn);
 
-ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_dynamic_asciiz (ccmem_ascii_t ptn);
+ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_dynamic_asciiz (ccmem_asciiz_t const * ptn);
 
 
 /** --------------------------------------------------------------------

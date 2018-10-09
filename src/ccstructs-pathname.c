@@ -35,94 +35,83 @@
 
 
 /** --------------------------------------------------------------------
- ** Pathname interface: from ASCIIZ static strings.
+ ** Pathname interface: from ASCIIZ static or dynamic strings.
  ** ----------------------------------------------------------------- */
 
 static size_t
-ccstructs_pathname_I_from_static_length (ccstructs_pathname_I I)
+ccstructs_pathname_I_from_string_length (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
 {
-  char const *	ptn = (char const *)ccstructs_pathname_self(I);
+  CCSTRUCTS_PC(char const, ptn, ccstructs_pathname_self(I));
   return strlen(ptn);
 }
 
 static char const *
-ccstructs_pathname_I_from_static_pointer (ccstructs_pathname_I I)
+ccstructs_pathname_I_from_string_pointer (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
 {
-  char const *	ptn = (char const *)ccstructs_pathname_self(I);
+  CCSTRUCTS_PC(char const, ptn, ccstructs_pathname_self(I));
   return ptn;
 }
 
 static bool
-ccstructs_pathname_I_from_static_is_static (ccstructs_pathname_I I CCSTRUCTS_UNUSED)
+ccstructs_pathname_I_from_static_string_is_static (ccstructs_pathname_I I CCSTRUCTS_UNUSED)
 {
   return true;
 }
 
-static ccstructs_pathname_I_methods_t const ccstructs_pathname_I_methods_from_static = {
-  .length	= ccstructs_pathname_I_from_static_length,
-  .pointer	= ccstructs_pathname_I_from_static_pointer,
-  .is_static	= ccstructs_pathname_I_from_static_is_static
-};
-
-ccstructs_pathname_I
-ccstructs_new_pathname_from_static_string (const char * pathname)
-{
-  return ccstructs_new_pathname(ccstructs_core(pathname), &ccstructs_pathname_I_methods_from_static);
-}
-
-
-/** --------------------------------------------------------------------
- ** Pathname interface: from ASCIIZ dynamic strings.
- ** ----------------------------------------------------------------- */
-
-static size_t
-ccstructs_pathname_I_from_dynamic_length (ccstructs_pathname_I I)
-{
-  char const *	ptn = (char const *)ccstructs_pathname_self(I);
-  return strlen(ptn);
-}
-
-static char const *
-ccstructs_pathname_I_from_dynamic_pointer (ccstructs_pathname_I I)
-{
-  char const *	ptn = (char const *)ccstructs_pathname_self(I);
-  return ptn;
-}
-
 static bool
-ccstructs_pathname_I_from_dynamic_is_static (ccstructs_pathname_I I CCSTRUCTS_UNUSED)
+ccstructs_pathname_I_from_dynamic_string_is_static (ccstructs_pathname_I I CCSTRUCTS_UNUSED)
 {
   return false;
 }
 
-static ccstructs_pathname_I_methods_t const ccstructs_pathname_I_methods_from_dynamic = {
-  .length	= ccstructs_pathname_I_from_dynamic_length,
-  .pointer	= ccstructs_pathname_I_from_dynamic_pointer,
-  .is_static	= ccstructs_pathname_I_from_dynamic_is_static
+static ccstructs_pathname_I_methods_t const ccstructs_pathname_I_methods_from_static_string = {
+  .length	= ccstructs_pathname_I_from_string_length,
+  .pointer	= ccstructs_pathname_I_from_string_pointer,
+  .is_static	= ccstructs_pathname_I_from_static_string_is_static
+};
+
+static ccstructs_pathname_I_methods_t const ccstructs_pathname_I_methods_from_dynamic_string = {
+  .length	= ccstructs_pathname_I_from_string_length,
+  .pointer	= ccstructs_pathname_I_from_string_pointer,
+  .is_static	= ccstructs_pathname_I_from_dynamic_string_is_static
 };
 
 ccstructs_pathname_I
-ccstructs_new_pathname_from_dynamic_string (const char * pathname)
+ccstructs_new_pathname_from_static_string (const char * const ptn)
 {
-  return ccstructs_new_pathname(ccstructs_core(pathname), &ccstructs_pathname_I_methods_from_dynamic);
+  ccstructs_pathname_I	I = {
+    .methods	= &ccstructs_pathname_I_methods_from_static_string,
+    .self	= ccstructs_core(ptn)
+  };
+  return I;
+}
+
+ccstructs_pathname_I
+ccstructs_new_pathname_from_dynamic_string (const char * const ptn)
+{
+  ccstructs_pathname_I	I = {
+    .methods	= &ccstructs_pathname_I_methods_from_dynamic_string,
+    .self	= ccstructs_core(ptn)
+  };
+  return I;
 }
 
 
 /** --------------------------------------------------------------------
- ** Pathname interface: from static ASCIIZ structs.
+ ** Pathname interface: from static or dynamic ASCIIZ structs.
  ** ----------------------------------------------------------------- */
 
 static size_t
-ccstructs_pathname_I_from_static_asciiz_length (ccstructs_pathname_I I)
+ccstructs_pathname_I_from_asciiz_length (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
 {
-  ccmem_ascii_t *	S = (ccmem_ascii_t *) ccstructs_pathname_self(I);
+  CCSTRUCTS_PC(ccmem_asciiz_t, S, ccstructs_pathname_self(I));
   return S->len;
 }
 
 static char const *
-ccstructs_pathname_I_from_static_asciiz_pointer (ccstructs_pathname_I I)
+ccstructs_pathname_I_from_asciiz_pointer (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
 {
-  ccmem_ascii_t *	S = (ccmem_ascii_t *) ccstructs_pathname_self(I);
+  CCSTRUCTS_PC(ccmem_asciiz_t, S, ccstructs_pathname_self(I));
   return S->ptr;
 }
 
@@ -132,53 +121,42 @@ ccstructs_pathname_I_from_static_asciiz_is_static (ccstructs_pathname_I I CCSTRU
   return true;
 }
 
-static ccstructs_pathname_I_methods_t const ccstructs_pathname_I_methods_from_static_asciiz = {
-  .length	= ccstructs_pathname_I_from_static_asciiz_length,
-  .pointer	= ccstructs_pathname_I_from_static_asciiz_pointer,
-  .is_static	= ccstructs_pathname_I_from_static_asciiz_is_static
-};
-
-ccstructs_pathname_I
-ccstructs_new_pathname_from_static_asciiz_string (const char * pathname)
-{
-  return ccstructs_new_pathname(ccstructs_core(pathname), &ccstructs_pathname_I_methods_from_static_asciiz);
-}
-
-
-/** --------------------------------------------------------------------
- ** Pathname interface: from dynamic ASCIIZ structs.
- ** ----------------------------------------------------------------- */
-
-static size_t
-ccstructs_pathname_I_from_dynamic_asciiz_length (ccstructs_pathname_I I)
-{
-  ccmem_ascii_t *	S = (ccmem_ascii_t *) ccstructs_pathname_self(I);
-  return S->len;
-}
-
-static char const *
-ccstructs_pathname_I_from_dynamic_asciiz_pointer (ccstructs_pathname_I I)
-{
-  ccmem_ascii_t *	S = (ccmem_ascii_t *) ccstructs_pathname_self(I);
-  return S->ptr;
-}
-
 static bool
 ccstructs_pathname_I_from_dynamic_asciiz_is_static (ccstructs_pathname_I I CCSTRUCTS_UNUSED)
 {
   return false;
 }
 
+static ccstructs_pathname_I_methods_t const ccstructs_pathname_I_methods_from_static_asciiz = {
+  .length	= ccstructs_pathname_I_from_asciiz_length,
+  .pointer	= ccstructs_pathname_I_from_asciiz_pointer,
+  .is_static	= ccstructs_pathname_I_from_static_asciiz_is_static
+};
+
 static ccstructs_pathname_I_methods_t const ccstructs_pathname_I_methods_from_dynamic_asciiz = {
-  .length	= ccstructs_pathname_I_from_dynamic_asciiz_length,
-  .pointer	= ccstructs_pathname_I_from_dynamic_asciiz_pointer,
+  .length	= ccstructs_pathname_I_from_asciiz_length,
+  .pointer	= ccstructs_pathname_I_from_asciiz_pointer,
   .is_static	= ccstructs_pathname_I_from_dynamic_asciiz_is_static
 };
 
 ccstructs_pathname_I
-ccstructs_new_pathname_from_dynamic_asciiz_string (const char * pathname)
+ccstructs_new_pathname_from_static_asciiz (ccmem_asciiz_t const * const S)
 {
-  return ccstructs_new_pathname(ccstructs_core(pathname), &ccstructs_pathname_I_methods_from_dynamic_asciiz);
+  ccstructs_pathname_I	I = {
+    .methods	= &ccstructs_pathname_I_methods_from_static_asciiz,
+    .self	= ccstructs_core(S)
+  };
+  return I;
+}
+
+ccstructs_pathname_I
+ccstructs_new_pathname_from_dynamic_asciiz (ccmem_asciiz_t const * const S)
+{
+  ccstructs_pathname_I	I = {
+    .methods	= &ccstructs_pathname_I_methods_from_dynamic_asciiz,
+    .self	= ccstructs_core(S)
+  };
+  return I;
 }
 
 /* end of file */
