@@ -980,6 +980,7 @@ has an external representation as @asciiz{} string.
 * pathname typedefs::           Type definitions.
 * pathname api::                Programming interface.
 * pathname simple::             Simple implementations.
+* pathname examples::           Implementation example.
 @end menu
 
 @c page
@@ -1091,6 +1092,77 @@ ty @var{ptn}.
 Build and return a new interface @struct{} for the dynamically allocated @asciiz{} string referenced
 ty @var{ptn}.
 @end deftypefun
+
+@c page
+@node pathname examples
+@section Implementation example for the @emph{pathname} interface.
+
+
+Here is how we can implement the interface for @objtype{ccmem_asciiz_t} representations:
+
+@smallexample
+static size_t
+ccstructs_pathname_I_from_asciiz_length (cce_destination_t L,
+                                         ccstructs_pathname_I I)
+@{
+  CCSTRUCTS_PC(ccmem_asciiz_t, S, ccstructs_pathname_self(I));
+  return S->len;
+@}
+
+static char const *
+ccstructs_pathname_I_from_asciiz_pointer (cce_destination_t L,
+                                          ccstructs_pathname_I I)
+@{
+  CCSTRUCTS_PC(ccmem_asciiz_t, S, ccstructs_pathname_self(I));
+  return S->ptr;
+@}
+
+static bool
+ccstructs_pathname_I_from_static_asciiz_is_static (ccstructs_pathname_I I)
+@{
+  return true;
+@}
+
+static bool
+ccstructs_pathname_I_from_dynamic_asciiz_is_static (ccstructs_pathname_I I)
+@{
+  return false;
+@}
+
+static ccstructs_pathname_I_methods_t const
+    ccstructs_pathname_I_methods_from_static_asciiz = @{
+  .length       = ccstructs_pathname_I_from_asciiz_length,
+  .pointer      = ccstructs_pathname_I_from_asciiz_pointer,
+  .is_static    = ccstructs_pathname_I_from_static_asciiz_is_static
+@};
+
+static ccstructs_pathname_I_methods_t const
+    ccstructs_pathname_I_methods_from_dynamic_asciiz = @{
+  .length       = ccstructs_pathname_I_from_asciiz_length,
+  .pointer      = ccstructs_pathname_I_from_asciiz_pointer,
+  .is_static    = ccstructs_pathname_I_from_dynamic_asciiz_is_static
+@};
+
+ccstructs_pathname_I
+ccstructs_new_pathname_from_static_asciiz (ccmem_asciiz_t const * const S)
+@{
+  ccstructs_pathname_I  I = @{
+    .methods    = &ccstructs_pathname_I_methods_from_static_asciiz,
+    .self       = ccstructs_core(S)
+  @};
+  return I;
+@}
+
+ccstructs_pathname_I
+ccstructs_new_pathname_from_dynamic_asciiz (ccmem_asciiz_t const * const S)
+@{
+  ccstructs_pathname_I  I = @{
+    .methods    = &ccstructs_pathname_I_methods_from_dynamic_asciiz,
+    .self       = ccstructs_core(S)
+  @};
+  return I;
+@}
+@end smallexample
 
 @c page
 @node utils
