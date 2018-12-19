@@ -1,11 +1,13 @@
-dnl @configure_input@
-dnl
+# @configure_input@
+#
 
 AC_PREREQ([2.69])
-AC_INIT([CCStructs],[0.1.0-devel.2],
+MMUX_PKG_VERSIONS([0],[1],[0],[devel.3])
+AC_INIT([CCStructs],[MMUX_PACKAGE_VERSION],
   [marco.maggi-ipsu@poste.it],
   [ccstructs],[http://github.com/marcomaggi/ccstructs])
-dnl This is the revision number of this configure.ac
+MMUX_INIT
+MMUX_LIBTOOL_LIBRARY_VERSIONS([ccstructs],1,0,0)
 AC_REVISION([0.1])
 AC_COPYRIGHT([Copyright (c) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -19,8 +21,8 @@ WITHOUT   ANY   WARRANTY;  without   even   the   implied  warranty   of
 MERCHANTABILITY  or  FITNESS FOR  A  PARTICULAR  PURPOSE.  See  the  GNU
 General Public License for more details.
 
-You should have received a copy  of the GNU General Public License along
-with this program.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Lesser General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ])
 AC_CONFIG_SRCDIR([src/])
 AC_CONFIG_MACRO_DIR([meta/autotools])
@@ -28,7 +30,7 @@ AC_CONFIG_AUX_DIR([meta/autotools])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE([foreign dist-xz no-dist-gzip subdir-objects])
+AM_INIT_AUTOMAKE([foreign subdir-objects])
 AM_MAINTAINER_MODE
 
 AM_PROG_AR
@@ -40,34 +42,22 @@ AC_PROG_MKDIR_P
 LT_PREREQ([2.4])
 LT_INIT
 
-dnl page
-#### libraries interface version
-
-MMUX_LIBTOOL_LIBRARY_VERSIONS([ccstructs],1,0,0)
-
-dnl This is the version stored in the pkg-config data file.
-AC_SUBST([CCSTRUCTS_PKG_CONFIG_VERSION],[0.1.0])
-
-AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.1d0.2])
-AC_SUBST([SLACKSTUFF_PACKAGE_VERSION])
-
-dnl page
+
 #### basic system inspection
 
 MMUX_CHECK_TARGET_OS
 
 AC_LANG([C])
 MMUX_LANG_C11
-AC_SUBST(AX_CFLAGS)
 
 AM_PROG_AS
 AM_PROG_CC_C_O
 AC_HEADER_STDC
-dnl AC_CHECK_HEADERS([assert.h stdint.h strings.h stddef.h])
+AC_HEADER_STDBOOL
 
 AC_CACHE_SAVE
 
-dnl page
+
 #### external libraries
 
 MMUX_CHECK_PKG_CONFIG_MACROS
@@ -79,18 +69,14 @@ AM_CONDITIONAL([MMUX_TESTING_ENABLED],[test -n "$CCTESTS_LIBS"])
 
 AC_CACHE_SAVE
 
-dnl page
+
 #### finish
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile]
    [meta/scripts/ccstructs.pc]
-   [meta/slackstuff/config]
    [meta/slackware/slack-desc])
+MMUX_OUTPUT
 AC_OUTPUT
 
 ### end of file
-# Local Variables:
-# mode: autoconf
-# page-delimiter: "^dnl page"
-# End:

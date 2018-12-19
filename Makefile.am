@@ -3,10 +3,9 @@
 ACLOCAL_AMFLAGS		= -I meta/autotools
 AUTOMAKE_OPTIONS	= foreign
 EXTRA_DIST		= INSTALL			\
-			  meta/slackstuff/config.in	\
 			  meta/slackware/slack-desc.in
 dist_doc_DATA		= README COPYING
-AM_CFLAGS		= -I$(srcdir)/src $(AX_CFLAGS)
+AM_CFLAGS		= $(MMUX_CFLAGS) -I$(srcdir)/src
 
 ## --------------------------------------------------------------------
 
@@ -17,6 +16,8 @@ nodist_pkgconfig_DATA	= meta/scripts/ccstructs.pc
 ## --------------------------------------------------------------------
 
 AM_MAKEINFOFLAGS	= --no-split
+AM_MAKEINFOHTMLFLAGS	= --split=node -c WORDS_IN_PAGE=0 \
+	-c PRE_BODY_CLOSE="<p>This document describes version <tt>$(PACKAGE_VERSION)</tt> of <em>$(PACKAGE_NAME)</em>.</p>"
 
 info_TEXINFOS		= doc/ccstructs.texi
 doc_ccstructs_TEXINFOS	= \
