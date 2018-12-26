@@ -173,7 +173,7 @@ run the test suite: this package depends upon the package CCTests, at least vers
 @value{PACKAGE} installs the single header file @file{ccstructs.h}.  All the function names in the
 @api{} are prefixed with @code{ccstructs_}; all the preprocessor symbol names are prefixed with
 @code{CCSTRUCTS_}; all the type names are prefixed with @code{ccstructs_} and suffixed with
-@code{_t}.
+@code{_t} or @code{_I}.
 
 @menu
 * overview linking::            Linking code with the library.
@@ -293,10 +293,12 @@ Cast the pointer @var{S} to @code{ccstructs_core_t *}.
 @chapter The @emph{destructors} interface
 
 
-The @emph{destructors} interface provides a uniform way to call a @struct{} destructors.
+The @emph{destructors} interface provides a uniform way to call a @struct{} destructors.  The best
+way to use the @emph{destructors} interface is through the exception handlers @api{}, @ref{handlers,
+Exception handlers}.
 
 @menu
-* dtors api::                   @emph{destructors} interface @api{}.
+* dtors api::                   The @emph{destructors} interface @api{}.
 * dtors sample empty::          Example of @emph{destructors} interface
                                 with empty @code{delete} method.
 * dtors sample non-empty::      Example of @emph{destructors} interface
@@ -305,7 +307,7 @@ The @emph{destructors} interface provides a uniform way to call a @struct{} dest
 
 @c page
 @node dtors api
-@section @emph{destructors} interface @api{}
+@section The @emph{destructors} interface @api{}
 
 
 @deftp {Struct Typedef} ccstructs_dtors_I
@@ -354,7 +356,8 @@ Return a pointer to the @struct{} to which the interface belongs.
 
 @deftypefun void ccstructs_dtors_final (ccstructs_dtors_I @var{I})
 Apply the @method{final} method to the @struct{}.  This function is the faster destructor for a
-@struct{} allocated on the stack or embedded in an enclosing @struct{}.
+@struct{} allocated on the stack or embedded in an enclosing @struct{}; calling the @method{delete}
+method is slower.
 @end deftypefun
 
 
@@ -415,7 +418,7 @@ and we can use the interface as follows:
 cce_location_t        L[1];
 
 if (cce_location(L)) @{
-  cce_run_catch_handlers_raise(L, upper_L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   one_t       S = @{
     .pointer  = ccmem_malloc(L, ccmem_standard_allocator, 256)
@@ -483,7 +486,7 @@ and we can use the interface as follows:
 cce_location_t        L[1];
 
 if (cce_location(L)) @{
-  cce_run_catch_handlers_raise(L, upper_L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   two_t * S = ccmem_malloc(L, ccmem_standard_allocator, sizeof(two_t));
   S->pointer = ccmem_malloc(L, ccmem_standard_allocator, 256)
@@ -597,8 +600,7 @@ static ccstructs_dtors_I_methods_t const two_dtors_I_methods = @{
   .final        = two_dtors_method_final
 @};
 
-__attribute__((__always_inline__,__nonnull__(1)))
-static inline ccstructs_dtors_I
+ccstructs_dtors_I
 two_new_I_dtors (two_t * S)
 @{
   return ccstructs_new_dtors(ccstructs_core(S), &two_dtors_I_methods);
