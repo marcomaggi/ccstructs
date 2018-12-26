@@ -20,7 +20,7 @@ sysconfdir=@sysconfdir@
 
 Name: @PACKAGE_NAME@
 Description: common interfaces for C structs
-Version: @CCSTRUCTS_PKG_CONFIG_VERSION@
+Version: @MMUX_PKG_CONFIG_VERSION@
 Requires: ccexceptions >= 0.8.0, ccmemory >= 0.2.1
 Libs: -L${libdir} -lccstructs
 Cflags: -I${includedir}
