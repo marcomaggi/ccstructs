@@ -525,7 +525,7 @@ interface @var{I}, in the context of the location @var{L}.
 @end deftypefun
 
 
-@deftypefn {Preprocessor Macro} ccstructs_handler_init (cce_destination_t @var{L}, @var{H}, ccstructs_dtors_I @var{I})
+@deftypefn {Preprocessor Macro} void ccstructs_handler_init (cce_destination_t @var{L}, @var{H}, ccstructs_dtors_I @var{I})
 Initialise the exception handler @var{H} to use the @code{delete} method of the @emph{destructors}
 interface @var{I}, in the context of the location @var{L}.  If @var{H} is a pointer of type:
 
