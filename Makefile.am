@@ -104,6 +104,30 @@ gdb-test: $(builddir)/.gdbinit
 	libtool --mode=execute gdb $$FILE
 
 
+#### Valgrind analysis
+#
+# To use this rule on the file "tests/standard-allocator" we do:
+#
+#   make valgrind file=standard-allocator
+#
+
+VALGRIND_PROGRAM	= valgrind
+VALGRIND_FLAGS		= --leak-check=yes --track-origins=yes
+VALGRIND_FULL_FLAGS	= $(VALGRIND_FLAGS) --leak-check=full --show-leak-kinds=all
+
+.PHONY: valgrind valgrind-full
+
+valgrind:
+	for f in $(builddir)/tests/$(file) ; \
+	do $(LIBTOOL) --mode=execute $(VALGRIND_PROGRAM) $(VALGRIND_FLAGS) $$f ; \
+	done
+
+valgrind-full:
+	for f in $(builddir)/tests/$(file) ; \
+	do $(LIBTOOL) --mode=execute $(VALGRIND_PROGRAM) $(VALGRIND_FULL_FLAGS) $$f ; \
+	done
+
+
 #### Static analysis with Clang's Static Analyzer
 #
 # See the documentation for the command line tool at:
