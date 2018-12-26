@@ -194,6 +194,8 @@ test_2_2 (cce_destination_t upper_L)
       ccstructs_dtors_I	I = two_new_I_dtors(S);
       ccstructs_dtors_final(I);
     }
+
+    ccmem_free(ccmem_standard_allocator, S);
     cce_run_body_handlers(L);
   }
 }
