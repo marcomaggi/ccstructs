@@ -104,6 +104,37 @@ gdb-test: $(builddir)/.gdbinit
 	libtool --mode=execute gdb $$FILE
 
 
+#### examples
+#
+# The example programs use CCTests to drive the code.
+#
+
+if MMUX_TESTING_ENABLED
+noinst_PROGRAMS	= \
+	examples/alpha
+endif
+
+ccstructs_examples_cppflags	= -I$(srcdir)/src -I$(srcdir)/examples $(CCTESTS_CFLAGS)
+ccstructs_examples_ldadd	= libccstructs.la $(CCTESTS_LIBS)
+
+.PHONY: examples
+
+examples: $(noinst_PROGRAMS)
+	-./examples/alpha
+
+## --------------------------------------------------------------------
+
+examples_alpha_SOURCES		=	\
+	examples/alpha.c		\
+	examples/alpha-header.h		\
+	examples/alpha-body.c
+
+examples_alpha_CPPFLAGS		= $(ccstructs_examples_cppflags)
+examples_alpha_LDADD		= $(ccstructs_examples_ldadd)
+
+$(examples_alpha_OBJECTS): libccstructs.la
+
+
 #### Valgrind analysis
 #
 # To use this rule on the file "tests/standard-allocator" we do:
