@@ -50,7 +50,7 @@ libccstructs_la_SOURCES		= \
 
 check_PROGRAMS	= \
 	tests/version			\
-	tests/destructors-interface	\
+	tests/dtors-interface		\
 	tests/exception-handlers	\
 	tests/writable-interface	\
 	tests/serialisable-interface	\
@@ -68,8 +68,8 @@ ccstructs_tests_ldadd		= libccstructs.la $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS) $
 tests_version_CPPFLAGS			= $(ccstructs_tests_cppflags)
 tests_version_LDADD			= $(ccstructs_tests_ldadd)
 
-tests_destructors_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
-tests_destructors_interface_LDADD	= $(ccstructs_tests_ldadd)
+tests_dtors_interface_CPPFLAGS		= $(ccstructs_tests_cppflags)
+tests_dtors_interface_LDADD		= $(ccstructs_tests_ldadd)
 
 tests_exception_handlers_CPPFLAGS	= $(ccstructs_tests_cppflags)
 tests_exception_handlers_LDADD		= $(ccstructs_tests_ldadd)

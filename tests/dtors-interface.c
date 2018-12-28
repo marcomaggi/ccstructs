@@ -1,6 +1,6 @@
 /*
   Part of: CCStructs
-  Contents: tests for the destructors interface
+  Contents: tests for the dtors interface
   Date: Sep 24, 2018
 
   Abstract
@@ -35,7 +35,7 @@
 
 
 /** --------------------------------------------------------------------
- ** Destructors interface: empty delete method.
+ ** Dtors interface: empty delete method.
  ** ----------------------------------------------------------------- */
 
 typedef struct one_t	one_t;
@@ -115,7 +115,7 @@ test_1_2 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Destructors interface: non-empty delete method.
+ ** Dtors interface: non-empty delete method.
  ** ----------------------------------------------------------------- */
 
 typedef struct two_t	two_t;
@@ -204,7 +204,7 @@ test_2_2 (cce_destination_t upper_L)
 int
 main (void)
 {
-  cctests_init("tests destructors interface");
+  cctests_init("tests dtors interface");
   {
     cctests_begin_group("empty delete method");
     {
