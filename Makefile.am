@@ -110,8 +110,9 @@ gdb-test: $(builddir)/.gdbinit
 #
 
 if MMUX_TESTING_ENABLED
-noinst_PROGRAMS	= \
-	examples/alpha
+noinst_PROGRAMS	=			\
+	examples/dtors-no-methods	\
+	examples/dtors-with-methods
 endif
 
 ccstructs_examples_cppflags	= -I$(srcdir)/src -I$(srcdir)/examples $(CCTESTS_CFLAGS)
@@ -120,19 +121,32 @@ ccstructs_examples_ldadd	= libccstructs.la $(CCTESTS_LIBS)
 .PHONY: examples
 
 examples: $(noinst_PROGRAMS)
-	-./examples/alpha
+	-./examples/dtors-no-methods
+	-./examples/dtors-with-methods
 
 ## --------------------------------------------------------------------
 
-examples_alpha_SOURCES		=	\
-	examples/alpha.c		\
-	examples/alpha-header.h		\
-	examples/alpha-body.c
+examples_dtors_no_methods_SOURCES =		\
+	examples/dtors-no-methods.h		\
+	examples/dtors-no-methods.c		\
+	examples/test-dtors-no-methods.c
 
-examples_alpha_CPPFLAGS		= $(ccstructs_examples_cppflags)
-examples_alpha_LDADD		= $(ccstructs_examples_ldadd)
+examples_test_dtors_no_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
+examples_test_dtors_no_methods_LDADD	= $(ccstructs_examples_ldadd)
 
-$(examples_alpha_OBJECTS): libccstructs.la
+$(examples_test_dtors_no_methods_OBJECTS): libccstructs.la
+
+## --------------------------------------------------------------------
+
+examples_dtors_with_methods_SOURCES =		\
+	examples/dtors-with-methods.h		\
+	examples/dtors-with-methods.c		\
+	examples/test-dtors-with-methods.c
+
+examples_test_dtors_with_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
+examples_test_dtors_with_methods_LDADD		= $(ccstructs_examples_ldadd)
+
+$(examples_test_dtors_with_methods_OBJECTS): libccstructs.la
 
 
 #### Valgrind analysis

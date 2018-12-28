@@ -41,9 +41,9 @@
  ** ----------------------------------------------------------------- */
 
 #include <cctests.h>
-#include "alpha-header.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "dtors-with-methods.h"
 
 
 /** --------------------------------------------------------------------
@@ -79,12 +79,16 @@ test_1_2 (cce_destination_t upper_L)
   cce_error_handler_t	A_H[1];
 
   if (cce_location(L)) {
-    cce_run_catch_handlers_raise(L, upper_L);
+    if (cctests_condition_is_signal_1(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
   } else {
     my_init_alpha(A, 1.0, 2.0, 3.0);
     my_alpha_register_error_handler_final(L, A_H, A);
     my_print_alpha(L, stderr, A);
-    cce_raise(L, cce_condition_new_error());
+    cce_raise(L, cctests_condition_new_signal_1());
     cce_run_body_handlers(L);
   }
 }
@@ -123,12 +127,16 @@ test_2_2 (cce_destination_t upper_L)
   cce_error_handler_t	A_H[1];
 
   if (cce_location(L)) {
-    cce_run_catch_handlers_raise(L, upper_L);
+    if (cctests_condition_is_signal_1(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
   } else {
     A = my_new_alpha(L, 1.0, 2.0, 3.0);
     my_alpha_register_error_handler_final(L, A_H, A);
     my_print_alpha(L, stderr, A);
-    cce_raise(L, cce_condition_new_error());
+    cce_raise(L, cctests_condition_new_signal_1());
     cce_run_body_handlers(L);
   }
 }

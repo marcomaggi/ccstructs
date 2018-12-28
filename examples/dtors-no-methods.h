@@ -55,8 +55,10 @@
  ** ----------------------------------------------------------------- */
 
 typedef struct my_alpha_t		my_alpha_t;
+typedef struct my_alpha_methods_t	my_alpha_methods_t;
 
 struct my_alpha_t {
+  my_alpha_methods_t const *	methods;
   double	X;
   double	Y;
   double	Z;
@@ -113,6 +115,14 @@ ccstructs_decl void my_alpha_register_clean_handler_delete (cce_destination_t L,
    as destructor function. */
 ccstructs_decl void my_alpha_register_error_handler_delete (cce_destination_t L, cce_error_handler_t * H, my_alpha_t const * self)
   __attribute__((__nonnull__(1,2,3)));
+
+
+/** --------------------------------------------------------------------
+ ** Interface "dtors".
+ ** ----------------------------------------------------------------- */
+
+ccstructs_decl ccstructs_dtors_I my_alpha_new_dtors (my_alpha_t const * self)
+  __attribute__((__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
