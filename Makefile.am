@@ -111,8 +111,8 @@ gdb-test: $(builddir)/.gdbinit
 
 if MMUX_TESTING_ENABLED
 noinst_PROGRAMS	=			\
-	examples/dtors-no-methods	\
-	examples/dtors-with-methods
+	examples/test-dtors-no-methods	\
+	examples/test-dtors-with-methods
 endif
 
 ccstructs_examples_cppflags	= -I$(srcdir)/src -I$(srcdir)/examples $(CCTESTS_CFLAGS)
@@ -121,12 +121,12 @@ ccstructs_examples_ldadd	= libccstructs.la $(CCTESTS_LIBS)
 .PHONY: examples
 
 examples: $(noinst_PROGRAMS)
-	-./examples/dtors-no-methods
-	-./examples/dtors-with-methods
+	-./examples/test-dtors-no-methods
+	-./examples/test-dtors-with-methods
 
 ## --------------------------------------------------------------------
 
-examples_dtors_no_methods_SOURCES =		\
+examples_test_dtors_no_methods_SOURCES =	\
 	examples/dtors-no-methods.h		\
 	examples/dtors-no-methods.c		\
 	examples/test-dtors-no-methods.c
@@ -138,7 +138,7 @@ $(examples_test_dtors_no_methods_OBJECTS): libccstructs.la
 
 ## --------------------------------------------------------------------
 
-examples_dtors_with_methods_SOURCES =		\
+examples_test_dtors_with_methods_SOURCES =	\
 	examples/dtors-with-methods.h		\
 	examples/dtors-with-methods.c		\
 	examples/test-dtors-with-methods.c
