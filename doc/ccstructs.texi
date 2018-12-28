@@ -344,7 +344,7 @@ owned by the fields of the @struct{}, if any.  The @struct{} itself is left alon
 @end deftypefn
 
 
-@deftypefun ccstructs_dtors_I ccstructs_new_dtors (ccstructs_core_t * @var{S}, ccstructs_dtors_I_methods_t const * @var{M})
+@deftypefun ccstructs_dtors_I ccstructs_new_dtors (ccstructs_core_t const * @var{S}, ccstructs_dtors_I_methods_t const * @var{M})
 Build and return a new @emph{dtors} interface.
 @end deftypefun
 

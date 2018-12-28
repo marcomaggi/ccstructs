@@ -126,8 +126,8 @@ typedef struct ccstructs_dtors_I_methods_t	ccstructs_dtors_I_methods_t;
 typedef struct ccstructs_dtors_I		ccstructs_dtors_I;
 
 struct ccstructs_dtors_I {
-  ccstructs_dtors_I_methods_t const	* methods;
-  ccstructs_core_t			* self;
+  ccstructs_dtors_I_methods_t	const * methods;
+  ccstructs_core_t		const * self;
 };
 
 /* Release the memory allocated for the struct, if needed. */
@@ -139,14 +139,14 @@ typedef void ccstructs_dtors_I_final_fun_t (ccstructs_dtors_I I);
 
 struct ccstructs_dtors_I_methods_t {
   ccstructs_dtors_I_delete_fun_t	* delete;
-  ccstructs_dtors_I_final_fun_t	* final;
+  ccstructs_dtors_I_final_fun_t		* final;
 };
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
 static inline ccstructs_dtors_I
-ccstructs_new_dtors (ccstructs_core_t * S, ccstructs_dtors_I_methods_t const * const M)
+ccstructs_new_dtors (ccstructs_core_t const * S, ccstructs_dtors_I_methods_t const * const M)
 {
   ccstructs_dtors_I	I = {
     .methods	= M,
@@ -156,7 +156,7 @@ ccstructs_new_dtors (ccstructs_core_t * S, ccstructs_dtors_I_methods_t const * c
 }
 
 __attribute__((__always_inline__,__pure__))
-static inline ccstructs_core_t *
+static inline ccstructs_core_t const *
 ccstructs_dtors_self (ccstructs_dtors_I I)
 {
   return I.self;

@@ -68,7 +68,7 @@ static ccstructs_dtors_I_methods_t const one_dtors_I_methods = {
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_dtors_I
-one_new_I_dtors (one_t * S)
+one_new_I_dtors (one_t const * const S)
 {
   return ccstructs_new_dtors(ccstructs_core(S), &one_dtors_I_methods);
 }
@@ -149,7 +149,7 @@ static ccstructs_dtors_I_methods_t const two_dtors_I_methods = {
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_dtors_I
-two_new_I_dtors (two_t * S)
+two_new_I_dtors (two_t const * const S)
 {
   return ccstructs_new_dtors(ccstructs_core(S), &two_dtors_I_methods);
 }
