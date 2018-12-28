@@ -352,31 +352,36 @@ Type of functions implementing the @method{final} method.  Release all the async
 owned by the fields of the @struct{}, if any.  The @struct{} itself is left alone.
 @end deftypefn
 
+
+@deftypefn {Function Prototype} ccstructs_dtors_I ccstructs_new_dtors_fun_t (ccstructs_core_t const * @var{self})
+Type of functions implementing the constructor for @iface{dtors} interfaces.
+@end deftypefn
+
 @c page
 @node dtors operations
 @section @iface{dtors} interface: operations
 
 
 @deftypefun ccstructs_dtors_I ccstructs_new_dtors (ccstructs_core_t const * @var{S}, ccstructs_dtors_I_methods_t const * @var{M})
-Build and return a new @iface{dtors} interface.
+Build and return a new @iface{dtors} interface @struct{}.
 @end deftypefun
 
 
 @deftypefun {ccstructs_core_t const *} ccstructs_dtors_self (ccstructs_dtors_I @var{I})
-Return a pointer to the @struct{} to which the interface belongs.
+Return a pointer to the subject @struct{} to which the interface belongs.
 @end deftypefun
 
 
 @deftypefun void ccstructs_dtors_final (ccstructs_dtors_I @var{I})
-Apply the @method{final} method to the @struct{}.  This function is the faster destructor for a
-@struct{} allocated on the stack or embedded in an enclosing @struct{}; calling the @method{delete}
-method is slower.
+Apply the @method{final} method to the subject @struct{}.  This function is the faster destructor
+for a @struct{} allocated on the stack or embedded in an enclosing @struct{}; calling the
+@method{delete} method is slower.
 @end deftypefun
 
 
 @deftypefun void ccstructs_dtors_delete (ccstructs_dtors_I @var{I})
-Apply the @method{final} method to the @struct{}, then apply the @method{delete} method to the
-@struct{}.  This function is always a correct destructor for a @struct{}.
+Apply the @method{final} method to the subject @struct{}, then apply the @method{delete} method to
+the subject @struct{}.  This function is always a correct destructor for a @struct{}.
 @end deftypefun
 
 @c page
