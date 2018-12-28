@@ -142,6 +142,10 @@ struct ccstructs_dtors_I_methods_t {
   ccstructs_dtors_I_final_fun_t		* final;
 };
 
+/* Type   of  functions   implementing   a  constructor   for  a   dtors
+   interface. */
+typedef ccstructs_dtors_I ccstructs_new_dtors_fun_t (ccstructs_core_t const * self);
+
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
