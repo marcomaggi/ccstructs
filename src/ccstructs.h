@@ -123,7 +123,7 @@ struct ccstructs_core_t;
  ** ----------------------------------------------------------------- */
 
 typedef struct ccstructs_dtor_I_methods_t	ccstructs_dtor_I_methods_t;
-typedef struct ccstructs_dtor_I		ccstructs_dtor_I;
+typedef struct ccstructs_dtor_I			ccstructs_dtor_I;
 
 struct ccstructs_dtor_I {
   ccstructs_dtor_I_methods_t	const * methods;
