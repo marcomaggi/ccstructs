@@ -139,7 +139,7 @@ typedef void ccstructs_dtor_I_final_fun_t (ccstructs_dtor_I I);
 
 struct ccstructs_dtor_I_methods_t {
   ccstructs_dtor_I_delete_fun_t	* delete;
-  ccstructs_dtor_I_final_fun_t		* final;
+  ccstructs_dtor_I_final_fun_t	* final;
 };
 
 /* Type   of  functions   implementing   a  constructor   for  a   dtor
