@@ -45,32 +45,32 @@ struct one_t {
 };
 
 static void
-one_dtors_method_delete (ccstructs_dtors_I I)
+one_dtor_method_delete (ccstructs_dtor_I I)
 {
-  CCSTRUCTS_PC(one_t, S, ccstructs_dtors_self(I));
+  CCSTRUCTS_PC(one_t, S, ccstructs_dtor_self(I));
 
   fprintf(stderr, "%s: delete method for %p\n", __func__, (void *)S);
 }
 
 static void
-one_dtors_method_final (ccstructs_dtors_I I)
+one_dtor_method_final (ccstructs_dtor_I I)
 {
-  CCSTRUCTS_PC(one_t, S, ccstructs_dtors_self(I));
+  CCSTRUCTS_PC(one_t, S, ccstructs_dtor_self(I));
 
   ccmem_free(ccmem_standard_allocator, S->pointer);
   fprintf(stderr, "%s: final method for %p\n", __func__, (void *)S);
 }
 
-static ccstructs_dtors_I_methods_t const one_dtors_I_methods = {
-  .delete	= one_dtors_method_delete,
-  .final	= one_dtors_method_final
+static ccstructs_dtor_I_methods_t const one_dtor_I_methods = {
+  .delete	= one_dtor_method_delete,
+  .final	= one_dtor_method_final
 };
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccstructs_dtors_I
-one_new_I_dtors (one_t * S)
+static inline ccstructs_dtor_I
+one_new_I_dtor (one_t * S)
 {
-  return ccstructs_new_dtors(ccstructs_core(S), &one_dtors_I_methods);
+  return ccstructs_new_dtor(ccstructs_core(S), &one_dtor_I_methods);
 }
 
 void
@@ -86,7 +86,7 @@ test_1_1 (cce_destination_t upper_L)
     one_t	S = {
       .pointer	= ccmem_malloc(L, ccmem_standard_allocator, 256)
     };
-    ccstructs_handler_init(L, I_H, one_new_I_dtors(&S));
+    ccstructs_handler_init(L, I_H, one_new_I_dtor(&S));
 
     memset(S.pointer, 123, 256);
     cce_run_body_handlers(L);
@@ -126,33 +126,33 @@ two_new (cce_destination_t upper_L, int init)
 /* Destructors interface implementation. */
 
 static void
-two_dtors_method_delete (ccstructs_dtors_I I)
+two_dtor_method_delete (ccstructs_dtor_I I)
 {
-  CCSTRUCTS_PC(two_t, S, ccstructs_dtors_self(I));
+  CCSTRUCTS_PC(two_t, S, ccstructs_dtor_self(I));
 
   free(S);
   fprintf(stderr, "%s: delete method for %p\n", __func__, (void *)S);
 }
 
 static void
-two_dtors_method_final (ccstructs_dtors_I I)
+two_dtor_method_final (ccstructs_dtor_I I)
 {
-  CCSTRUCTS_PC(two_t, S, ccstructs_dtors_self(I));
+  CCSTRUCTS_PC(two_t, S, ccstructs_dtor_self(I));
 
   free(S->pointer);
   fprintf(stderr, "%s: final method for %p\n", __func__, (void *)S);
 }
 
-static ccstructs_dtors_I_methods_t const two_dtors_I_methods = {
-  .delete	= two_dtors_method_delete,
-  .final	= two_dtors_method_final
+static ccstructs_dtor_I_methods_t const two_dtor_I_methods = {
+  .delete	= two_dtor_method_delete,
+  .final	= two_dtor_method_final
 };
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccstructs_dtors_I
-two_new_I_dtors (two_t * S)
+static inline ccstructs_dtor_I
+two_new_I_dtor (two_t * S)
 {
-  return ccstructs_new_dtors(ccstructs_core(S), &two_dtors_I_methods);
+  return ccstructs_new_dtor(ccstructs_core(S), &two_dtor_I_methods);
 }
 
 /* ------------------------------------------------------------------ */
@@ -161,7 +161,7 @@ two_t *
 two_new_guarded_clean (cce_destination_t L, ccstructs_clean_handler_t * I_H, int init)
 {
   two_t * S = two_new(L, init);
-  ccstructs_handler_init(L, I_H, two_new_I_dtors(S));
+  ccstructs_handler_init(L, I_H, two_new_I_dtor(S));
   return S;
 }
 
@@ -169,7 +169,7 @@ two_t *
 two_new_guarded_error (cce_destination_t L, ccstructs_error_handler_t * I_H, int init)
 {
   two_t * S = two_new(L, init);
-  ccstructs_handler_init(L, I_H, two_new_I_dtors(S));
+  ccstructs_handler_init(L, I_H, two_new_I_dtor(S));
   return S;
 }
 
@@ -190,7 +190,7 @@ test_2_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     two_t * S = two_new(L, 123);
-    ccstructs_handler_init(L, I_H, two_new_I_dtors(S));
+    ccstructs_handler_init(L, I_H, two_new_I_dtor(S));
 
     cce_run_body_handlers(L);
   }

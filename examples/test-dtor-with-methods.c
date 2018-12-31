@@ -8,7 +8,7 @@
 	This test program checks the behaviour  of the API of the struct
 	"my_alpha_t" and shows how to use the implemented interfaces.
 
-	The "dtors-with-methods" example shows how to implement a struct
+	The "dtor-with-methods" example shows  how to implement a struct
 	using  a   methods  table  for  the   struct-specific  interface
 	constructors: every instance of the  struct type holds a pointer
 	to a struct implementing a methods table.
@@ -47,7 +47,7 @@
 #include <cctests.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "dtors-with-methods.h"
+#include "dtor-with-methods.h"
 
 
 /** --------------------------------------------------------------------
@@ -88,13 +88,13 @@ flag_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
 
 
 /** --------------------------------------------------------------------
- ** Allocation on the stack, dtors handlers.
+ ** Allocation on the stack, dtor handlers.
  ** ----------------------------------------------------------------- */
 
 void
 test_1_1 (cce_destination_t upper_L)
 /* Allocate the  struct instance on  the stack,  then destroy it  with a
-   "clean" handler using the "dtors" interface. */
+   "clean" handler using the "dtor" interface. */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
@@ -106,7 +106,7 @@ test_1_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     my_init_alpha(A, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, my_new_alpha_dtors(A));
+    ccstructs_handler_init(L, A_H, my_new_alpha_dtor(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -119,7 +119,7 @@ test_1_1 (cce_destination_t upper_L)
 void
 test_1_2 (cce_destination_t upper_L)
 /* Allocate the  struct instance on the  stack, then destroy it  with an
-   "error" handler using the "dtors" interface. */
+   "error" handler using the "dtor" interface. */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
@@ -135,7 +135,7 @@ test_1_2 (cce_destination_t upper_L)
     }
   } else {
     my_init_alpha(A, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, my_new_alpha_dtors(A));
+    ccstructs_handler_init(L, A_H, my_new_alpha_dtor(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -148,13 +148,13 @@ test_1_2 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Allocation on the heap, dtors handlers.
+ ** Allocation on the heap, dtor handlers.
  ** ----------------------------------------------------------------- */
 
 void
 test_2_1 (cce_destination_t upper_L)
 /* Allocate the  struct instance  on the  heap, then  destroy it  with a
-   "clean" handler using the "dtors" interface. */
+   "clean" handler using the "dtor" interface. */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
@@ -166,7 +166,7 @@ test_2_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     A = my_new_alpha(L, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, my_new_alpha_dtors(A));
+    ccstructs_handler_init(L, A_H, my_new_alpha_dtor(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -179,7 +179,7 @@ test_2_1 (cce_destination_t upper_L)
 void
 test_2_2 (cce_destination_t upper_L)
 /* Allocate the  struct on  the heap,  then destroy  it with  an "error"
-   handler using the "dtors" interface. */
+   handler using the "dtor" interface. */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
@@ -195,7 +195,7 @@ test_2_2 (cce_destination_t upper_L)
     }
   } else {
     A = my_new_alpha(L, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, my_new_alpha_dtors(A));
+    ccstructs_handler_init(L, A_H, my_new_alpha_dtor(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -210,16 +210,16 @@ test_2_2 (cce_destination_t upper_L)
 int
 main (void)
 {
-  cctests_init("tests for dtors interface on struct with methods table in the subject struct");
+  cctests_init("tests for dtor interface on struct with methods table in the subject struct");
   {
-    cctests_begin_group("allocation on the stack, dtors handlers from methods table");
+    cctests_begin_group("allocation on the stack, dtor handlers from methods table");
     {
       cctests_run(test_1_1);
       cctests_run(test_1_2);
     }
     cctests_end_group();
 
-    cctests_begin_group("allocation on the heap, dtors handlers from methods table");
+    cctests_begin_group("allocation on the heap, dtor handlers from methods table");
     {
       cctests_run(test_2_1);
       cctests_run(test_2_2);

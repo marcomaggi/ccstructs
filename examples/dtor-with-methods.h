@@ -10,7 +10,7 @@
 	simple  struct with  embedded  fields, no  pointers to  external
 	memory blocks.
 
-	The "dtors-with-methods" example shows how to implement a struct
+	The "dtor-with-methods" example shows  how to implement a struct
 	using  a   methods  table  for  the   struct-specific  interface
 	constructors: every instance of the  struct type holds a pointer
 	to a struct implementing a methods table.
@@ -85,12 +85,12 @@ ccstructs_decl void my_init_alpha (my_alpha_t * self, double x, double y, double
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtors".
+ ** Interface "dtor".
  ** ----------------------------------------------------------------- */
 
-/* Interface  constructor function.   Return a  new instance  of "dtors"
+/* Interface  constructor function.   Return a  new instance  of "dtor"
    interface which destroys the struct instance. */
-ccstructs_decl ccstructs_dtors_I my_new_alpha_dtors (my_alpha_t const * self)
+ccstructs_decl ccstructs_dtor_I my_new_alpha_dtor (my_alpha_t const * self)
   __attribute__((__nonnull__(1)));
 
 

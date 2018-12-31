@@ -50,7 +50,7 @@ libccstructs_la_SOURCES		= \
 
 check_PROGRAMS	= \
 	tests/version			\
-	tests/dtors-interface		\
+	tests/dtor-interface		\
 	tests/exception-handlers	\
 	tests/writable-interface	\
 	tests/serialisable-interface	\
@@ -68,8 +68,8 @@ ccstructs_tests_ldadd		= libccstructs.la $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS) $
 tests_version_CPPFLAGS			= $(ccstructs_tests_cppflags)
 tests_version_LDADD			= $(ccstructs_tests_ldadd)
 
-tests_dtors_interface_CPPFLAGS		= $(ccstructs_tests_cppflags)
-tests_dtors_interface_LDADD		= $(ccstructs_tests_ldadd)
+tests_dtor_interface_CPPFLAGS		= $(ccstructs_tests_cppflags)
+tests_dtor_interface_LDADD		= $(ccstructs_tests_ldadd)
 
 tests_exception_handlers_CPPFLAGS	= $(ccstructs_tests_cppflags)
 tests_exception_handlers_LDADD		= $(ccstructs_tests_ldadd)
@@ -111,8 +111,8 @@ gdb-test: $(builddir)/.gdbinit
 
 if MMUX_TESTING_ENABLED
 noinst_PROGRAMS	=			\
-	examples/test-dtors-no-methods	\
-	examples/test-dtors-with-methods
+	examples/test-dtor-no-methods	\
+	examples/test-dtor-with-methods
 endif
 
 ccstructs_examples_cppflags	= -I$(srcdir)/src -I$(srcdir)/examples $(CCTESTS_CFLAGS)
@@ -121,32 +121,32 @@ ccstructs_examples_ldadd	= libccstructs.la $(CCTESTS_LIBS)
 .PHONY: examples
 
 examples: $(noinst_PROGRAMS)
-	-./examples/test-dtors-no-methods
-	-./examples/test-dtors-with-methods
+	-./examples/test-dtor-no-methods
+	-./examples/test-dtor-with-methods
 
 ## --------------------------------------------------------------------
 
-examples_test_dtors_no_methods_SOURCES =	\
-	examples/dtors-no-methods.h		\
-	examples/dtors-no-methods.c		\
-	examples/test-dtors-no-methods.c
+examples_test_dtor_no_methods_SOURCES =	\
+	examples/dtor-no-methods.h		\
+	examples/dtor-no-methods.c		\
+	examples/test-dtor-no-methods.c
 
-examples_test_dtors_no_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
-examples_test_dtors_no_methods_LDADD	= $(ccstructs_examples_ldadd)
+examples_test_dtor_no_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
+examples_test_dtor_no_methods_LDADD	= $(ccstructs_examples_ldadd)
 
-$(examples_test_dtors_no_methods_OBJECTS): libccstructs.la
+$(examples_test_dtor_no_methods_OBJECTS): libccstructs.la
 
 ## --------------------------------------------------------------------
 
-examples_test_dtors_with_methods_SOURCES =	\
-	examples/dtors-with-methods.h		\
-	examples/dtors-with-methods.c		\
-	examples/test-dtors-with-methods.c
+examples_test_dtor_with_methods_SOURCES =	\
+	examples/dtor-with-methods.h		\
+	examples/dtor-with-methods.c		\
+	examples/test-dtor-with-methods.c
 
-examples_test_dtors_with_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
-examples_test_dtors_with_methods_LDADD		= $(ccstructs_examples_ldadd)
+examples_test_dtor_with_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
+examples_test_dtor_with_methods_LDADD		= $(ccstructs_examples_ldadd)
 
-$(examples_test_dtors_with_methods_OBJECTS): libccstructs.la
+$(examples_test_dtor_with_methods_OBJECTS): libccstructs.la
 
 
 #### Valgrind analysis

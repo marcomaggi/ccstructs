@@ -8,7 +8,7 @@
 	This body file defines the API to handle the struct "my_alpha_t"
 	and shows how to implement the main interfaces for it.
 
-	The "dtors-with-methods" example shows how to implement a struct
+	The "dtor-with-methods" example shows  how to implement a struct
 	using  a   methods  table  for  the   struct-specific  interface
 	constructors: every instance of the  struct type holds a pointer
 	to a struct implementing a methods table.
@@ -44,13 +44,13 @@
  ** Headers.
  ** ----------------------------------------------------------------- */
 
-#include "dtors-with-methods.h"
+#include "dtor-with-methods.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
 
-static ccstructs_new_dtors_fun_t my_new_alpha_embedded_I_dtors;
-static ccstructs_new_dtors_fun_t my_new_alpha_standalone_I_dtors;
+static ccstructs_new_dtor_fun_t my_new_alpha_embedded_I_dtor;
+static ccstructs_new_dtor_fun_t my_new_alpha_standalone_I_dtor;
 
 static void my_final_alpha (my_alpha_t const * self)
   __attribute__((__nonnull__(1)));
@@ -64,15 +64,15 @@ static void my_alpha_release_struct (my_alpha_t const * self)
  ** ----------------------------------------------------------------- */
 
 struct my_alpha_methods_t {
-  ccstructs_new_dtors_fun_t *		new_dtors;
+  ccstructs_new_dtor_fun_t *		new_dtor;
 };
 
 static my_alpha_methods_t const my_alpha_methods_embedded_stru = {
-  .new_dtors	= my_new_alpha_embedded_I_dtors
+  .new_dtor	= my_new_alpha_embedded_I_dtor
 };
 
 static my_alpha_methods_t const my_alpha_methods_standalone_stru = {
-  .new_dtors	= my_new_alpha_standalone_I_dtors
+  .new_dtor	= my_new_alpha_standalone_I_dtor
 };
 
 
@@ -114,93 +114,93 @@ my_alpha_release_struct (my_alpha_t const * self)
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtors": embedded struct.
+ ** Interface "dtor": embedded struct.
  ** ----------------------------------------------------------------- */
 
 /* This is for struct instances allocated on the stack or embedded in an
    enclosing struct. */
 
-/* Interface "dtors": "final()" method. */
+/* Interface "dtor": "final()" method. */
 static void
-my_alpha_stack_dtors_method_final (ccstructs_dtors_I I)
+my_alpha_stack_dtor_method_final (ccstructs_dtor_I I)
 {
-  CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtors_self(I));
+  CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
 
   my_final_alpha(self);
-  if (1) { fprintf(stderr, "%-35s: finalised by dtors\n", __func__); }
+  if (1) { fprintf(stderr, "%-35s: finalised by dtor\n", __func__); }
 }
 
-/* Interface "dtors": "delete()" method. */
+/* Interface "dtor": "delete()" method. */
 static void
-my_alpha_stack_dtors_method_delete (ccstructs_dtors_I I CCSTRUCTS_UNUSED)
+my_alpha_stack_dtor_method_delete (ccstructs_dtor_I I CCSTRUCTS_UNUSED)
 {
-  if (1) { fprintf(stderr, "%-35s: deleted by dtors\n", __func__); }
+  if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
 }
 
-/* Methods table  for the  "dtors" interface. */
-static ccstructs_dtors_I_methods_t const my_alpha_stack_dtors_I_methods = {
-  .final	= my_alpha_stack_dtors_method_final,
-  .delete	= my_alpha_stack_dtors_method_delete
+/* Methods table  for the  "dtor" interface. */
+static ccstructs_dtor_I_methods_t const my_alpha_stack_dtor_I_methods = {
+  .final	= my_alpha_stack_dtor_method_final,
+  .delete	= my_alpha_stack_dtor_method_delete
 };
 
-/* Constructor for the "dtors" interface. */
-static ccstructs_dtors_I
-my_new_alpha_embedded_I_dtors (ccstructs_core_t const * const self)
+/* Constructor for the "dtor" interface. */
+static ccstructs_dtor_I
+my_new_alpha_embedded_I_dtor (ccstructs_core_t const * const self)
 {
-  return ccstructs_new_dtors(self, &my_alpha_stack_dtors_I_methods);
+  return ccstructs_new_dtor(self, &my_alpha_stack_dtor_I_methods);
 }
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtors": standalone struct.
+ ** Interface "dtor": standalone struct.
  ** ----------------------------------------------------------------- */
 
 /* This is for struct instances allocated on the heap. */
 
-/* Interface "dtors": "final()" method. */
+/* Interface "dtor": "final()" method. */
 static void
-my_alpha_heap_dtors_method_final (ccstructs_dtors_I I)
+my_alpha_heap_dtor_method_final (ccstructs_dtor_I I)
 {
-  CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtors_self(I));
+  CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
 
   my_final_alpha(self);
-  if (1) { fprintf(stderr, "%-35s: finalised by dtors\n", __func__); }
+  if (1) { fprintf(stderr, "%-35s: finalised by dtor\n", __func__); }
 }
 
-/* Interface "dtors": "delete()" method. */
+/* Interface "dtor": "delete()" method. */
 static void
-my_alpha_heap_dtors_method_delete (ccstructs_dtors_I I)
+my_alpha_heap_dtor_method_delete (ccstructs_dtor_I I)
 {
-  CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtors_self(I));
+  CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
 
   my_alpha_release_struct(self);
-  if (1) { fprintf(stderr, "%-35s: deleted by dtors\n", __func__); }
+  if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
 }
 
-/* Methods table for the "dtors" interface. */
-static ccstructs_dtors_I_methods_t const my_alpha_heap_dtors_I_methods = {
-  .final	= my_alpha_heap_dtors_method_final,
-  .delete	= my_alpha_heap_dtors_method_delete
+/* Methods table for the "dtor" interface. */
+static ccstructs_dtor_I_methods_t const my_alpha_heap_dtor_I_methods = {
+  .final	= my_alpha_heap_dtor_method_final,
+  .delete	= my_alpha_heap_dtor_method_delete
 };
 
-/* Constructor for the "dtors" interface. */
-static ccstructs_dtors_I
-my_new_alpha_standalone_I_dtors (ccstructs_core_t const * const self)
+/* Constructor for the "dtor" interface. */
+static ccstructs_dtor_I
+my_new_alpha_standalone_I_dtor (ccstructs_core_t const * const self)
 {
-  return ccstructs_new_dtors(self, &my_alpha_heap_dtors_I_methods);
+  return ccstructs_new_dtor(self, &my_alpha_heap_dtor_I_methods);
 }
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtors": constructors.
+ ** Interface "dtor": constructors.
  ** ----------------------------------------------------------------- */
 
-/* Interface  constructor function.   Return a  new instance  of "dtors"
+/* Interface  constructor function.   Return a  new instance  of "dtor"
    interface which destroys the struct instance. */
-ccstructs_dtors_I
-my_new_alpha_dtors (my_alpha_t const * const self)
+ccstructs_dtor_I
+my_new_alpha_dtor (my_alpha_t const * const self)
 {
-  return self->methods->new_dtors(ccstructs_core(self));
+  return self->methods->new_dtor(ccstructs_core(self));
 }
 
 

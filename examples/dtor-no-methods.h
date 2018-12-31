@@ -10,7 +10,7 @@
 	simple  struct with  embedded  fields, no  pointers to  external
 	memory blocks.
 
-	The "dtors-no-methods"  example shows how to  implement a struct
+	The "dtor-no-methods"  example shows  how to implement  a struct
 	using  no  methods  table   for  the  struct-specific  interface
 	constructors.
 
@@ -120,17 +120,17 @@ ccstructs_decl void my_alpha_register_error_handler_delete (cce_destination_t L,
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtors".
+ ** Interface "dtor".
  ** ----------------------------------------------------------------- */
 
-/* Constructor  for   a  "dtors"  interface  that   finalises  instances
+/* Constructor  for   a  "dtor"  interface  that   finalises  instances
    allocated on the stack or embedded into enclosing structs. */
-ccstructs_decl ccstructs_dtors_I my_new_alpha_embedded_I_dtors (my_alpha_t const * self)
+ccstructs_decl ccstructs_dtor_I my_new_alpha_embedded_I_dtor (my_alpha_t const * self)
   __attribute__((__nonnull__(1)));
 
-/* Constructor  for  a  "dtors"   interface  that  finalises  standalone
+/* Constructor  for  a  "dtor"   interface  that  finalises  standalone
    instances dynamically allocated on the heap. */
-ccstructs_decl ccstructs_dtors_I my_new_alpha_standalone_I_dtors (my_alpha_t const * self)
+ccstructs_decl ccstructs_dtor_I my_new_alpha_standalone_I_dtor (my_alpha_t const * self)
   __attribute__((__nonnull__(1)));
 
 

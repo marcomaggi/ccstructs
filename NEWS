@@ -8,6 +8,8 @@ Revision 0.1.0-devel.3
 
 * Development of build infrastructure.
 
+* Renamed "dtors" interface to "dtor".
+
 
 Revision 0.1.0-devel.2
 ----------------------
