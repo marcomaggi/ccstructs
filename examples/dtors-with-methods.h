@@ -1,6 +1,6 @@
 /*
   Part of: CCStructs
-  Contents: header file for sample struct
+  Contents: header file for sample struct with methods table
   Date: Thu Dec 27, 2018
 
   Abstract
@@ -9,6 +9,11 @@
 	to  implement the  main interfaces  for it.   "my_alpha_t" is  a
 	simple  struct with  embedded  fields, no  pointers to  external
 	memory blocks.
+
+	The "dtors-with-methods" example shows how to implement a struct
+	using  a   methods  table  for  the   struct-specific  interface
+	constructors: every instance of the  struct type holds a pointer
+	to a struct implementing a methods table.
 
   Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -66,62 +71,26 @@ struct my_alpha_t {
 
 
 /** --------------------------------------------------------------------
- ** Function prototypes: constructors and destructors.
+ ** Function prototypes: constructors.
  ** ----------------------------------------------------------------- */
 
-/* Constructor function that allocates the  struct on the heap using the
-   standard memory allocator implemented by CCMemory. */
+/* Constructor function.  Allocate the struct instance on the heap using
+   the standard memory allocator implemented by CCMemory. */
 ccstructs_decl my_alpha_t const * my_new_alpha (cce_destination_t L, double x, double y, double z)
   __attribute__((__nonnull__((1))));
 
-/* Initialisation  function   that  initialises  an   already  allocated
-   struct. */
+/* Constructor function.  Initialise an already allocated struct. */
 ccstructs_decl void my_init_alpha (my_alpha_t * self, double x, double y, double z)
   __attribute__((__nonnull__((1))));
-
-/* Finalisation function.  Releases all the asynchronous resources owned
-   by  the  struct,   if  any.   The  struct's  memory   block  is  left
-   untouched. */
-ccstructs_decl void my_final_alpha (my_alpha_t const * self)
-  __attribute__((__nonnull__((1))));
-
-/* Destructor function.   Releases all the asynchronous  resources owned
-   by the struct,  if any.  The struct's memory block  is released using
-   the standard memory allocato implemented by CCMemory.  */
-ccstructs_decl void my_delete_alpha (my_alpha_t const * self)
-  __attribute__((__nonnull__((1))));
-
-
-/** --------------------------------------------------------------------
- ** Function prototypes: plain exception handlers.
- ** ----------------------------------------------------------------- */
-
-/* Initialises a  clean exception handler that  calls "my_final_alpha()"
-   as destructor function. */
-ccstructs_decl void my_alpha_register_clean_handler_final (cce_destination_t L, cce_clean_handler_t * H, my_alpha_t const * self)
-  __attribute__((__nonnull__(1,2,3)));
-
-/* Initialises an error exception  handler that calls "my_final_alpha()"
-   as destructor function. */
-ccstructs_decl void my_alpha_register_error_handler_final (cce_destination_t L, cce_error_handler_t * H, my_alpha_t const * self)
-  __attribute__((__nonnull__(1,2,3)));
-
-/* Initialises a clean exception  handler that calls "my_delete_alpha()"
-   as destructor function. */
-ccstructs_decl void my_alpha_register_clean_handler_delete (cce_destination_t L, cce_clean_handler_t * H, my_alpha_t const * self)
-  __attribute__((__nonnull__(1,2,3)));
-
-/* Initialises an error exception handler that calls "my_delete_alpha()"
-   as destructor function. */
-ccstructs_decl void my_alpha_register_error_handler_delete (cce_destination_t L, cce_error_handler_t * H, my_alpha_t const * self)
-  __attribute__((__nonnull__(1,2,3)));
 
 
 /** --------------------------------------------------------------------
  ** Interface "dtors".
  ** ----------------------------------------------------------------- */
 
-ccstructs_decl ccstructs_dtors_I my_alpha_new_dtors (my_alpha_t const * self)
+/* Interface  constructor function.   Return a  new instance  of "dtors"
+   interface which destroys the struct instance. */
+ccstructs_decl ccstructs_dtors_I my_new_alpha_dtors (my_alpha_t const * self)
   __attribute__((__nonnull__(1)));
 
 

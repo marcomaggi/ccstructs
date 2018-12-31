@@ -8,6 +8,11 @@
 	This body file defines the API to handle the struct "my_alpha_t"
 	and shows how to implement the main interfaces for it.
 
+	The "dtors-with-methods" example shows how to implement a struct
+	using  a   methods  table  for  the   struct-specific  interface
+	constructors: every instance of the  struct type holds a pointer
+	to a struct implementing a methods table.
+
   Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   The author hereby  grant permission to use,  copy, modify, distribute,
@@ -32,7 +37,6 @@
   NON-INFRINGEMENT.  THIS  SOFTWARE IS PROVIDED  ON AN "AS  IS" BASIS,
   AND  THE  AUTHOR  AND  DISTRIBUTORS  HAVE  NO  OBLIGATION  TO  PROVIDE
   MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
 */
 
 
@@ -47,6 +51,12 @@
 
 static ccstructs_new_dtors_fun_t my_new_alpha_embedded_I_dtors;
 static ccstructs_new_dtors_fun_t my_new_alpha_standalone_I_dtors;
+
+static void my_final_alpha (my_alpha_t const * self)
+  __attribute__((__nonnull__(1)));
+
+static void my_alpha_release_struct (my_alpha_t const * self)
+  __attribute__((__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -89,79 +99,17 @@ my_new_alpha (cce_destination_t L, double x, double y, double z)
   return (my_alpha_t const *) self;
 }
 
-void
+static void
 my_final_alpha (my_alpha_t const * self CCSTRUCTS_UNUSED)
 {
+  if (1) { fprintf(stderr, "%-35s: finalised\n", __func__); }
 }
 
 static void
 my_alpha_release_struct (my_alpha_t const * self)
 {
   ccmem_std_free((void *)self);
-}
-
-void
-my_delete_alpha (my_alpha_t const * self)
-{
-  my_final_alpha(self);
-  my_alpha_release_struct(self);
-}
-
-
-/** --------------------------------------------------------------------
- ** Plain exception handlers.
- ** ----------------------------------------------------------------- */
-
-static void
-my_alpha_handler_final (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H)
-{
-  CCSTRUCTS_PC(my_alpha_t, self, H->pointer);
-
-  my_final_alpha(self);
-  if (1) { fprintf(stderr, "%s: finalised\n", __func__); }
-}
-
-void
-my_alpha_register_clean_handler_final (cce_destination_t L, cce_clean_handler_t * H, my_alpha_t const * self)
-{
-  H->handler.function	= my_alpha_handler_final;
-  H->handler.pointer	= (void *)self;
-  cce_register_clean_handler(L, H);
-}
-
-void
-my_alpha_register_error_handler_final (cce_destination_t L, cce_error_handler_t * H, my_alpha_t const * self)
-{
-  H->handler.function	= my_alpha_handler_final;
-  H->handler.pointer	= (void *)self;
-  cce_register_error_handler(L, H);
-}
-
-/* ------------------------------------------------------------------ */
-
-static void
-my_alpha_handler_delete (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H)
-{
-  CCSTRUCTS_PC(my_alpha_t, self, H->pointer);
-
-  my_delete_alpha(self);
-  if (1) { fprintf(stderr, "%s: deleted\n", __func__); }
-}
-
-void
-my_alpha_register_clean_handler_delete (cce_destination_t L, cce_clean_handler_t * H, my_alpha_t const * self)
-{
-  H->handler.function	= my_alpha_handler_delete;
-  H->handler.pointer	= (void *)self;
-  cce_register_clean_handler(L, H);
-}
-
-void
-my_alpha_register_error_handler_delete (cce_destination_t L, cce_error_handler_t * H, my_alpha_t const * self)
-{
-  H->handler.function	= my_alpha_handler_delete;
-  H->handler.pointer	= (void *)self;
-  cce_register_error_handler(L, H);
+  if (1) { fprintf(stderr, "%-35s: released\n", __func__); }
 }
 
 
@@ -169,14 +117,8 @@ my_alpha_register_error_handler_delete (cce_destination_t L, cce_error_handler_t
  ** Interface "dtors": embedded struct.
  ** ----------------------------------------------------------------- */
 
-/* This is for subject structs allocated  on the stack or embedded in an
+/* This is for struct instances allocated on the stack or embedded in an
    enclosing struct. */
-
-/* Interface "dtors": "delete()" method. */
-static void
-my_alpha_stack_dtors_method_delete (ccstructs_dtors_I I CCSTRUCTS_UNUSED)
-{
-}
 
 /* Interface "dtors": "final()" method. */
 static void
@@ -185,6 +127,14 @@ my_alpha_stack_dtors_method_final (ccstructs_dtors_I I)
   CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtors_self(I));
 
   my_final_alpha(self);
+  if (1) { fprintf(stderr, "%-35s: finalised by dtors\n", __func__); }
+}
+
+/* Interface "dtors": "delete()" method. */
+static void
+my_alpha_stack_dtors_method_delete (ccstructs_dtors_I I CCSTRUCTS_UNUSED)
+{
+  if (1) { fprintf(stderr, "%-35s: deleted by dtors\n", __func__); }
 }
 
 /* Methods table  for the  "dtors" interface. */
@@ -205,16 +155,7 @@ my_new_alpha_embedded_I_dtors (ccstructs_core_t const * const self)
  ** Interface "dtors": standalone struct.
  ** ----------------------------------------------------------------- */
 
-/* This is for subject structs allocated on the heap. */
-
-/* Interface "dtors": "delete()" method. */
-static void
-my_alpha_heap_dtors_method_delete (ccstructs_dtors_I I)
-{
-  CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtors_self(I));
-
-  my_alpha_release_struct(self);
-}
+/* This is for struct instances allocated on the heap. */
 
 /* Interface "dtors": "final()" method. */
 static void
@@ -223,6 +164,17 @@ my_alpha_heap_dtors_method_final (ccstructs_dtors_I I)
   CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtors_self(I));
 
   my_final_alpha(self);
+  if (1) { fprintf(stderr, "%-35s: finalised by dtors\n", __func__); }
+}
+
+/* Interface "dtors": "delete()" method. */
+static void
+my_alpha_heap_dtors_method_delete (ccstructs_dtors_I I)
+{
+  CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtors_self(I));
+
+  my_alpha_release_struct(self);
+  if (1) { fprintf(stderr, "%-35s: deleted by dtors\n", __func__); }
 }
 
 /* Methods table for the "dtors" interface. */
@@ -243,8 +195,10 @@ my_new_alpha_standalone_I_dtors (ccstructs_core_t const * const self)
  ** Interface "dtors": constructors.
  ** ----------------------------------------------------------------- */
 
+/* Interface  constructor function.   Return a  new instance  of "dtors"
+   interface which destroys the struct instance. */
 ccstructs_dtors_I
-my_alpha_new_dtors (my_alpha_t const * const self)
+my_new_alpha_dtors (my_alpha_t const * const self)
 {
   return self->methods->new_dtors(ccstructs_core(self));
 }

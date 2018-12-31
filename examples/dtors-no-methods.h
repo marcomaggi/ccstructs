@@ -1,6 +1,6 @@
 /*
   Part of: CCStructs
-  Contents: header file for sample struct
+  Contents: header file for sample struct with no methods table
   Date: Thu Dec 27, 2018
 
   Abstract
@@ -9,6 +9,10 @@
 	to  implement the  main interfaces  for it.   "my_alpha_t" is  a
 	simple  struct with  embedded  fields, no  pointers to  external
 	memory blocks.
+
+	The "dtors-no-methods"  example shows how to  implement a struct
+	using  no  methods  table   for  the  struct-specific  interface
+	constructors.
 
   Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -55,10 +59,8 @@
  ** ----------------------------------------------------------------- */
 
 typedef struct my_alpha_t		my_alpha_t;
-typedef struct my_alpha_methods_t	my_alpha_methods_t;
 
 struct my_alpha_t {
-  my_alpha_methods_t const *	methods;
   double	X;
   double	Y;
   double	Z;
@@ -87,7 +89,7 @@ ccstructs_decl void my_final_alpha (my_alpha_t const * self)
 
 /* Destructor function.   Releases all the asynchronous  resources owned
    by the struct,  if any.  The struct's memory block  is released using
-   the standard memory allocato implemented by CCMemory.  */
+   the standard memory allocator implemented by CCMemory.  */
 ccstructs_decl void my_delete_alpha (my_alpha_t const * self)
   __attribute__((__nonnull__((1))));
 
@@ -96,23 +98,23 @@ ccstructs_decl void my_delete_alpha (my_alpha_t const * self)
  ** Function prototypes: plain exception handlers.
  ** ----------------------------------------------------------------- */
 
-/* Initialises a  clean exception handler that  calls "my_final_alpha()"
+/* Initialises a "clean" exception handler that calls "my_final_alpha()"
    as destructor function. */
 ccstructs_decl void my_alpha_register_clean_handler_final (cce_destination_t L, cce_clean_handler_t * H, my_alpha_t const * self)
   __attribute__((__nonnull__(1,2,3)));
 
-/* Initialises an error exception  handler that calls "my_final_alpha()"
-   as destructor function. */
+/* Initialises    an    "error"    exception    handler    that    calls
+   "my_final_alpha()" as destructor function. */
 ccstructs_decl void my_alpha_register_error_handler_final (cce_destination_t L, cce_error_handler_t * H, my_alpha_t const * self)
   __attribute__((__nonnull__(1,2,3)));
 
-/* Initialises a clean exception  handler that calls "my_delete_alpha()"
-   as destructor function. */
+/* Initialises    a    "clean"     exception    handler    that    calls
+   "my_delete_alpha()" as destructor function. */
 ccstructs_decl void my_alpha_register_clean_handler_delete (cce_destination_t L, cce_clean_handler_t * H, my_alpha_t const * self)
   __attribute__((__nonnull__(1,2,3)));
 
-/* Initialises an error exception handler that calls "my_delete_alpha()"
-   as destructor function. */
+/* Initialises    an    "error"    exception    handler    that    calls
+   "my_delete_alpha()" as destructor function. */
 ccstructs_decl void my_alpha_register_error_handler_delete (cce_destination_t L, cce_error_handler_t * H, my_alpha_t const * self)
   __attribute__((__nonnull__(1,2,3)));
 
@@ -121,7 +123,14 @@ ccstructs_decl void my_alpha_register_error_handler_delete (cce_destination_t L,
  ** Interface "dtors".
  ** ----------------------------------------------------------------- */
 
-ccstructs_decl ccstructs_dtors_I my_alpha_new_dtors (my_alpha_t const * self)
+/* Constructor  for   a  "dtors"  interface  that   finalises  instances
+   allocated on the stack or embedded into enclosing structs. */
+ccstructs_decl ccstructs_dtors_I my_new_alpha_embedded_I_dtors (my_alpha_t const * self)
+  __attribute__((__nonnull__(1)));
+
+/* Constructor  for  a  "dtors"   interface  that  finalises  standalone
+   instances dynamically allocated on the heap. */
+ccstructs_decl ccstructs_dtors_I my_new_alpha_standalone_I_dtors (my_alpha_t const * self)
   __attribute__((__nonnull__(1)));
 
 

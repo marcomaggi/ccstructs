@@ -1,12 +1,16 @@
 /*
   Part of: CCStructs
-  Contents: test file for sample struct
+  Contents: test file for sample struct without embedded methods table
   Date: Thu Dec 27, 2018
 
   Abstract
 
 	This test program checks the behaviour  of the API of the struct
 	"my_alpha_t" and shows how to use the implemented interfaces.
+
+	The "dtors-no-methods"  example shows how to  implement a struct
+	using  no  methods  table   for  the  struct-specific  interface
+	constructors.
 
   Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -32,7 +36,6 @@
   NON-INFRINGEMENT.  THIS  SOFTWARE IS PROVIDED  ON AN "AS  IS" BASIS,
   AND  THE  AUTHOR  AND  DISTRIBUTORS  HAVE  NO  OBLIGATION  TO  PROVIDE
   MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
 */
 
 
@@ -47,15 +50,104 @@
 
 
 /** --------------------------------------------------------------------
- ** Allocation on the stack.
+ ** Flagging handlers.
+ ** ----------------------------------------------------------------- */
+
+/* This handler  is used to signal  that the "clean" handlers  have been
+   executed. */
+static void
+flag_clean_handler (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H CCSTRUCTS_UNUSED)
+{
+  fprintf(stderr, "%-35s: clean handler fired\n", __func__);
+}
+
+void
+flag_register_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
+{
+  H->handler.function	= flag_clean_handler;
+  cce_register_clean_handler(L, H);
+}
+
+/* ------------------------------------------------------------------ */
+
+/* This handler  is used to signal  that the "error" handlers  have been
+   executed. */
+static void
+flag_error_handler (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H CCSTRUCTS_UNUSED)
+{
+  fprintf(stderr, "%-35s: error handler fired\n", __func__);
+}
+
+void
+flag_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
+{
+  H->handler.function	= flag_error_handler;
+  cce_register_error_handler(L, H);
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation on the stack, no handlers.
  ** ----------------------------------------------------------------- */
 
 void
 test_1_1 (cce_destination_t upper_L)
-/* Allocate the  struct on the stack,  then finalise it using  the clean
-   handler. */
+/* Allocate the  struct on the stack,  then destroy it with  the "final"
+   function. */
 {
   cce_location_t	L[1];
+  my_alpha_t		A[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_init_alpha(A, 1.0, 2.0, 3.0);
+    /* If  this  call  raises  an  exception: we  may  have  a  resource
+       leakage. */
+    my_print_alpha(L, stderr, A);
+    my_final_alpha(A);
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation on the heap, no handlers.
+ ** ----------------------------------------------------------------- */
+
+void
+test_2_1 (cce_destination_t upper_L)
+/* Allocate the  struct on the heap,  then destroy it with  the "delete"
+   function. */
+{
+  cce_location_t	L[1];
+  my_alpha_t const *	A;
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    A = my_new_alpha(L, 1.0, 2.0, 3.0);
+    /* If  this  call  raises  an  exception: we  may  have  a  resource
+       leakage. */
+    my_print_alpha(L, stderr, A);
+    my_delete_alpha(A);
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation on the stack, plain handler destructors.
+ ** ----------------------------------------------------------------- */
+
+void
+test_3_1 (cce_destination_t upper_L)
+/* Allocate the struct on the stack, then destroy with a "clean" handler
+   using the "final" function. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
   my_alpha_t		A[1];
   cce_clean_handler_t	A_H[1];
 
@@ -64,17 +156,23 @@ test_1_1 (cce_destination_t upper_L)
   } else {
     my_init_alpha(A, 1.0, 2.0, 3.0);
     my_alpha_register_clean_handler_final(L, A_H, A);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
     my_print_alpha(L, stderr, A);
     cce_run_body_handlers(L);
   }
 }
 
 void
-test_1_2 (cce_destination_t upper_L)
-/* Allocate the  struct on the stack,  then finalise it using  the error
-   handler. */
+test_3_2 (cce_destination_t upper_L)
+/* Allocate the  struct on the  stack, then  destroy it with  an "error"
+   handler using the "final" function. */
 {
   cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
   my_alpha_t		A[1];
   cce_error_handler_t	A_H[1];
 
@@ -87,6 +185,10 @@ test_1_2 (cce_destination_t upper_L)
   } else {
     my_init_alpha(A, 1.0, 2.0, 3.0);
     my_alpha_register_error_handler_final(L, A_H, A);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
     my_print_alpha(L, stderr, A);
     cce_raise(L, cctests_condition_new_signal_1());
     cce_run_body_handlers(L);
@@ -95,15 +197,17 @@ test_1_2 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Allocation on the heap.
+ ** Allocation on the heap, plain handler destructors.
  ** ----------------------------------------------------------------- */
 
 void
-test_2_1 (cce_destination_t upper_L)
-/* Allocate the  struct on the  heap, then  finalise it using  the clean
-   handler. */
+test_4_1 (cce_destination_t upper_L)
+/* Allocate  the struct  on the  heap, then  destroy it  with a  "clean"
+   handler usin the "delete" function. */
 {
   cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
   my_alpha_t const *	A;
   cce_clean_handler_t	A_H[1];
 
@@ -112,17 +216,23 @@ test_2_1 (cce_destination_t upper_L)
   } else {
     A = my_new_alpha(L, 1.0, 2.0, 3.0);
     my_alpha_register_clean_handler_delete(L, A_H, A);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
     my_print_alpha(L, stderr, A);
     cce_run_body_handlers(L);
   }
 }
 
 void
-test_2_2 (cce_destination_t upper_L)
-/* Allocate the  struct on the  heap, then  finalise it using  the error
-   handler. */
+test_4_2 (cce_destination_t upper_L)
+/* Allocate the  struct on  the heap,  then destroy  it with  an "error"
+   handler using the "delete" function. */
 {
   cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
   my_alpha_t const *	A;
   cce_error_handler_t	A_H[1];
 
@@ -134,7 +244,131 @@ test_2_2 (cce_destination_t upper_L)
     }
   } else {
     A = my_new_alpha(L, 1.0, 2.0, 3.0);
-    my_alpha_register_error_handler_final(L, A_H, A);
+    my_alpha_register_error_handler_delete(L, A_H, A);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    my_print_alpha(L, stderr, A);
+    cce_raise(L, cctests_condition_new_signal_1());
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation on the stack, dtors handlers.
+ ** ----------------------------------------------------------------- */
+
+void
+test_5_1 (cce_destination_t upper_L)
+/* Allocate the  struct on  the stack,  then destroy  it with  a "clean"
+   handler using the "embedded" dtors interface. */
+{
+  cce_location_t		L[1];
+  cce_clean_handler_t		FC_H[1];
+  cce_error_handler_t		FE_H[1];
+  my_alpha_t			A[1];
+  ccstructs_clean_handler_t	A_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    my_init_alpha(A, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, my_new_alpha_embedded_I_dtors(A));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    my_print_alpha(L, stderr, A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_5_2 (cce_destination_t upper_L)
+/* Allocate the  struct on the  stack, then  destroy it with  an "error"
+   handler using the "embedded" dtors interface. */
+{
+  cce_location_t		L[1];
+  cce_clean_handler_t		FC_H[1];
+  cce_error_handler_t		FE_H[1];
+  my_alpha_t			A[1];
+  ccstructs_error_handler_t	A_H[1];
+
+  if (cce_location(L)) {
+    if (cctests_condition_is_signal_1(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+    my_init_alpha(A, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, my_new_alpha_embedded_I_dtors(A));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    my_print_alpha(L, stderr, A);
+    cce_raise(L, cctests_condition_new_signal_1());
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation on the heap, dtors handlers.
+ ** ----------------------------------------------------------------- */
+
+void
+test_6_1 (cce_destination_t upper_L)
+/* Allocate  the struct  on the  heap, then  destroy it  with a  "clean"
+   handler using the "standalone" dtors interface. */
+{
+  cce_location_t		L[1];
+  cce_clean_handler_t		FC_H[1];
+  cce_error_handler_t		FE_H[1];
+  my_alpha_t const *		A;
+  ccstructs_clean_handler_t	A_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    A = my_new_alpha(L, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, my_new_alpha_standalone_I_dtors(A));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    my_print_alpha(L, stderr, A);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_6_2 (cce_destination_t upper_L)
+/* Allocate the  struct on  the heap,  then destroy  it with  an "error"
+   handler using the "standalone" dtors interface. */
+{
+  cce_location_t		L[1];
+  cce_clean_handler_t		FC_H[1];
+  cce_error_handler_t		FE_H[1];
+  my_alpha_t const *		A;
+  ccstructs_error_handler_t	A_H[1];
+
+  if (cce_location(L)) {
+    if (cctests_condition_is_signal_1(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+    A = my_new_alpha(L, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, my_new_alpha_standalone_I_dtors(A));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
     my_print_alpha(L, stderr, A);
     cce_raise(L, cctests_condition_new_signal_1());
     cce_run_body_handlers(L);
@@ -145,19 +379,45 @@ test_2_2 (cce_destination_t upper_L)
 int
 main (void)
 {
-  cctests_init("tests for my_alpha_t");
+  cctests_init("tests for dtors interface on struct without methods table in the subject struct");
   {
-    cctests_begin_group("allocation on the stack");
+    cctests_begin_group("allocation on the stack, no handlers");
     {
       cctests_run(test_1_1);
-      cctests_run(test_1_2);
     }
     cctests_end_group();
 
-    cctests_begin_group("allocation on the heap");
+    cctests_begin_group("allocation on the heap, no handlers");
     {
       cctests_run(test_2_1);
-      cctests_run(test_2_2);
+    }
+    cctests_end_group();
+
+    cctests_begin_group("allocation on the stack, plain handler destructors");
+    {
+      cctests_run(test_3_1);
+      cctests_run(test_3_2);
+    }
+    cctests_end_group();
+
+    cctests_begin_group("allocation on the heap, plain handler destructors");
+    {
+      cctests_run(test_4_1);
+      cctests_run(test_4_2);
+    }
+    cctests_end_group();
+
+    cctests_begin_group("allocation on the stack, dtors handlers");
+    {
+      cctests_run(test_5_1);
+      cctests_run(test_5_2);
+    }
+    cctests_end_group();
+
+    cctests_begin_group("allocation on the heap, dtors handlers");
+    {
+      cctests_run(test_6_1);
+      cctests_run(test_6_2);
     }
     cctests_end_group();
   }
