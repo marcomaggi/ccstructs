@@ -6,6 +6,7 @@ EXTRA_DIST		= INSTALL			\
 			  meta/slackware/slack-desc.in
 dist_doc_DATA		= README COPYING
 AM_CFLAGS		= $(MMUX_CFLAGS) -I$(srcdir)/src
+#AM_ETAGSFLAGS		=
 
 ## --------------------------------------------------------------------
 
@@ -48,13 +49,6 @@ libccstructs_la_SOURCES		= \
 if WANTS_CCNAMES
 include_HEADERS		+= src/ccnames.h
 endif
-
-## --------------------------------------------------------------------
-
-.PHONY: tags
-
-tags:
-	cd $(top_srcdir); etags src/*.c src/*.h
 
 
 #### tests
@@ -166,7 +160,8 @@ $(examples_test_dtor_with_methods_OBJECTS): libccstructs.la
 examples_test_dtor_with_methods_and_names_SOURCES =	\
 	examples/dtor-with-methods-and-names.h		\
 	examples/dtor-with-methods-and-names.c		\
-	examples/test-dtor-with-methods-and-names.c
+	examples/test-dtor-with-methods-and-names.c	\
+	src/ccnames.h
 
 examples_test_dtor_with_methods_and_names_CPPFLAGS	= $(ccstructs_examples_cppflags)
 examples_test_dtor_with_methods_and_names_LDADD		= $(ccstructs_examples_ldadd)

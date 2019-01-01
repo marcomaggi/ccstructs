@@ -123,6 +123,23 @@
    "release()". */
 #define ccname_release(STRUCT_TYPE)		CCNAME_RELEASE(STRUCT_TYPE)
 
+/* Given a struct  type name: expand into the name  of the methods table
+   type for the struct type. */
+#define ccname_table_type(STRUCT_TYPE)		CCNAME_TABLE_T(STRUCT_TYPE)
+
+/* Given   a  struct   type  name   and  a   (possibly  empty)   variant
+   specification: expand  into the  name of the  methods table  for that
+   type. */
+#define ccname_table(STRUCT_TYPE)		CCNAME_TABLE(STRUCT_TYPE, )
+#define ccname_tableex(STRUCT_TYPE, VARIANT)	CCNAME_TABLE(STRUCT_TYPE, VARIANT)
+
+/* Given an  interface type name,  a struct  type name, and  a (possibly
+   empty) variant  specification: expand  into the  name of  the methods
+   table for that variant of the interface implementation for the struct
+   type. */
+#define ccname_iface_table(IFACE_TYPE, STRUCT_TYPE)		CCNAME_IFACE_TABLE(IFACE_TYPE, STRUCT_TYPE, )
+#define ccname_iface_tableex(IFACE_TYPE, STRUCT_TYPE, VARIANT)	CCNAME_IFACE_TABLE(IFACE_TYPE, STRUCT_TYPE, VARIANT)
+
 /* Given an interface type name, a  struct type name, a (possibly empty)
    variant specification, and an expression  that evaluates to a pointer
    to struct  instance: expand into  the invocation of the  API function

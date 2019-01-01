@@ -65,15 +65,15 @@ static void ccname_release(my_alpha_t) (my_alpha_t const * self)
  ** Struct methods table.
  ** ----------------------------------------------------------------- */
 
-struct CCNAME_TABLE_T(my_alpha_t) {
+struct ccname_table_type(my_alpha_t) {
   ccstructs_new_dtor_fun_t *		new_dtor;
 };
 
-static CCNAME_TABLE_T(my_alpha_t) const CCNAME_TABLE(my_alpha_t, embedded) = {
+static ccname_table_type(my_alpha_t) const ccname_tableex(my_alpha_t, embedded) = {
   .new_dtor	= ccname_iface_newex(ccstructs_dtor_I, my_alpha_t, embedded)
 };
 
-static CCNAME_TABLE_T(my_alpha_t) const CCNAME_TABLE(my_alpha_t, standalone) = {
+static ccname_table_type(my_alpha_t) const ccname_tableex(my_alpha_t, standalone) = {
   .new_dtor	= ccname_iface_newex(ccstructs_dtor_I, my_alpha_t, standalone)
 };
 
@@ -85,7 +85,7 @@ static CCNAME_TABLE_T(my_alpha_t) const CCNAME_TABLE(my_alpha_t, standalone) = {
 void
 ccname_init(my_alpha_t) (my_alpha_t * self, double x, double y, double z)
 {
-  self->methods	= &CCNAME_TABLE(my_alpha_t, embedded);
+  self->methods	= &ccname_tableex(my_alpha_t, embedded);
   self->X	= x;
   self->Y	= y;
   self->Z	= z;
@@ -97,7 +97,7 @@ ccname_new(my_alpha_t) (cce_destination_t L, double x, double y, double z)
   my_alpha_t *	self = ccmem_std_malloc(L, sizeof(my_alpha_t));
 
   ccname_init(my_alpha_t)(self, x, y, z);
-  self->methods	= &CCNAME_TABLE(my_alpha_t, standalone);
+  self->methods	= &ccname_tableex(my_alpha_t, standalone);
   return (my_alpha_t const *) self;
 }
 
@@ -148,7 +148,7 @@ ccname_iface_methodex(ccstructs_dtor_I, my_alpha_t, embedded, delete) (ccstructs
 }
 
 /* Methods table  for the  "dtor" interface. */
-static ccstructs_dtor_I_methods_t const CCNAME_IFACE_TABLE(ccstructs_dtor_I, my_alpha_t, embedded) = {
+static ccstructs_dtor_I_methods_t const ccname_iface_tableex(ccstructs_dtor_I, my_alpha_t, embedded) = {
   .final	= ccname_iface_methodex(ccstructs_dtor_I, my_alpha_t, embedded, final),
   .delete	= ccname_iface_methodex(ccstructs_dtor_I, my_alpha_t, embedded, delete)
 };
@@ -157,7 +157,7 @@ static ccstructs_dtor_I_methods_t const CCNAME_IFACE_TABLE(ccstructs_dtor_I, my_
 static ccstructs_dtor_I
 ccname_iface_newex(ccstructs_dtor_I, my_alpha_t, embedded) (ccstructs_core_t const * const self)
 {
-  return ccstructs_new_dtor(self, &CCNAME_IFACE_TABLE(ccstructs_dtor_I, my_alpha_t, embedded));
+  return ccstructs_new_dtor(self, &ccname_iface_tableex(ccstructs_dtor_I, my_alpha_t, embedded));
 }
 
 
@@ -188,7 +188,7 @@ ccname_iface_methodex(ccstructs_dtor_I, my_alpha_t, standalone, delete) (ccstruc
 }
 
 /* Methods table for the "dtor" interface. */
-static ccstructs_dtor_I_methods_t const CCNAME_IFACE_TABLE(ccstructs_dtor_I, my_alpha_t, standalone) = {
+static ccstructs_dtor_I_methods_t const ccname_iface_tableex(ccstructs_dtor_I, my_alpha_t, standalone) = {
   .final	= ccname_iface_methodex(ccstructs_dtor_I, my_alpha_t, standalone, final),
   .delete	= ccname_iface_methodex(ccstructs_dtor_I, my_alpha_t, standalone, delete)
 };
@@ -197,7 +197,7 @@ static ccstructs_dtor_I_methods_t const CCNAME_IFACE_TABLE(ccstructs_dtor_I, my_
 static ccstructs_dtor_I
 ccname_iface_newex(ccstructs_dtor_I, my_alpha_t, standalone) (ccstructs_core_t const * const self)
 {
-  return ccstructs_new_dtor(self, &CCNAME_IFACE_TABLE(ccstructs_dtor_I, my_alpha_t, standalone));
+  return ccstructs_new_dtor(self, &ccname_iface_tableex(ccstructs_dtor_I, my_alpha_t, standalone));
 }
 
 
