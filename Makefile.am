@@ -49,6 +49,13 @@ if WANTS_CCNAMES
 include_HEADERS		+= src/ccnames.h
 endif
 
+## --------------------------------------------------------------------
+
+.PHONY: tags
+
+tags:
+	cd $(top_srcdir); etags src/*.c src/*.h
+
 
 #### tests
 
