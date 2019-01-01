@@ -51,13 +51,13 @@
 #include <stdlib.h>
 #include <errno.h>
 
-static ccstructs_new_dtor_fun_t CCNAME_IFACE_NEW(ccstructs_dtor_I, my_alpha_t, embedded);
-static ccstructs_new_dtor_fun_t CCNAME_IFACE_NEW(ccstructs_dtor_I, my_alpha_t, standalone);
+static ccstructs_new_dtor_fun_t ccname_iface_newex(ccstructs_dtor_I, my_alpha_t, embedded);
+static ccstructs_new_dtor_fun_t ccname_iface_newex(ccstructs_dtor_I, my_alpha_t, standalone);
 
-static void CCNAME_FINAL(my_alpha_t) (my_alpha_t const * self)
+static void ccname_final(my_alpha_t) (my_alpha_t const * self)
   __attribute__((__nonnull__(1)));
 
-static void CCNAME_RELEASE(my_alpha_t) (my_alpha_t const * self)
+static void ccname_release(my_alpha_t) (my_alpha_t const * self)
   __attribute__((__nonnull__(1)));
 
 
@@ -70,11 +70,11 @@ struct CCNAME_TABLE_T(my_alpha_t) {
 };
 
 static CCNAME_TABLE_T(my_alpha_t) const CCNAME_TABLE(my_alpha_t, embedded) = {
-  .new_dtor	= CCNAME_IFACE_NEW(ccstructs_dtor_I, my_alpha_t, embedded)
+  .new_dtor	= ccname_iface_newex(ccstructs_dtor_I, my_alpha_t, embedded)
 };
 
 static CCNAME_TABLE_T(my_alpha_t) const CCNAME_TABLE(my_alpha_t, standalone) = {
-  .new_dtor	= CCNAME_IFACE_NEW(ccstructs_dtor_I, my_alpha_t, standalone)
+  .new_dtor	= ccname_iface_newex(ccstructs_dtor_I, my_alpha_t, standalone)
 };
 
 
@@ -83,7 +83,7 @@ static CCNAME_TABLE_T(my_alpha_t) const CCNAME_TABLE(my_alpha_t, standalone) = {
  ** ----------------------------------------------------------------- */
 
 void
-CCNAME_INIT(my_alpha_t,) (my_alpha_t * self, double x, double y, double z)
+ccname_init(my_alpha_t) (my_alpha_t * self, double x, double y, double z)
 {
   self->methods	= &CCNAME_TABLE(my_alpha_t, embedded);
   self->X	= x;
@@ -92,33 +92,33 @@ CCNAME_INIT(my_alpha_t,) (my_alpha_t * self, double x, double y, double z)
 }
 
 my_alpha_t const *
-CCNAME_NEW(my_alpha_t,) (cce_destination_t L, double x, double y, double z)
+ccname_new(my_alpha_t) (cce_destination_t L, double x, double y, double z)
 {
   my_alpha_t *	self = ccmem_std_malloc(L, sizeof(my_alpha_t));
 
-  ccstructs_init(my_alpha_t, , self, x, y, z);
+  ccname_init(my_alpha_t)(self, x, y, z);
   self->methods	= &CCNAME_TABLE(my_alpha_t, standalone);
   return (my_alpha_t const *) self;
 }
 
 static void
-CCNAME_FINAL(my_alpha_t) (my_alpha_t const * self CCSTRUCTS_UNUSED)
+ccname_final(my_alpha_t) (my_alpha_t const * self CCSTRUCTS_UNUSED)
 {
   if (1) { fprintf(stderr, "%-35s: finalised\n", __func__); }
 }
 
 static void
-CCNAME_RELEASE(my_alpha_t) (my_alpha_t const * self)
+ccname_release(my_alpha_t) (my_alpha_t const * self)
 {
   ccmem_std_free((void *)self);
   if (1) { fprintf(stderr, "%-35s: released\n", __func__); }
 }
 
 void
-CCNAME_DELETE(my_alpha_t) (my_alpha_t const * self)
+ccname_delete(my_alpha_t) (my_alpha_t const * self)
 {
-  ccstructs_final(my_alpha_t, self);
-  ccstructs_release(my_alpha_t, self);
+  ccname_final(my_alpha_t)(self);
+  ccname_release(my_alpha_t)(self);
   if (1) { fprintf(stderr, "%-35s: delete\n", __func__); }
 }
 
@@ -132,30 +132,30 @@ CCNAME_DELETE(my_alpha_t) (my_alpha_t const * self)
 
 /* Interface "dtor": "final()" method. */
 static void
-CCNAME_IFACE_METHOD(ccstructs_dtor_I, my_alpha_t, embedded, final) (ccstructs_dtor_I I)
+ccname_iface_methodex(ccstructs_dtor_I, my_alpha_t, embedded, final) (ccstructs_dtor_I I)
 {
   CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
 
-  ccstructs_final(my_alpha_t, self);
+  ccname_final(my_alpha_t)(self);
   if (1) { fprintf(stderr, "%-35s: finalised by dtor\n", __func__); }
 }
 
 /* Interface "dtor": "delete()" method. */
 static void
-CCNAME_IFACE_METHOD(ccstructs_dtor_I, my_alpha_t, embedded, delete) (ccstructs_dtor_I I CCSTRUCTS_UNUSED)
+ccname_iface_methodex(ccstructs_dtor_I, my_alpha_t, embedded, delete) (ccstructs_dtor_I I CCSTRUCTS_UNUSED)
 {
   if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
 }
 
 /* Methods table  for the  "dtor" interface. */
 static ccstructs_dtor_I_methods_t const CCNAME_IFACE_TABLE(ccstructs_dtor_I, my_alpha_t, embedded) = {
-  .final	= CCNAME_IFACE_METHOD(ccstructs_dtor_I, my_alpha_t, embedded, final),
-  .delete	= CCNAME_IFACE_METHOD(ccstructs_dtor_I, my_alpha_t, embedded, delete)
+  .final	= ccname_iface_methodex(ccstructs_dtor_I, my_alpha_t, embedded, final),
+  .delete	= ccname_iface_methodex(ccstructs_dtor_I, my_alpha_t, embedded, delete)
 };
 
 /* Constructor for the "dtor" interface. */
 static ccstructs_dtor_I
-CCNAME_IFACE_NEW(ccstructs_dtor_I, my_alpha_t, embedded) (ccstructs_core_t const * const self)
+ccname_iface_newex(ccstructs_dtor_I, my_alpha_t, embedded) (ccstructs_core_t const * const self)
 {
   return ccstructs_new_dtor(self, &CCNAME_IFACE_TABLE(ccstructs_dtor_I, my_alpha_t, embedded));
 }
@@ -169,33 +169,33 @@ CCNAME_IFACE_NEW(ccstructs_dtor_I, my_alpha_t, embedded) (ccstructs_core_t const
 
 /* Interface "dtor": "final()" method. */
 static void
-CCNAME_IFACE_METHOD(ccstructs_dtor_I, my_alpha_t, standalone, final) (ccstructs_dtor_I I)
+ccname_iface_methodex(ccstructs_dtor_I, my_alpha_t, standalone, final) (ccstructs_dtor_I I)
 {
   CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
 
-  ccstructs_final(my_alpha_t, self);
+  ccname_final(my_alpha_t)(self);
   if (1) { fprintf(stderr, "%-35s: finalised by dtor\n", __func__); }
 }
 
 /* Interface "dtor": "delete()" method. */
 static void
-CCNAME_IFACE_METHOD(ccstructs_dtor_I, my_alpha_t, standalone, delete) (ccstructs_dtor_I I)
+ccname_iface_methodex(ccstructs_dtor_I, my_alpha_t, standalone, delete) (ccstructs_dtor_I I)
 {
   CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
 
-  ccstructs_release(my_alpha_t, self);
+  ccname_release(my_alpha_t)(self);
   if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
 }
 
 /* Methods table for the "dtor" interface. */
 static ccstructs_dtor_I_methods_t const CCNAME_IFACE_TABLE(ccstructs_dtor_I, my_alpha_t, standalone) = {
-  .final	= CCNAME_IFACE_METHOD(ccstructs_dtor_I, my_alpha_t, standalone, final),
-  .delete	= CCNAME_IFACE_METHOD(ccstructs_dtor_I, my_alpha_t, standalone, delete)
+  .final	= ccname_iface_methodex(ccstructs_dtor_I, my_alpha_t, standalone, final),
+  .delete	= ccname_iface_methodex(ccstructs_dtor_I, my_alpha_t, standalone, delete)
 };
 
 /* Constructor for the "dtor" interface. */
 static ccstructs_dtor_I
-CCNAME_IFACE_NEW(ccstructs_dtor_I, my_alpha_t, standalone) (ccstructs_core_t const * const self)
+ccname_iface_newex(ccstructs_dtor_I, my_alpha_t, standalone) (ccstructs_core_t const * const self)
 {
   return ccstructs_new_dtor(self, &CCNAME_IFACE_TABLE(ccstructs_dtor_I, my_alpha_t, standalone));
 }
@@ -208,7 +208,7 @@ CCNAME_IFACE_NEW(ccstructs_dtor_I, my_alpha_t, standalone) (ccstructs_core_t con
 /* Interface  constructor function.   Return a  new instance  of "dtor"
    interface which destroys the struct instance. */
 ccstructs_dtor_I
-CCNAME_IFACE_NEW(ccstructs_dtor_I, my_alpha_t, ) (my_alpha_t const * const self)
+ccname_iface_new(ccstructs_dtor_I, my_alpha_t) (my_alpha_t const * const self)
 {
   return self->methods->new_dtor(ccstructs_core(self));
 }

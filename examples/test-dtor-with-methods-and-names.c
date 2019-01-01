@@ -107,8 +107,8 @@ test_1_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    ccstructs_init(my_alpha_t, , A, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, ccstructs_iface_new(ccstructs_dtor_I, my_alpha_t, , A));
+    ccname_init(my_alpha_t)(A, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_alpha_t)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -136,8 +136,8 @@ test_1_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    ccstructs_init(my_alpha_t, , A, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, ccstructs_iface_new(ccstructs_dtor_I, my_alpha_t, , A));
+    ccname_init(my_alpha_t)(A, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_alpha_t)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -167,8 +167,8 @@ test_2_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    A = ccstructs_new(my_alpha_t, , L, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, ccstructs_iface_new(ccstructs_dtor_I, my_alpha_t, , A));
+    A = ccname_new(my_alpha_t)(L, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_alpha_t)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -196,8 +196,8 @@ test_2_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    A = ccstructs_new(my_alpha_t, , L, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, ccstructs_iface_new(ccstructs_dtor_I, my_alpha_t, , A));
+    A = ccname_new(my_alpha_t)(L, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_alpha_t)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);

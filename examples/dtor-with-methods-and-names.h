@@ -79,11 +79,11 @@ struct my_alpha_t {
 
 /* Constructor function.  Allocate the struct instance on the heap using
    the standard memory allocator implemented by CCMemory. */
-ccstructs_decl my_alpha_t const * CCNAME_NEW(my_alpha_t,) (cce_destination_t L, double x, double y, double z)
+ccstructs_decl my_alpha_t const * ccname_new(my_alpha_t) (cce_destination_t L, double x, double y, double z)
   __attribute__((__nonnull__((1))));
 
 /* Constructor function.  Initialise an already allocated struct. */
-ccstructs_decl void CCNAME_INIT(my_alpha_t,) (my_alpha_t * self, double x, double y, double z)
+ccstructs_decl void ccname_init(my_alpha_t) (my_alpha_t * self, double x, double y, double z)
   __attribute__((__nonnull__((1))));
 
 
@@ -93,7 +93,7 @@ ccstructs_decl void CCNAME_INIT(my_alpha_t,) (my_alpha_t * self, double x, doubl
 
 /* Interface  constructor function.   Return a  new instance  of "dtor"
    interface which destroys the struct instance. */
-ccstructs_decl ccstructs_dtor_I CCNAME_IFACE_NEW(ccstructs_dtor_I, my_alpha_t,) (my_alpha_t const * self)
+ccstructs_decl ccstructs_dtor_I ccname_iface_new(ccstructs_dtor_I, my_alpha_t) (my_alpha_t const * self)
   __attribute__((__nonnull__(1)));
 
 
