@@ -9,7 +9,7 @@ AC_INIT([CCStructs],[MMUX_PACKAGE_VERSION],
 MMUX_INIT
 MMUX_LIBTOOL_LIBRARY_VERSIONS([ccstructs],1,0,0)
 AC_REVISION([0.1])
-AC_COPYRIGHT([Copyright (c) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+AC_COPYRIGHT([Copyright (c) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
 This program is free software: you  can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as published by
@@ -32,6 +32,14 @@ AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 AM_MAINTAINER_MODE
+
+AC_CACHE_CHECK([whether to install ccnames.h (default yes)],
+  [ccstructs_cv_install_ccnames],
+  [AC_ARG_ENABLE([CCNAMES],
+     [AS_HELP_STRING([--enable-ccnames],[enables installation of ccnames.h])],
+     [AS_VAR_SET([ccstructs_cv_install_ccnames],[$enable_CCNAMES])],
+     [AS_VAR_SET([ccstructs_cv_install_ccnames],[yes])])])
+AM_CONDITIONAL([WANTS_CCNAMES],[test "$ccstructs_cv_install_ccnames" = yes])
 
 AM_PROG_AR
 AC_PROG_INSTALL

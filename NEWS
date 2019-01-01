@@ -10,6 +10,8 @@ Revision 0.1.0-devel.3
 
 * Renamed "dtors" interface to "dtor".
 
+* Added experimental header file "ccnames.h".
+
 
 Revision 0.1.0-devel.2
 ----------------------

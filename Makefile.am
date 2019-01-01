@@ -45,6 +45,10 @@ libccstructs_la_SOURCES		= \
 	src/ccstructs-exception-handlers.c	\
 	src/ccstructs-pathname.c
 
+if WANTS_CCNAMES
+include_HEADERS		+= src/ccnames.h
+endif
+
 
 #### tests
 
