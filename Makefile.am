@@ -114,9 +114,10 @@ gdb-test: $(builddir)/.gdbinit
 #
 
 if MMUX_TESTING_ENABLED
-noinst_PROGRAMS	=			\
-	examples/test-dtor-no-methods	\
-	examples/test-dtor-with-methods
+noinst_PROGRAMS	=					\
+	examples/test-dtor-no-methods			\
+	examples/test-dtor-with-methods			\
+	examples/test-dtor-with-methods-and-names
 endif
 
 ccstructs_examples_cppflags	= -I$(srcdir)/src -I$(srcdir)/examples $(CCTESTS_CFLAGS)
@@ -127,6 +128,7 @@ ccstructs_examples_ldadd	= libccstructs.la $(CCTESTS_LIBS)
 examples: $(noinst_PROGRAMS)
 	-./examples/test-dtor-no-methods
 	-./examples/test-dtor-with-methods
+	-./examples/test-dtor-with-methods-and-names
 
 ## --------------------------------------------------------------------
 
@@ -151,6 +153,18 @@ examples_test_dtor_with_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
 examples_test_dtor_with_methods_LDADD		= $(ccstructs_examples_ldadd)
 
 $(examples_test_dtor_with_methods_OBJECTS): libccstructs.la
+
+## --------------------------------------------------------------------
+
+examples_test_dtor_with_methods_and_names_SOURCES =	\
+	examples/dtor-with-methods-and-names.h		\
+	examples/dtor-with-methods-and-names.c		\
+	examples/test-dtor-with-methods-and-names.c
+
+examples_test_dtor_with_methods_and_names_CPPFLAGS	= $(ccstructs_examples_cppflags)
+examples_test_dtor_with_methods_and_names_LDADD		= $(ccstructs_examples_ldadd)
+
+$(examples_test_dtor_with_methods_and_names_OBJECTS): libccstructs.la
 
 
 #### Valgrind analysis
