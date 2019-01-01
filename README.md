@@ -20,7 +20,7 @@ both Ubuntu GNU+Linux systems and OS X systems.
 
 ## License
 
-Copyright (c) 2018 Marco Maggi <marco.maggi-ipsu@poste.it><br/>
+Copyright (c) 2018-2019 Marco Maggi <marco.maggi-ipsu@poste.it><br/>
 All rights reserved.
 
 This program is free software: you  can redistribute it and/or modify it
