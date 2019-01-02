@@ -6,7 +6,8 @@ EXTRA_DIST		= INSTALL			\
 			  meta/slackware/slack-desc.in
 dist_doc_DATA		= README COPYING
 AM_CFLAGS		= $(MMUX_CFLAGS) -I$(srcdir)/src
-#AM_ETAGSFLAGS		= --regex='{c}/ccname_init(.+)/'
+AM_ETAGSFLAGS		= \
+	--regex='{c}/\(ccname_\(init\|new\|final\|delete\|release\|table\|iface_\(new\|table\|method\)\)([^)]+)\)/\1/'
 
 ## --------------------------------------------------------------------
 
