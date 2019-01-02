@@ -38,6 +38,57 @@
 
 
 /** --------------------------------------------------------------------
+ ** Variadic macros mechanism.
+ ** ----------------------------------------------------------------- */
+
+/* The  following  macros are  adapted  from  Stack Overflow  (URL  last
+ * accessed Jan 2, 2019):
+ *
+ *   <https://stackoverflow.com/a/26408195>
+ */
+
+/* The macro use:
+ *
+ *   CCNAMES__NARG__(__VA_ARGS__)
+ *
+ * expands into the number of arguments in __VA_ARGS__.
+ */
+#define CCNAMES__NARG__(...)	CCNAMES__NARG_I_(__VA_ARGS__,CCNAMES__RSEQ_N())
+#define CCNAMES__NARG_I_(...)	CCNAMES__ARG_N(__VA_ARGS__)
+#define CCNAMES__ARG_N( \
+      _1, _2, _3, _4, _5, _6, _7, _8, _9,_10, \
+     _11,_12,_13,_14,_15,_16,_17,_18,_19,_20, \
+     _21,_22,_23,_24,_25,_26,_27,_28,_29,_30, \
+     _31,_32,_33,_34,_35,_36,_37,_38,_39,_40, \
+     _41,_42,_43,_44,_45,_46,_47,_48,_49,_50, \
+     _51,_52,_53,_54,_55,_56,_57,_58,_59,_60, \
+     _61,_62,_63,N,...)		N
+#define CCNAMES__RSEQ_N() \
+     63,62,61,60,                   \
+     59,58,57,56,55,54,53,52,51,50, \
+     49,48,47,46,45,44,43,42,41,40, \
+     39,38,37,36,35,34,33,32,31,30, \
+     29,28,27,26,25,24,23,22,21,20, \
+     19,18,17,16,15,14,13,12,11,10, \
+     9,8,7,6,5,4,3,2,1,0
+
+/* The macro uses:
+ *
+ *    CCNAMES_VFUNC(ccname_new, alpha)
+ *    CCNAMES_VFUNC(ccname_new, alpha, beta)
+ *
+ * respectively expand into:
+ *
+ *    ccname_new_1(alpha)
+ *    ccname_new_2(alpha, beta)
+ *
+ */
+#define CCNAMES___VFUNC(NAME, N)	NAME ## _ ## N
+#define CCNAMES__VFUNC(NAME, N)		CCNAMES___VFUNC(NAME, N)
+#define CCNAMES_VFUNC(FUNC, ...)	CCNAMES__VFUNC(FUNC, CCNAMES__NARG__(__VA_ARGS__))(__VA_ARGS__)
+
+
+/** --------------------------------------------------------------------
  ** Name definitions.
  ** ----------------------------------------------------------------- */
 
@@ -99,8 +150,9 @@
 /* Given a struct type name, a variant specification, a (possibly empty)
    variant  specification, and  a  (possibly empty)  list of  arguments:
    expand into the invocation of the API function "new()". */
-#define ccname_new(STRUCT_TYPE)			CCNAME_NEW(STRUCT_TYPE, )
-#define ccname_newex(STRUCT_TYPE, VARIANT)	CCNAME_NEW(STRUCT_TYPE, VARIANT)
+#define ccname_new_1(STRUCT_TYPE)		CCNAME_NEW(STRUCT_TYPE, )
+#define ccname_new_2(STRUCT_TYPE, VARIANT)	CCNAME_NEW(STRUCT_TYPE, VARIANT)
+#define ccname_new(...)				CCNAMES_VFUNC(ccname_new, __VA_ARGS__)
 
 /* Given a struct type name and an expression evaluating to a pointer to
    the struct instance:  expand into the invocation of  the API function
@@ -110,8 +162,9 @@
 /* Given a struct type name, a variant specification, a (possibly empty)
    variant  specification, and  a  (possibly empty)  list of  arguments:
    expand into the invocation of the API function "init()". */
-#define ccname_init(STRUCT_TYPE)		CCNAME_INIT(STRUCT_TYPE, )
-#define ccname_initex(STRUCT_TYPE, VARIANT)	CCNAME_INIT(STRUCT_TYPE, VARIANT)
+#define ccname_init_1(STRUCT_TYPE)		CCNAME_INIT(STRUCT_TYPE, )
+#define ccname_init_2(STRUCT_TYPE, VARIANT)	CCNAME_INIT(STRUCT_TYPE, VARIANT)
+#define ccname_init(...)			CCNAMES_VFUNC(ccname_init, __VA_ARGS__)
 
 /* Given a struct type name and an expression evaluating to a pointer to
    the struct instance:  expand into the invocation of  the API function
@@ -130,31 +183,35 @@
 /* Given   a  struct   type  name   and  a   (possibly  empty)   variant
    specification: expand  into the  name of the  methods table  for that
    type. */
-#define ccname_table(STRUCT_TYPE)		CCNAME_TABLE(STRUCT_TYPE, )
-#define ccname_tableex(STRUCT_TYPE, VARIANT)	CCNAME_TABLE(STRUCT_TYPE, VARIANT)
+#define ccname_table_1(STRUCT_TYPE)		CCNAME_TABLE(STRUCT_TYPE, )
+#define ccname_table_2(STRUCT_TYPE, VARIANT)	CCNAME_TABLE(STRUCT_TYPE, VARIANT)
+#define ccname_table(...)			CCNAMES_VFUNC(ccname_table, __VA_ARGS__)
 
 /* Given an  interface type name,  a struct  type name, and  a (possibly
    empty) variant  specification: expand  into the  name of  the methods
    table for that variant of the interface implementation for the struct
    type. */
-#define ccname_iface_table(IFACE_TYPE, STRUCT_TYPE)		CCNAME_IFACE_TABLE(IFACE_TYPE, STRUCT_TYPE, )
-#define ccname_iface_tableex(IFACE_TYPE, STRUCT_TYPE, VARIANT)	CCNAME_IFACE_TABLE(IFACE_TYPE, STRUCT_TYPE, VARIANT)
+#define ccname_iface_table_2(IFACE_TYPE, STRUCT_TYPE)		CCNAME_IFACE_TABLE(IFACE_TYPE, STRUCT_TYPE, )
+#define ccname_iface_table_3(IFACE_TYPE, STRUCT_TYPE, VARIANT)	CCNAME_IFACE_TABLE(IFACE_TYPE, STRUCT_TYPE, VARIANT)
+#define ccname_iface_table(...)					CCNAMES_VFUNC(ccname_iface_table, __VA_ARGS__)
 
 /* Given an interface type name, a  struct type name, a (possibly empty)
    variant specification, and an expression  that evaluates to a pointer
    to struct  instance: expand into  the invocation of the  API function
    "new()" that instantiates the interface for the struct. */
-#define ccname_iface_new(IFACE_TYPE, STRUCT_TYPE)		CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, )
-#define ccname_iface_newex(IFACE_TYPE, STRUCT_TYPE, VARIANT)	CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, VARIANT)
+#define ccname_iface_new_2(IFACE_TYPE, STRUCT_TYPE)		CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, )
+#define ccname_iface_new_3(IFACE_TYPE, STRUCT_TYPE, VARIANT)	CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, VARIANT)
+#define ccname_iface_new(...)					CCNAMES_VFUNC(ccname_iface_new, __VA_ARGS__)
 
 /* Given an interface type name, a  struct type name, a (possibly empty)
    variant specification, and a method name: expand into the name of the
    method function for that variant  of the interface implementation for
    the struct type. */
-#define ccname_iface_method(IFACE_TYPE, STRUCT_TYPE, METHOD_NAME)	\
+#define ccname_iface_method_3(IFACE_TYPE, STRUCT_TYPE, METHOD_NAME)		\
   CCNAME_IFACE_METHOD(IFACE_TYPE, STRUCT_TYPE,        , METHOD_NAME)
-#define ccname_iface_methodex(IFACE_TYPE, STRUCT_TYPE, VARIANT, METHOD_NAME)	\
+#define ccname_iface_method_4(IFACE_TYPE, STRUCT_TYPE, VARIANT, METHOD_NAME)	\
   CCNAME_IFACE_METHOD(IFACE_TYPE, STRUCT_TYPE, VARIANT, METHOD_NAME)
+#define ccname_iface_method(...)				CCNAMES_VFUNC(ccname_iface_method, __VA_ARGS__)
 
 
 /** --------------------------------------------------------------------
