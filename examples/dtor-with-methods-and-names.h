@@ -63,10 +63,10 @@
  ** ----------------------------------------------------------------- */
 
 typedef struct my_alpha_t			my_alpha_t;
-typedef struct CCNAME_TABLE_T(my_alpha_t)	CCNAME_TABLE_T(my_alpha_t);
+typedef struct ccname_table_type(my_alpha_t)	ccname_table_type(my_alpha_t);
 
 struct my_alpha_t {
-  CCNAME_TABLE_T(my_alpha_t) const *	methods;
+  ccname_table_type(my_alpha_t) const *	methods;
   double	X;
   double	Y;
   double	Z;
