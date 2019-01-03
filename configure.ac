@@ -75,6 +75,9 @@ PKG_CHECK_MODULES([CCTESTS],[cctests >= 0.3.0],,[AC_MSG_WARN([package CCTests no
 
 AM_CONDITIONAL([MMUX_TESTING_ENABLED],[test -n "$CCTESTS_LIBS"])
 
+AC_SUBST([CCEXCEPTIONS_HEADER],$(pkg-config ccexceptions --variable=includedir)/ccexceptions.h)
+AC_SUBST([CCMEMORY_HEADER],    $(pkg-config ccmemory     --variable=includedir)/ccmemory.h)
+
 AC_CACHE_SAVE
 
 

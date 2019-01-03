@@ -7,6 +7,8 @@ EXTRA_DIST		= INSTALL			\
 dist_doc_DATA		= README COPYING
 AM_CFLAGS		= $(MMUX_CFLAGS) -I$(srcdir)/src
 AM_ETAGSFLAGS		= \
+	$(CCEXCEPTIONS_HEADER)		\
+	$(CCMEMORY_HEADER)		\
 	--regex='{c}/\(ccname_\(init\|new\|final\|delete\|release\|table\|iface_\(new\|table\|method\)\)([^)]+)\)/\1/'
 
 ## --------------------------------------------------------------------
