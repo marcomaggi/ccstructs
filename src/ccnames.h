@@ -35,6 +35,28 @@
 
 
 /** --------------------------------------------------------------------
+ ** Preliminary definitions.
+ ** ----------------------------------------------------------------- */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* The  macro  CCNAMES_UNUSED  indicates  that a  function,  function
+   argument or variable may potentially be unused. Usage examples:
+
+   static int unused_function (char arg) CCNAMES_UNUSED;
+   int foo (char unused_argument CCNAMES_UNUSED);
+   int unused_variable CCNAMES_UNUSED;
+*/
+#ifdef __GNUC__
+#  define CCNAMES_UNUSED		__attribute__((__unused__))
+#else
+#  define CCNAMES_UNUSED		/* empty */
+#endif
+
+
+/** --------------------------------------------------------------------
  ** Variadic macros mechanism.
  ** ----------------------------------------------------------------- */
 
@@ -106,17 +128,26 @@
 #define _CCNAME_FINAL(STRUCT_TYPE)		STRUCT_TYPE ## __final
 
 /* Given a  struct type name: expand  into the name of  the API function
+   "alloc()". */
+#define _CCNAME_ALLOC(STRUCT_TYPE)		STRUCT_TYPE ## __alloc
+
+/* Given a  struct type name: expand  into the name of  the API function
    "release()". */
 #define _CCNAME_RELEASE(STRUCT_TYPE)		STRUCT_TYPE ## __release
 
-/* Given a struct  type name: expand into the name  of the methods table
-   type for the struct type. */
-#define _CCNAME_TABLE_TYPE(STRUCT_TYPE)		STRUCT_TYPE ## __methods_table_t
+/* Given a struct type name an a (possibly empty) variant specification:
+   expand  into the  name  of  the methods  table  type  for the  struct
+   type. */
+#define _CCNAME_TABLE_TYPE(STRUCT_TYPE, VARIANT) STRUCT_TYPE ## __ ## VARIANT ## __methods_table_t
 
 /* Given   a  struct   type  name   and  a   (possibly  empty)   variant
    specification: expand  into the  name of the  methods table  for that
    type. */
 #define _CCNAME_TABLE(STRUCT_TYPE, VARIANT)	STRUCT_TYPE ## __ ## VARIANT ## __methods_table
+
+/* Given a struct type  name and a method name: expand  into the name of
+   the method for that type. */
+#define _CCNAME_METHOD(STRUCT_TYPE, METHOD_NAME) STRUCT_TYPE ## __method__ ## METHOD_NAME
 
 /* Given an  interface type name,  a struct  type name, and  a (possibly
    empty)  variant  specification:  expand  into the  name  of  the  API
@@ -165,40 +196,47 @@
 #define ccname_final(STRUCT_TYPE)		_CCNAME_FINAL(STRUCT_TYPE)
 
 /* Given a  struct type name: expand  into the name of  the API function
+   "alloc()". */
+#define ccname_alloc(STRUCT_TYPE)		_CCNAME_ALLOC(STRUCT_TYPE)
+
+/* Given a  struct type name: expand  into the name of  the API function
    "release()". */
 #define ccname_release(STRUCT_TYPE)		_CCNAME_RELEASE(STRUCT_TYPE)
 
 /* Given a struct  type name: expand into the name  of the methods table
    type for the struct type. */
-#define ccname_table_type(STRUCT_TYPE)		_CCNAME_TABLE_TYPE(STRUCT_TYPE)
+#define ccname_table_type_1(STRUCT_TYPE)	_CCNAME_TABLE_TYPE(STRUCT_TYPE, )
+#define ccname_table_type_2(STRUCT_TYPE, VARIANT) _CCNAME_TABLE_TYPE(STRUCT_TYPE, VARIANT)
+#define ccname_table_type(...)			_CCNAMES_VFUNC(ccname_table_type, __VA_ARGS__)
 
-/* Given   a  struct   type  name   and  a   (possibly  empty)   variant
-   specification: expand  into the  name of the  methods table  for that
-   type. */
+/* Given  a struct  type  name and  an  optional variant  specification:
+   expand into the name of the methods table for that type. */
 #define ccname_table_1(STRUCT_TYPE)		_CCNAME_TABLE(STRUCT_TYPE, )
 #define ccname_table_2(STRUCT_TYPE, VARIANT)	_CCNAME_TABLE(STRUCT_TYPE, VARIANT)
 #define ccname_table(...)			_CCNAMES_VFUNC(ccname_table, __VA_ARGS__)
 
-/* Given an  interface type name,  a struct  type name, and  a (possibly
-   empty) variant  specification: expand  into the  name of  the methods
-   table for that variant of the interface implementation for the struct
-   type. */
+/* Given a struct type  name and a method name: expand  into the name of
+   the method for that type. */
+#define ccname_method(STRUCT_TYPE, METHOD_NAME)	_CCNAME_METHOD(STRUCT_TYPE, METHOD_NAME)
+
+/* Given an  interface type name,  a struct  type name, and  an optional
+   variant specification: expand into the  name of the methods table for
+   that variant of the interface implementation for the struct type. */
 #define ccname_iface_table_2(IFACE_TYPE, STRUCT_TYPE)		_CCNAME_IFACE_TABLE(IFACE_TYPE, STRUCT_TYPE, )
 #define ccname_iface_table_3(IFACE_TYPE, STRUCT_TYPE, VARIANT)	_CCNAME_IFACE_TABLE(IFACE_TYPE, STRUCT_TYPE, VARIANT)
 #define ccname_iface_table(...)					_CCNAMES_VFUNC(ccname_iface_table, __VA_ARGS__)
 
-/* Given an interface type name, a  struct type name, a (possibly empty)
-   variant  specification: expand  into  the name  of  the API  function
-   "new()"  that instantiates  that  variant of  the  interface for  the
-   struct. */
+/* Given an interface type name, a struct type name, an optional variant
+   specification: expand into the name  of the API function "new()" that
+   instantiates that variant of the interface for the struct. */
 #define ccname_iface_new_2(IFACE_TYPE, STRUCT_TYPE)		_CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, )
 #define ccname_iface_new_3(IFACE_TYPE, STRUCT_TYPE, VARIANT)	_CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, VARIANT)
 #define ccname_iface_new(...)					_CCNAMES_VFUNC(ccname_iface_new, __VA_ARGS__)
 
-/* Given an interface type name, a  struct type name, a (possibly empty)
-   variant specification, and a method name: expand into the name of the
-   method function for that variant  of the interface implementation for
-   the struct type. */
+/* Given an interface type name, a struct type name, an optional variant
+   specification, and a method name: expand  into the name of the method
+   function for  that variant  of the  interface implementation  for the
+   struct type. */
 #define ccname_iface_method_3(IFACE_TYPE, STRUCT_TYPE, METHOD_NAME)		\
   _CCNAME_IFACE_METHOD(IFACE_TYPE, STRUCT_TYPE,        , METHOD_NAME)
 #define ccname_iface_method_4(IFACE_TYPE, STRUCT_TYPE, VARIANT, METHOD_NAME)	\
@@ -209,6 +247,10 @@
 /** --------------------------------------------------------------------
  ** Done.
  ** ----------------------------------------------------------------- */
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif /* defined CCNAMES_H */
 

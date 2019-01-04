@@ -119,6 +119,8 @@ gdb-test: $(builddir)/.gdbinit
 
 if MMUX_TESTING_ENABLED
 noinst_PROGRAMS	=					\
+	examples/ccnames-struct-common-no-methods	\
+	examples/ccnames-struct-common-with-methods	\
 	examples/test-dtor-no-methods			\
 	examples/test-dtor-with-methods			\
 	examples/test-dtor-with-methods-and-names
@@ -130,9 +132,31 @@ ccstructs_examples_ldadd	= libccstructs.la $(CCTESTS_LIBS)
 .PHONY: examples
 
 examples: $(noinst_PROGRAMS)
-	-./examples/test-dtor-no-methods
-	-./examples/test-dtor-with-methods
-	-./examples/test-dtor-with-methods-and-names
+	-examples/ccnames-struct-common-no-methods
+	-examples/ccnames-struct-common-with-methods
+	-examples/test-dtor-no-methods
+	-examples/test-dtor-with-methods
+	-examples/test-dtor-with-methods-and-names
+
+## --------------------------------------------------------------------
+
+examples_ccnames_struct_common_no_methods_SOURCES =	\
+	examples/ccnames-struct-common-no-methods.c
+
+examples_ccnames_struct_common_no_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
+examples_ccnames_struct_common_no_methods_LDADD		= $(ccstructs_examples_ldadd) -lm
+
+$(examples_ccnames_struct_common_no_methods_OBJECTS): libccstructs.la
+
+## --------------------------------------------------------------------
+
+examples_ccnames_struct_common_with_methods_SOURCES =	\
+	examples/ccnames-struct-common-with-methods.c
+
+examples_ccnames_struct_common_with_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
+examples_ccnames_struct_common_with_methods_LDADD	= $(ccstructs_examples_ldadd) -lm
+
+$(examples_ccnames_struct_common_with_methods_OBJECTS): libccstructs.la
 
 ## --------------------------------------------------------------------
 

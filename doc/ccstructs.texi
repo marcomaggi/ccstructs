@@ -152,6 +152,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 
 Appendices
 
+* ccnames::                     Automatically generated @api{} names.
 * Package License::             GNU Lesser General Public License.
 * Documentation License::       GNU Free Documentation License.
 * references::                  Bibliography and references.
@@ -1233,6 +1234,292 @@ __attribute__((__unused__))
 
 @noindent
 otherwise the expansion is the empty string.
+@end defmac
+
+@c page
+@node ccnames
+@appendix Automatically generated @api{} names
+
+
+The header file @file{ccnames.h} defines a set of macros that generate, at expansion time,
+identifiers for functions and variables that have ``well known'' roles in the @api{} of the
+CCLibraries projects.
+
+@menu
+* ccnames struct common::       Well known functions for @struct{} types.
+* ccnames struct table::        Tables of methods for @struct{} types.
+* ccnames iface common::        Well known functions for interface types.
+* ccnames iface table::         Tables of methods for interface types.
+@end menu
+
+@c page
+@node ccnames struct common
+@appendixsec Well known functions for @struct{} types
+
+
+@defmac ccname_init (@var{STRUCT_TYPE})
+@defmacx ccname_init (@var{STRUCT_TYPE}, @var{VARIANT})
+Given a @struct{} type name and an optional variant specification: expand into the name of the
+@api{} function @cfunc{init}.
+
+Functions with this name are constructors for @struct{} instances allocated on the stack or embedded
+into enclosing @struct{} instances.  They allocate all the asynchronous resources and initialise the
+@struct{} fields.
+@end defmac
+
+
+@defmac ccname_final (@var{STRUCT_TYPE})
+Given a @struct{} type name: expand into the name of the @api{} function @cfunc{final}.
+
+Functions with this name are destructors for @struct{} instances allocated on the stack or embedded
+into enclosing @struct{} instances.  They release all the asynchronous resources associated to the
+@struct{} fields.
+@end defmac
+
+
+@defmac ccname_alloc (@var{STRUCT_TYPE})
+Given a @struct{} type name: expand into the name of the @api{} function @cfunc{alloc}.
+
+Functions of this type are memory allocators for @struct{} instances allocated on the heap.  They
+might perform the allocation using the @api{} of the library CCMemory.
+@end defmac
+
+
+@defmac ccname_release (@var{STRUCT_TYPE})
+Given a @struct{} type name: expand into the name of the @api{} function @cfunc{release}.
+
+Functions of this type are memory releasers for @struct{} instances allocated on the heap.  They
+might perform the release using the @api{} of the library CCMemory.
+@end defmac
+
+
+@defmac ccname_new (@var{STRUCT_TYPE})
+@defmacx ccname_new (@var{STRUCT_TYPE}, @var{VARIANT})
+Given a @struct{} type name and an optional variant specification: expand into the name of the
+@api{} function @cfunc{new}.
+
+Functions with this name are constructors for @struct{} instances allocated on the heap.  The memory
+allocation is performed by calling the @cfunc{alloc} function.  The initialisation of the fields is
+performed by calling the @cfunc{init} function.
+@end defmac
+
+
+@defmac ccname_delete (@var{STRUCT_TYPE})
+Given a @struct{} type name: expand into the name of the @api{} function @cfunc{delete}.
+
+Functions with this name are destructors for @struct{} instances allocated on the heap.  The
+finalisation of the fields is performed by calling the @cfunc{final} function.  The memory release
+is performed by calling the @cfunc{release} function.
+@end defmac
+
+
+An example of common function implementation for @struct{} types:
+
+@smallexample
+#include <ccexceptions.h>
+#include <ccmemory.h>
+#include <ccnames.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+typedef struct my_coords_t      my_coords_t;
+
+struct my_coords_t @{
+  double        X;
+  double        Y;
+@};
+
+void
+ccname_init(my_coords_t, rec) (my_coords_t * S, double X, double Y)
+@{
+  S->X = X;
+  S->Y = Y;
+@}
+
+void
+ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
+@{
+  S->X = RHO * cos(THETA);
+  S->Y = RHO * sin(THETA);
+@}
+
+void
+ccname_final(my_coords_t) (my_coords_t * S)
+@{
+@}
+
+static my_coords_t *
+ccname_alloc(my_coords_t) (cce_destination_t L)
+@{
+  return (my_coords_t *)ccmem_std_malloc(L, sizeof(my_coords_t));
+@}
+
+static void
+ccname_release(my_coords_t) (my_coords_t * S)
+@{
+  ccmem_std_free(S);
+@}
+
+my_coords_t *
+ccname_new(my_coords_t, rec) (cce_destination_t L, double X, double Y)
+@{
+  my_coords_t * S = ccname_alloc(my_coords_t)(L);
+
+  ccname_init(my_coords_t, rec)(S, X, Y);
+  return S;
+@}
+
+my_coords_t *
+ccname_new(my_coords_t, pol) (cce_destination_t L, double RHO, double THETA)
+@{
+  my_coords_t * S = ccname_alloc(my_coords_t)(L);
+
+  ccname_init(my_coords_t, pol)(S, RHO, THETA);
+  return S;
+@}
+
+void
+ccname_delete(my_coords_t) (my_coords_t * S)
+@{
+  ccname_final(my_coords_t)(S);
+  ccname_release(my_coords_t)(S);
+@}
+
+int
+main (void)
+@{
+  cce_location_t        L[1];
+  my_coords_t *         S;
+
+  if (cce_location(L)) @{
+    cce_run_catch_handlers_final(L);
+  @} else @{
+    S = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
+
+    printf("X=%f, Y=%f\n", S->X, S->Y);
+    ccname_delete(my_coords_t)(S);
+  @}
+  exit(EXIT_SUCCESS);
+@}
+@end smallexample
+
+@c page
+@node ccnames struct table
+@appendixsec Tables of methods for @struct{} types
+
+
+@defmac ccname_table_type (@var{STRUCT_TYPE})
+@defmacx ccname_table_type (@var{STRUCT_TYPE}, @var{VARIANT})
+Given a @struct{} type name and an optional variant specification: expand into the name of the
+methods table type for the @struct{} type.
+@end defmac
+
+
+@defmac ccname_table (@var{STRUCT_TYPE})
+@defmacx ccname_table (@var{STRUCT_TYPE}, @var{VARIANT})
+Given a @struct{} type name and an optional variant specification: expand into the name of the
+methods table for the @struct{} type.
+@end defmac
+
+
+@defmac ccname_method (@var{STRUCT_TYPE}, @var{METHOD_NAME})
+Given a @struct{} type name and a method name: expand into the name of the method for that type.
+@end defmac
+
+
+An example of methods table implementation for @struct{} types:
+
+@smallexample
+#include <ccexceptions.h>
+#include <ccnames.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct my_coords_t                      my_coords_t;
+typedef struct ccname_table_type(my_coords_t)   ccname_table_type(my_coords_t);
+
+typedef void my_coords_print_fun_t (my_coords_t * S, FILE * stream);
+
+struct my_coords_t @{
+  ccname_table_type(my_coords_t) const * methods;
+  double        X;
+  double        Y;
+@};
+
+struct ccname_table_type(my_coords_t) @{
+  my_coords_print_fun_t *       print_rec;
+  my_coords_print_fun_t *       print_pol;
+@};
+
+static void
+ccname_method(my_coords_t, print_rec) (my_coords_t * S, FILE * stream)
+@{
+  fprintf(stream, "X=%f, Y=%f\n", S->X, S->Y);
+@}
+
+static void
+ccname_method(my_coords_t, print_pol) (my_coords_t * S, FILE * stream)
+@{
+  double        RHO   = hypot(S->X, S->Y);
+  double        THETA = atan2(S->Y, S->X);
+
+  fprintf(stream, "RHO=%f, THETA=%f\n", RHO, THETA);
+@}
+
+static ccname_table_type(my_coords_t) const ccname_table(my_coords_t) = @{
+  .print_rec    = ccname_method(my_coords_t, print_rec),
+  .print_pol    = ccname_method(my_coords_t, print_pol)
+@};
+
+void
+ccname_init(my_coords_t, rec) (my_coords_t * S, double X, double Y)
+@{
+  S->methods = &ccname_table(my_coords_t);
+  S->X = X;
+  S->Y = Y;
+@}
+
+void
+ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
+@{
+  S->methods = &ccname_table(my_coords_t);
+  S->X = RHO * cos(THETA);
+  S->Y = RHO * sin(THETA);
+@}
+@end smallexample
+
+@c page
+@node ccnames iface common
+@appendixsec Well known functions for interface types
+
+
+@defmac ccname_iface_new (@var{IFACE_TYPE}, @var{STRUCT_TYPE})
+@defmacx ccname_iface_new (@var{IFACE_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
+Given an interface type name, a struct type name, an optional variant specification: expand into the
+name of the @api{} function @cfunc{new} that instantiates that variant of the interface for the
+@struct{}.
+@end defmac
+
+
+@c page
+@node ccnames iface table
+@appendixsec Tables of methods for interface types
+
+
+@defmac ccname_iface_table (@var{IFACE_TYPE}, @var{STRUCT_TYPE})
+@defmacx ccname_iface_table (@var{IFACE_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
+Given an interface type name, a struct type name, and an optional variant specification: expand into
+the name of the methods table for that variant of the interface implementation for the @struct{}
+type.
+@end defmac
+
+
+@defmac ccname_iface_method (@var{IFACE_TYPE}, @var{STRUCT_TYPE}, @var{METHOD_NAME})
+@defmacx ccname_iface_method (@var{IFACE_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT}, @var{METHOD_NAME})
+Given an interface type name, a struct type name, an optional variant specification, and a method
+name: expand into the name of the method function for that variant of the interface implementation
+for the struct type.
 @end defmac
 
 @c page
