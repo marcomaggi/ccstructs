@@ -6,7 +6,7 @@
   Abstract
 
 	This  demo program  shows how  to implement  an interface  for a
-	struct type.  In this demo the data struct has no methods table.
+	struct type.  In this demo the data struct has a methods table.
 
   Copyright (C) 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -50,15 +50,32 @@
 
 
 /** --------------------------------------------------------------------
- ** Type definitions.
+ ** Type definitions: data struct.
  ** ----------------------------------------------------------------- */
 
 typedef struct my_coords_t	my_coords_t;
+typedef struct ccname_table_type(my_coords_t)	ccname_table_type(my_coords_t);
+
+typedef struct my_printable_I	my_printable_I;
+typedef my_printable_I ccname_method_type(my_coords_t, new_printable) (my_coords_t * self);
 
 struct my_coords_t {
+  ccname_table_type(my_coords_t) const * methods;
   double	X;
   double	Y;
 };
+
+struct ccname_table_type(my_coords_t) {
+  ccname_method_type(my_coords_t, new_printable) *	new_printable_rec;
+  ccname_method_type(my_coords_t, new_printable) *	new_printable_pol;
+};
+
+static ccname_table_type(my_coords_t) const * my_coords_methods_table (void);
+
+
+/** --------------------------------------------------------------------
+ ** Type definitions: interface struct.
+ ** ----------------------------------------------------------------- */
 
 typedef struct my_printable_I	my_printable_I;
 typedef struct ccname_iface_table_type(my_printable_I)	ccname_iface_table_type(my_printable_I);
@@ -71,18 +88,18 @@ struct my_printable_I {
 typedef void ccname_iface_method_type(my_printable_I, print) (my_printable_I I, FILE * stream);
 
 struct ccname_iface_table_type(my_printable_I) {
-  ccname_iface_method_type(my_printable_I, print) *	print_rec;
-  ccname_iface_method_type(my_printable_I, print) *	print_pol;
+  ccname_iface_method_type(my_printable_I, print) *	print;
 };
 
 
 /** --------------------------------------------------------------------
- ** Well known functions.
+ ** Data struct: well known functions.
  ** ----------------------------------------------------------------- */
 
 void
 ccname_init(my_coords_t, rec) (my_coords_t * S, double X, double Y)
 {
+  S->methods = my_coords_methods_table();
   S->X = X;
   S->Y = Y;
 }
@@ -90,6 +107,7 @@ ccname_init(my_coords_t, rec) (my_coords_t * S, double X, double Y)
 void
 ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
 {
+  S->methods = my_coords_methods_table();
   S->X = RHO * cos(THETA);
   S->Y = RHO * sin(THETA);
 }
@@ -138,7 +156,7 @@ ccname_delete(my_coords_t) (my_coords_t * S)
 
 
 /** --------------------------------------------------------------------
- ** Printable interface.
+ ** Printable interface: implementation function.
  ** ----------------------------------------------------------------- */
 
 my_printable_I
@@ -158,20 +176,14 @@ my_printable_self (my_printable_I I)
 }
 
 void
-my_printable_print_rec (my_printable_I I, FILE * stream)
+my_printable_print (my_printable_I I, FILE * stream)
 {
-  I.methods->print_rec(I, stream);
-}
-
-void
-my_printable_print_pol (my_printable_I I, FILE * stream)
-{
-  I.methods->print_pol(I, stream);
+  I.methods->print(I, stream);
 }
 
 
 /** --------------------------------------------------------------------
- ** Printable interface for "my_coords_t".
+ ** Printable interface for "my_coords_t": rectangular coordinates.
  ** ----------------------------------------------------------------- */
 
 static void
@@ -181,6 +193,21 @@ ccname_iface_method(my_printable_I, my_coords_t, print_rec) (my_printable_I I, F
 
   fprintf(stream, "X=%f, Y=%f\n", S->X, S->Y);
 }
+
+static ccname_iface_table_type(my_printable_I) const ccname_iface_table(my_printable_I, my_coords_t, rec) = {
+  .print	= ccname_iface_method(my_printable_I, my_coords_t, print_rec)
+};
+
+static my_printable_I
+ccname_iface_new(my_printable_I, my_coords_t, rec) (my_coords_t * S)
+{
+  return my_printable_new(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t, rec));
+}
+
+
+/** --------------------------------------------------------------------
+ ** Printable interface for "my_coords_t": polar coordinates.
+ ** ----------------------------------------------------------------- */
 
 static void
 ccname_iface_method(my_printable_I, my_coords_t, print_pol) (my_printable_I I, FILE * stream)
@@ -192,15 +219,42 @@ ccname_iface_method(my_printable_I, my_coords_t, print_pol) (my_printable_I I, F
   fprintf(stream, "RHO=%f, THETA=%f\n", RHO, THETA);
 }
 
-static ccname_iface_table_type(my_printable_I) const ccname_iface_table(my_printable_I, my_coords_t) = {
-  .print_rec	= ccname_iface_method(my_printable_I, my_coords_t, print_rec),
-  .print_pol	= ccname_iface_method(my_printable_I, my_coords_t, print_pol)
+static ccname_iface_table_type(my_printable_I) const ccname_iface_table(my_printable_I, my_coords_t, pol) = {
+  .print	= ccname_iface_method(my_printable_I, my_coords_t, print_pol)
 };
 
-my_printable_I
-ccname_iface_new(my_printable_I, my_coords_t) (my_coords_t * S)
+static my_printable_I
+ccname_iface_new(my_printable_I, my_coords_t, pol) (my_coords_t * S)
 {
-  return my_printable_new(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t));
+  return my_printable_new(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t, pol));
+}
+
+
+/** --------------------------------------------------------------------
+ ** Data struct: methods table.
+ ** ----------------------------------------------------------------- */
+
+static my_printable_I
+ccname_method(my_coords_t, new_printable_rec) (my_coords_t * self)
+{
+  return ccname_iface_new(my_printable_I, my_coords_t, rec)(self);
+}
+
+static my_printable_I
+ccname_method(my_coords_t, new_printable_pol) (my_coords_t * self)
+{
+  return ccname_iface_new(my_printable_I, my_coords_t, pol)(self);
+}
+
+static ccname_table_type(my_coords_t) const ccname_table(my_coords_t) = {
+  .new_printable_rec	= ccname_method(my_coords_t, new_printable_rec),
+  .new_printable_pol	= ccname_method(my_coords_t, new_printable_pol)
+};
+
+static ccname_table_type(my_coords_t) const *
+my_coords_methods_table (void)
+{
+  return &ccname_table(my_coords_t);
 }
 
 
@@ -213,16 +267,17 @@ main (void)
 {
   cce_location_t	L[1];
   my_coords_t *		S;
-  my_printable_I	I;
+  my_printable_I	IR, IP;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    S = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    I = ccname_iface_new(my_printable_I, my_coords_t)(S);
+    S  = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
+    IR = S->methods->new_printable_rec(S);
+    IP = S->methods->new_printable_pol(S);
 
-    my_printable_print_rec(I, stdout);
-    my_printable_print_pol(I, stdout);
+    my_printable_print(IR, stdout);
+    my_printable_print(IP, stdout);
     ccname_delete(my_coords_t)(S);
   }
   exit(EXIT_SUCCESS);

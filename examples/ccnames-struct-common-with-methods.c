@@ -56,7 +56,7 @@
 typedef struct my_coords_t			my_coords_t;
 typedef struct ccname_table_type(my_coords_t)	ccname_table_type(my_coords_t);
 
-typedef void my_coords_print_fun_t (my_coords_t * S, FILE * stream);
+typedef void ccname_method_type(my_coords_t, print) (my_coords_t * S, FILE * stream);
 
 struct my_coords_t {
   ccname_table_type(my_coords_t) const * methods;
@@ -65,8 +65,8 @@ struct my_coords_t {
 };
 
 struct ccname_table_type(my_coords_t) {
-  my_coords_print_fun_t *	print_rec;
-  my_coords_print_fun_t *	print_pol;
+  ccname_method_type(my_coords_t, print) *	print_rec;
+  ccname_method_type(my_coords_t, print) *	print_pol;
 };
 
 

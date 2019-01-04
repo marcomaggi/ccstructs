@@ -1422,6 +1422,12 @@ methods table for the @struct{} type.
 @end defmac
 
 
+@defmac ccname_method_type (@var{STRUCT_TYPE}, @var{VARIANT}, @var{METHOD_NAME})
+Given a struct type name, an optional variant specification, and a method name: expand into the type
+name of that variant of the method function for the struct type.
+@end defmac
+
+
 @defmac ccname_method (@var{STRUCT_TYPE}, @var{METHOD_NAME})
 Given a @struct{} type name and a method name: expand into the name of the method for that type.
 @end defmac
@@ -1438,7 +1444,7 @@ An example of methods table implementation for @struct{} types:
 typedef struct my_coords_t                      my_coords_t;
 typedef struct ccname_table_type(my_coords_t)   ccname_table_type(my_coords_t);
 
-typedef void my_coords_print_fun_t (my_coords_t * S, FILE * stream);
+typedef void ccname_method_type(my_coords_t, print) (my_coords_t * S, FILE * stream);
 
 struct my_coords_t @{
   ccname_table_type(my_coords_t) const * methods;
@@ -1447,8 +1453,8 @@ struct my_coords_t @{
 @};
 
 struct ccname_table_type(my_coords_t) @{
-  my_coords_print_fun_t *       print_rec;
-  my_coords_print_fun_t *       print_pol;
+  ccname_method_type(my_coords_t, print) * print_rec;
+  ccname_method_type(my_coords_t, print) * print_pol;
 @};
 
 static void

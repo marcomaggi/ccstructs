@@ -122,6 +122,7 @@ noinst_PROGRAMS	=					\
 	examples/ccnames-struct-common-no-methods	\
 	examples/ccnames-struct-common-with-methods	\
 	examples/ccnames-iface-struct-no-methods	\
+	examples/ccnames-iface-struct-with-methods	\
 	examples/test-dtor-no-methods			\
 	examples/test-dtor-with-methods			\
 	examples/test-dtor-with-methods-and-names
@@ -169,6 +170,16 @@ examples_ccnames_iface_struct_no_methods_CPPFLAGS	= $(ccstructs_examples_cppflag
 examples_ccnames_iface_struct_no_methods_LDADD		= $(ccstructs_examples_ldadd) -lm
 
 $(examples_ccnames_iface_struct_no_methods_OBJECTS): libccstructs.la
+
+## --------------------------------------------------------------------
+
+examples_ccnames_iface_struct_with_methods_SOURCES =	\
+	examples/ccnames-iface-struct-with-methods.c
+
+examples_ccnames_iface_struct_with_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
+examples_ccnames_iface_struct_with_methods_LDADD	= $(ccstructs_examples_ldadd) -lm
+
+$(examples_ccnames_iface_struct_with_methods_OBJECTS): libccstructs.la
 
 ## --------------------------------------------------------------------
 
