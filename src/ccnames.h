@@ -156,12 +156,24 @@ extern "C" {
 #define _CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, VARIANT)	\
   _CCNAME_NEW(IFACE_TYPE ## __ ## STRUCT_TYPE, VARIANT)
 
+/* Given an interface  type name and an  optional variant specification:
+   expand into  the name  of the  methods table  type for  the interface
+   type. */
+#define _CCNAME_IFACE_TABLE_TYPE(IFACE_TYPE, VARIANT)		\
+  _CCNAME_TABLE_TYPE(IFACE_TYPE, VARIANT)
+
 /* Given an  interface type name,  a struct  type name, and  a (possibly
    empty) variant  specification: expand  into the  name of  the methods
    table for that variant of the interface implementation for the struct
    type. */
 #define _CCNAME_IFACE_TABLE(IFACE_TYPE, STRUCT_TYPE, VARIANT)	\
   _CCNAME_TABLE(IFACE_TYPE ## __ ## STRUCT_TYPE, VARIANT)
+
+/* Given   an  interface   type   name,  a   (possibly  empty)   variant
+   specification, and  a method name: expand  into the type name  of the
+   method function for that variant of the interface implementation. */
+#define _CCNAME_IFACE_METHOD_TYPE(IFACE_TYPE, VARIANT, METHOD_NAME)	\
+  IFACE_TYPE ## __ ## VARIANT ## __method__ ## METHOD_NAME ## _fun_t
 
 /* Given an interface type name, a  struct type name, a (possibly empty)
    variant specification, and a method name: expand into the name of the
@@ -219,6 +231,13 @@ extern "C" {
    the method for that type. */
 #define ccname_method(STRUCT_TYPE, METHOD_NAME)	_CCNAME_METHOD(STRUCT_TYPE, METHOD_NAME)
 
+/* Given an interface  type name and an  optional variant specification:
+   expand into  the name  of the  methods table  type for  the interface
+   type. */
+#define ccname_iface_table_type_1(IFACE_TYPE)		_CCNAME_IFACE_TABLE_TYPE(IFACE_TYPE, )
+#define ccname_iface_table_type_2(IFACE_TYPE, VARIANT)	_CCNAME_IFACE_TABLE_TYPE(IFACE_TYPE, VARIANT)
+#define ccname_iface_table_type(...)			_CCNAMES_VFUNC(ccname_iface_table_type, __VA_ARGS__)
+
 /* Given an  interface type name,  a struct  type name, and  an optional
    variant specification: expand into the  name of the methods table for
    that variant of the interface implementation for the struct type. */
@@ -232,6 +251,13 @@ extern "C" {
 #define ccname_iface_new_2(IFACE_TYPE, STRUCT_TYPE)		_CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, )
 #define ccname_iface_new_3(IFACE_TYPE, STRUCT_TYPE, VARIANT)	_CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, VARIANT)
 #define ccname_iface_new(...)					_CCNAMES_VFUNC(ccname_iface_new, __VA_ARGS__)
+
+/* Given an interface type name,  an optional variant specification, and
+   a method name:  expand into the type name of  the method function for
+   that variant of the interface implementation. */
+#define ccname_iface_method_type_2(IFACE_TYPE,          METHOD_NAME)	_CCNAME_IFACE_METHOD_TYPE(IFACE_TYPE,        , METHOD_NAME)
+#define ccname_iface_method_type_3(IFACE_TYPE, VARIANT, METHOD_NAME)	_CCNAME_IFACE_METHOD_TYPE(IFACE_TYPE, VARIANT, METHOD_NAME)
+#define ccname_iface_method_type(...)				_CCNAMES_VFUNC(ccname_iface_method_type, __VA_ARGS__)
 
 /* Given an interface type name, a struct type name, an optional variant
    specification, and a method name: expand  into the name of the method

@@ -1248,8 +1248,7 @@ CCLibraries projects.
 @menu
 * ccnames struct common::       Well known functions for @struct{} types.
 * ccnames struct table::        Tables of methods for @struct{} types.
-* ccnames iface common::        Well known functions for interface types.
-* ccnames iface table::         Tables of methods for interface types.
+* ccnames iface::               Well known names for interface types.
 @end menu
 
 @c page
@@ -1490,8 +1489,8 @@ ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
 @end smallexample
 
 @c page
-@node ccnames iface common
-@appendixsec Well known functions for interface types
+@node ccnames iface
+@appendixsec Well known names for interface types.
 
 
 @defmac ccname_iface_new (@var{IFACE_TYPE}, @var{STRUCT_TYPE})
@@ -1502,9 +1501,11 @@ name of the @api{} function @cfunc{new} that instantiates that variant of the in
 @end defmac
 
 
-@c page
-@node ccnames iface table
-@appendixsec Tables of methods for interface types
+@defmac ccname_iface_table_type (@var{IFACE_TYPE})
+@defmacx ccname_iface_table_type (@var{IFACE_TYPE}, @var{VARIANT})
+Given an interface type name and an optional variant specification: expand into the name of the
+methods table type for the interface type.
+@end defmac
 
 
 @defmac ccname_iface_table (@var{IFACE_TYPE}, @var{STRUCT_TYPE})
@@ -1515,12 +1516,152 @@ type.
 @end defmac
 
 
+@defmac ccname_iface_method_type (@var{IFACE_TYPE}, @var{METHOD_NAME})
+@defmacx ccname_iface_method_type (@var{IFACE_TYPE}, @var{VARIANT}, @var{METHOD_NAME})
+Given an interface type name, an optional variant specification, and a method name: expand into the
+type name of the method function for that variant of the interface implementation.
+@end defmac
+
+
 @defmac ccname_iface_method (@var{IFACE_TYPE}, @var{STRUCT_TYPE}, @var{METHOD_NAME})
 @defmacx ccname_iface_method (@var{IFACE_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT}, @var{METHOD_NAME})
 Given an interface type name, a struct type name, an optional variant specification, and a method
 name: expand into the name of the method function for that variant of the interface implementation
 for the struct type.
 @end defmac
+
+
+Let's say we have this @struct{} definition:
+
+@smallexample
+typedef struct my_coords_t      my_coords_t;
+
+struct my_coords_t @{
+  double        X;
+  double        Y;
+@};
+@end smallexample
+
+@noindent
+and we want to define an interface type @objtype{my_printable_I} to print the @struct{} on a
+standard stream, both in rectangular and polar forms.
+
+Every interface must have a @struct{} acting as table of pointers to functions, whose functions
+implements the interface methods.  The interface @struct{} type is unique, the methods table
+@struct{} type is unique; for every data @struct{} that implements the interface: we need a methods
+table and an interface constructor.
+
+The interface @struct{} type and the methods table @struct{} type are defined as follows:
+
+@smallexample
+typedef struct my_printable_I   my_printable_I;
+typedef struct ccname_iface_table_type(my_printable_I) \
+  ccname_iface_table_type(my_printable_I);
+
+struct my_printable_I @{
+  ccname_iface_table_type(my_printable_I)  const * methods;
+  ccstructs_core_t                         const * self;
+@};
+
+typedef void ccname_iface_method_type(my_printable_I, print) \
+  (my_printable_I I, FILE * stream);
+
+struct ccname_iface_table_type(my_printable_I) @{
+  ccname_iface_method_type(my_printable_I, print) * print_rec;
+  ccname_iface_method_type(my_printable_I, print) * print_pol;
+@};
+@end smallexample
+
+The @objtype{my_printable_I} interface @api{} is defined as follows:
+
+@smallexample
+my_printable_I
+my_printable_new (ccstructs_core_t const * S,
+                  ccname_iface_table_type(my_printable_I) const * M)
+@{
+  my_printable_I        I = @{
+    .methods    = M,
+    .self       = S
+  @};
+  return I;
+@}
+
+ccstructs_core_t const *
+my_printable_self (my_printable_I I)
+@{
+  return I.self;
+@}
+
+void
+my_printable_print_rec (my_printable_I I, FILE * stream)
+@{
+  I.methods->print_rec(I, stream);
+@}
+
+void
+my_printable_print_pol (my_printable_I I, FILE * stream)
+@{
+  I.methods->print_pol(I, stream);
+@}
+@end smallexample
+
+The implementation of @objtype{my_printable_I} for the data @struct{} @objtype{my_coords_t} is
+defined as follows:
+
+@smallexample
+static void
+ccname_iface_method(my_printable_I, my_coords_t, print_rec) (my_printable_I I, FILE * stream)
+@{
+  CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
+
+  fprintf(stream, "X=%f, Y=%f\n", S->X, S->Y);
+@}
+
+static void
+ccname_iface_method(my_printable_I, my_coords_t, print_pol) (my_printable_I I, FILE * stream)
+@{
+  CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
+  double        RHO   = hypot(S->X, S->Y);
+  double        THETA = atan2(S->Y, S->X);
+
+  fprintf(stream, "RHO=%f, THETA=%f\n", RHO, THETA);
+@}
+
+static ccname_iface_table_type(my_printable_I) const ccname_iface_table(my_printable_I, my_coords_t) = @{
+  .print_rec    = ccname_iface_method(my_printable_I, my_coords_t, print_rec),
+  .print_pol    = ccname_iface_method(my_printable_I, my_coords_t, print_pol)
+@};
+
+my_printable_I
+ccname_iface_new(my_printable_I, my_coords_t) (my_coords_t * S)
+@{
+  return my_printable_new(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t));
+@}
+@end smallexample
+
+We can use the interface as follows:
+
+@smallexample
+int
+main (void)
+@{
+  cce_location_t        L[1];
+  my_coords_t *         S;
+  my_printable_I        I;
+
+  if (cce_location(L)) @{
+    cce_run_catch_handlers_final(L);
+  @} else @{
+    S = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
+    I = ccname_iface_new(my_printable_I, my_coords_t)(S);
+
+    my_printable_print_rec(I, stdout);
+    my_printable_print_pol(I, stdout);
+    ccname_delete(my_coords_t)(S);
+  @}
+  exit(EXIT_SUCCESS);
+@}
+@end smallexample
 
 @c page
 @c ------------------------------------------------------------
