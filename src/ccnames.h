@@ -5,7 +5,11 @@
 
   Abstract
 
+	This  header file  defines a  set  of macros  that generate,  at
+	expansion  time, identifiers  for functions  and variables  that
+	have "well known" roles in the API of the CCLibraries projects.
 
+	It is to be considered experimental.
 
   Copyright (C) 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -28,13 +32,6 @@
 
 #ifndef CCNAMES_H
 #define CCNAMES_H 1
-
-
-/** --------------------------------------------------------------------
- ** Headers.
- ** ----------------------------------------------------------------- */
-
-//#include <ccexceptions.h>
 
 
 /** --------------------------------------------------------------------
@@ -89,7 +86,7 @@
 
 
 /** --------------------------------------------------------------------
- ** Name definitions.
+ ** Construction of automatically generated names.
  ** ----------------------------------------------------------------- */
 
 /* Given   a  struct   type  name   and  a   (possibly  empty)   variant
@@ -114,7 +111,7 @@
 
 /* Given a struct  type name: expand into the name  of the methods table
    type for the struct type. */
-#define _CCNAME_TABLE_T(STRUCT_TYPE)		STRUCT_TYPE ## __methods_table_t
+#define _CCNAME_TABLE_TYPE(STRUCT_TYPE)		STRUCT_TYPE ## __methods_table_t
 
 /* Given   a  struct   type  name   and  a   (possibly  empty)   variant
    specification: expand  into the  name of the  methods table  for that
@@ -144,41 +141,36 @@
 
 
 /** --------------------------------------------------------------------
- ** Function invocations.
+ ** Automatically generated names API.
  ** ----------------------------------------------------------------- */
 
-/* Given a struct type name, a variant specification, a (possibly empty)
-   variant  specification, and  a  (possibly empty)  list of  arguments:
-   expand into the invocation of the API function "new()". */
+/* Given  a struct  type  name and  an  optional variant  specification:
+   expand into the name of the API function "new()". */
 #define ccname_new_1(STRUCT_TYPE)		_CCNAME_NEW(STRUCT_TYPE, )
 #define ccname_new_2(STRUCT_TYPE, VARIANT)	_CCNAME_NEW(STRUCT_TYPE, VARIANT)
 #define ccname_new(...)				_CCNAMES_VFUNC(ccname_new, __VA_ARGS__)
 
-/* Given a struct type name and an expression evaluating to a pointer to
-   the struct instance:  expand into the invocation of  the API function
+/* Given a  struct type name: expand  into the name of  the API function
    "delete()". */
 #define ccname_delete(STRUCT_TYPE)		_CCNAME_DELETE(STRUCT_TYPE)
 
-/* Given a struct type name, a variant specification, a (possibly empty)
-   variant  specification, and  a  (possibly empty)  list of  arguments:
-   expand into the invocation of the API function "init()". */
+/* Given  a struct  type  name and  an  optional variant  specification:
+   expand into the name of the API function "init()". */
 #define ccname_init_1(STRUCT_TYPE)		_CCNAME_INIT(STRUCT_TYPE, )
 #define ccname_init_2(STRUCT_TYPE, VARIANT)	_CCNAME_INIT(STRUCT_TYPE, VARIANT)
 #define ccname_init(...)			_CCNAMES_VFUNC(ccname_init, __VA_ARGS__)
 
-/* Given a struct type name and an expression evaluating to a pointer to
-   the struct instance:  expand into the invocation of  the API function
+/* Given a  struct type name: expand  into the name of  the API function
    "final()". */
 #define ccname_final(STRUCT_TYPE)		_CCNAME_FINAL(STRUCT_TYPE)
 
-/* Given a struct type name and an expression evaluating to a pointer to
-   the struct instance:  expand into the invocation of  the API function
+/* Given a  struct type name: expand  into the name of  the API function
    "release()". */
 #define ccname_release(STRUCT_TYPE)		_CCNAME_RELEASE(STRUCT_TYPE)
 
 /* Given a struct  type name: expand into the name  of the methods table
    type for the struct type. */
-#define ccname_table_type(STRUCT_TYPE)		_CCNAME_TABLE_T(STRUCT_TYPE)
+#define ccname_table_type(STRUCT_TYPE)		_CCNAME_TABLE_TYPE(STRUCT_TYPE)
 
 /* Given   a  struct   type  name   and  a   (possibly  empty)   variant
    specification: expand  into the  name of the  methods table  for that
@@ -196,9 +188,9 @@
 #define ccname_iface_table(...)					_CCNAMES_VFUNC(ccname_iface_table, __VA_ARGS__)
 
 /* Given an interface type name, a  struct type name, a (possibly empty)
-   variant specification, and an expression  that evaluates to a pointer
-   to struct  instance: expand into  the invocation of the  API function
-   "new()" that instantiates the interface for the struct. */
+   variant  specification: expand  into  the name  of  the API  function
+   "new()"  that instantiates  that  variant of  the  interface for  the
+   struct. */
 #define ccname_iface_new_2(IFACE_TYPE, STRUCT_TYPE)		_CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, )
 #define ccname_iface_new_3(IFACE_TYPE, STRUCT_TYPE, VARIANT)	_CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, VARIANT)
 #define ccname_iface_new(...)					_CCNAMES_VFUNC(ccname_iface_new, __VA_ARGS__)
