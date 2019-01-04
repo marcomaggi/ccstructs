@@ -51,7 +51,12 @@
 #include <stdlib.h>
 #include <errno.h>
 
+/* Constructor for "ccstructs_dtor_I" implemented by "my_alpha_t".  This
+   variant destroys embedded instances. */
 static ccstructs_new_dtor_fun_t ccname_iface_new(ccstructs_dtor_I, my_alpha_t, embedded);
+
+/* Constructor for "ccstructs_dtor_I" implemented by "my_alpha_t".  This
+   variant destroys standalone instances. */
 static ccstructs_new_dtor_fun_t ccname_iface_new(ccstructs_dtor_I, my_alpha_t, standalone);
 
 static void ccname_final(my_alpha_t) (my_alpha_t const * self)
@@ -62,17 +67,21 @@ static void ccname_release(my_alpha_t) (my_alpha_t const * self)
 
 
 /** --------------------------------------------------------------------
- ** Struct methods table.
+ ** Data struct "my_alpha_t": methods table.
  ** ----------------------------------------------------------------- */
 
 struct ccname_table_type(my_alpha_t) {
-  ccstructs_new_dtor_fun_t *		new_dtor;
+  ccstructs_new_dtor_fun_t *	new_dtor;
 };
 
+/* Methods  table  for  "my_alpha_t":  this  variant  destroys  embedded
+   instances. */
 static ccname_table_type(my_alpha_t) const ccname_table(my_alpha_t, embedded) = {
   .new_dtor	= ccname_iface_new(ccstructs_dtor_I, my_alpha_t, embedded)
 };
 
+/* Methods  table for  "my_alpha_t":  this  variant destroys  standalone
+   instances. */
 static ccname_table_type(my_alpha_t) const ccname_table(my_alpha_t, standalone) = {
   .new_dtor	= ccname_iface_new(ccstructs_dtor_I, my_alpha_t, standalone)
 };
@@ -124,15 +133,17 @@ ccname_delete(my_alpha_t) (my_alpha_t const * self)
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtor": embedded struct.
+ ** Interface "ccstructs_dtor_I": embedded structs.
  ** ----------------------------------------------------------------- */
 
 /* This is for struct instances allocated on the stack or embedded in an
    enclosing struct. */
 
-/* Interface "dtor": "final()" method. */
 static void
 ccname_iface_method(ccstructs_dtor_I, my_alpha_t, embedded, final) (ccstructs_dtor_I I)
+/* Implementation   of   the   method   "final()"   in   the   interface
+   "ccstructs_dtor_I"   implemented  by   "my_alpha_t".   This   variant
+   finalises embedded structs. */
 {
   CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
 
@@ -140,36 +151,41 @@ ccname_iface_method(ccstructs_dtor_I, my_alpha_t, embedded, final) (ccstructs_dt
   if (1) { fprintf(stderr, "%-35s: finalised by dtor\n", __func__); }
 }
 
-/* Interface "dtor": "delete()" method. */
 static void
 ccname_iface_method(ccstructs_dtor_I, my_alpha_t, embedded, delete) (ccstructs_dtor_I I CCSTRUCTS_UNUSED)
+/* Implementation   of   the   method  "delete()"   in   the   interface
+   "ccstructs_dtor_I" implemented by "my_alpha_t".  This variant deletes
+   embedded structs. */
 {
   if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
 }
 
-/* Methods table  for the  "dtor" interface. */
+/* Methods  table for  the interface  "ccstructs_dtor_I" implemented  by
+   "my_alpha_t".  This variant is for embedded structs. */
 static ccstructs_dtor_I_methods_t const ccname_iface_table(ccstructs_dtor_I, my_alpha_t, embedded) = {
   .final	= ccname_iface_method(ccstructs_dtor_I, my_alpha_t, embedded, final),
   .delete	= ccname_iface_method(ccstructs_dtor_I, my_alpha_t, embedded, delete)
 };
 
-/* Constructor for the "dtor" interface. */
 static ccstructs_dtor_I
 ccname_iface_new(ccstructs_dtor_I, my_alpha_t, embedded) (ccstructs_core_t const * const self)
+/* Constructor for the "dtor" interface. */
 {
   return ccstructs_new_dtor(self, &ccname_iface_table(ccstructs_dtor_I, my_alpha_t, embedded));
 }
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtor": standalone struct.
+ ** Interface "ccstructs_dtor_I": standalone structs.
  ** ----------------------------------------------------------------- */
 
 /* This is for struct instances allocated on the heap. */
 
-/* Interface "dtor": "final()" method. */
 static void
 ccname_iface_method(ccstructs_dtor_I, my_alpha_t, standalone, final) (ccstructs_dtor_I I)
+/* Implementation   of   the   method   "final()"   in   the   interface
+   "ccstructs_dtor_I"   implemented  by   "my_alpha_t".   This   variant
+   finalises standalone structs. */
 {
   CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
 
@@ -177,9 +193,11 @@ ccname_iface_method(ccstructs_dtor_I, my_alpha_t, standalone, final) (ccstructs_
   if (1) { fprintf(stderr, "%-35s: finalised by dtor\n", __func__); }
 }
 
-/* Interface "dtor": "delete()" method. */
 static void
 ccname_iface_method(ccstructs_dtor_I, my_alpha_t, standalone, delete) (ccstructs_dtor_I I)
+/* Implementation   of   the   method  "delete()"   in   the   interface
+   "ccstructs_dtor_I" implemented by "my_alpha_t".  This variant deletes
+   standalone structs. */
 {
   CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
 
@@ -187,28 +205,30 @@ ccname_iface_method(ccstructs_dtor_I, my_alpha_t, standalone, delete) (ccstructs
   if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
 }
 
-/* Methods table for the "dtor" interface. */
+/* Methods  table for  the interface  "ccstructs_dtor_I" implemented  by
+   "my_alpha_t".  This variant is for standalone structs. */
 static ccstructs_dtor_I_methods_t const ccname_iface_table(ccstructs_dtor_I, my_alpha_t, standalone) = {
   .final	= ccname_iface_method(ccstructs_dtor_I, my_alpha_t, standalone, final),
   .delete	= ccname_iface_method(ccstructs_dtor_I, my_alpha_t, standalone, delete)
 };
 
-/* Constructor for the "dtor" interface. */
 static ccstructs_dtor_I
 ccname_iface_new(ccstructs_dtor_I, my_alpha_t, standalone) (ccstructs_core_t const * const self)
+/* Implementation  of the  method "new_dtor()"  for "my_alpha_t".   This
+   variant deletes standalone structs. */
 {
   return ccstructs_new_dtor(self, &ccname_iface_table(ccstructs_dtor_I, my_alpha_t, standalone));
 }
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtor": constructors.
+ ** Data struct "my_alpha_t": constructors of implemented interfaces.
  ** ----------------------------------------------------------------- */
 
-/* Interface  constructor function.   Return a  new instance  of "dtor"
-   interface which destroys the struct instance. */
 ccstructs_dtor_I
 ccname_iface_new(ccstructs_dtor_I, my_alpha_t) (my_alpha_t const * const self)
+/* Interface   constructor   for   "ccstructs_dtor_I"   implemented   by
+   "my_alpha_t". */
 {
   return self->methods->new_dtor(ccstructs_core(self));
 }

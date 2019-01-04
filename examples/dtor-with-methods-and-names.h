@@ -59,7 +59,7 @@
 
 
 /** --------------------------------------------------------------------
- ** Type definitions.
+ ** Type definitions: data struct "my_alpha_t".
  ** ----------------------------------------------------------------- */
 
 typedef struct my_alpha_t			my_alpha_t;
@@ -74,7 +74,7 @@ struct my_alpha_t {
 
 
 /** --------------------------------------------------------------------
- ** Function prototypes: constructors.
+ ** Data struct "my_alpha_t": function prototypes, constructors.
  ** ----------------------------------------------------------------- */
 
 /* Constructor function.  Allocate the struct instance on the heap using
@@ -88,17 +88,17 @@ ccstructs_decl void ccname_init(my_alpha_t) (my_alpha_t * self, double x, double
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtor".
+ ** Data struct "my_alpha_t": constructors for implemented interfaces.
  ** ----------------------------------------------------------------- */
 
-/* Interface  constructor function.   Return a  new instance  of "dtor"
-   interface which destroys the struct instance. */
+/* Interface  constructor  function.   Return  a  new  instance  of  the
+   "ccstructs_dtor_I" interface which destroys the struct instance. */
 ccstructs_decl ccstructs_dtor_I ccname_iface_new(ccstructs_dtor_I, my_alpha_t) (my_alpha_t const * self)
   __attribute__((__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
- ** Function prototypes: printing.
+ ** Data struct "my_alpha_t": function prototypes, printing.
  ** ----------------------------------------------------------------- */
 
 ccstructs_decl void my_print_alpha (cce_destination_t L, FILE * stream, my_alpha_t const * self)
