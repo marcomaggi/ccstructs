@@ -14,7 +14,7 @@
 	using  no  methods  table   for  the  struct-specific  interface
 	constructors.
 
-  Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   The author hereby  grant permission to use,  copy, modify, distribute,
   and  license this  software  and its  documentation  for any  purpose,
@@ -41,8 +41,8 @@
 
 */
 
-#ifndef ALPHA_HEADER_H
-#define ALPHA_HEADER_H 1
+#ifndef DTOR_NO_METHODS_H
+#define DTOR_NO_METHODS_H 1
 
 
 /** --------------------------------------------------------------------
@@ -146,6 +146,6 @@ ccstructs_decl void my_print_alpha (cce_destination_t L, FILE * stream, my_alpha
  ** Done.
  ** ----------------------------------------------------------------- */
 
-#endif /* defined ALPHA_HEADER_H */
+#endif /* defined DTOR_NO_METHODS_H */
 
 /* end of file */

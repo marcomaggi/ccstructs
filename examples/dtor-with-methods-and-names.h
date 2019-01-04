@@ -44,8 +44,8 @@
 
 */
 
-#ifndef ALPHA_HEADER_H
-#define ALPHA_HEADER_H 1
+#ifndef DTOR_WITH_METHODS_AND_NAMES_H
+#define DTOR_WITH_METHODS_AND_NAMES_H 1
 
 
 /** --------------------------------------------------------------------
@@ -109,6 +109,6 @@ ccstructs_decl void my_print_alpha (cce_destination_t L, FILE * stream, my_alpha
  ** Done.
  ** ----------------------------------------------------------------- */
 
-#endif /* defined ALPHA_HEADER_H */
+#endif /* defined DTOR_WITH_METHODS_AND_NAMES_H */
 
 /* end of file */
