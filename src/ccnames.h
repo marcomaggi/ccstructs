@@ -151,9 +151,10 @@ extern "C" {
 #define _CCNAME_METHOD_TYPE(STRUCT_TYPE, VARIANT, METHOD_NAME)	\
   STRUCT_TYPE ## __ ## VARIANT ## __method__ ## METHOD_NAME ## __fun_t
 
-/* Given a struct type  name and a method name: expand  into the name of
-   the method for that type. */
-#define _CCNAME_METHOD(STRUCT_TYPE, METHOD_NAME) STRUCT_TYPE ## __method__ ## METHOD_NAME
+/* Given a struct  type name, a (possibly  empty) variant specification,
+   and  a method  name: expand  into  the name  of the  method for  that
+   type. */
+#define _CCNAME_METHOD(STRUCT_TYPE, VARIANT, METHOD_NAME) STRUCT_TYPE ## __ ## VARIANT ## __method__ ## METHOD_NAME
 
 /* Given an  interface type name,  a struct  type name, and  a (possibly
    empty)  variant  specification:  expand  into the  name  of  the  API
@@ -245,9 +246,11 @@ extern "C" {
 #define ccname_method_type_3(STRUCT_TYPE, VARIANT, METHOD_NAME)	_CCNAME_METHOD_TYPE(STRUCT_TYPE, VARIANT, METHOD_NAME)
 #define ccname_method_type(...)			_CCNAMES_VFUNC(ccname_method_type, __VA_ARGS__)
 
-/* Given a struct type  name and a method name: expand  into the name of
-   the method for that type. */
-#define ccname_method(STRUCT_TYPE, METHOD_NAME)	_CCNAME_METHOD(STRUCT_TYPE, METHOD_NAME)
+/* Given a  struct type name,  an optional variant specification,  and a
+   method name: expand into the name of the method for that type. */
+#define ccname_method_2(STRUCT_TYPE,          METHOD_NAME)	_CCNAME_METHOD(STRUCT_TYPE,        , METHOD_NAME)
+#define ccname_method_3(STRUCT_TYPE, VARIANT, METHOD_NAME)	_CCNAME_METHOD(STRUCT_TYPE, VARIANT, METHOD_NAME)
+#define ccname_method(...)					_CCNAMES_VFUNC(ccname_method, __VA_ARGS__)
 
 
 /** --------------------------------------------------------------------
