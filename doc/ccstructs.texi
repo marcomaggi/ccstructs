@@ -144,7 +144,6 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * version::                     Version functions.
 * core::                        Core type definitions.
 * dtor::                        The @iface{dtor} interface.
-* handlers::                    Exception handlers.
 * writable::                    The @emph{writable} interface.
 * serialisable::                The @emph{serialisable} interface.
 * pathname::                    The @emph{pathname} interface.
@@ -313,12 +312,13 @@ Cast the pointer @var{S} to @code{ccstructs_core_t *}.
 
 
 The @iface{dtor} interface provides a uniform way to call a @struct{} destructors.  The best way to
-use the @iface{dtor} interface is through the exception handlers @api{}, @ref{handlers, Exception
-handlers}.
+use the @iface{dtor} interface is through the exception handlers @api{}, @ref{dtor handlers,
+Exception handlers}.
 
 @menu
 * dtor typedefs::              @iface{dtor} interface: type definitions.
 * dtor operations::            @iface{dtor} interface: operations.
+* dtor handlers::              Exception handlers.
 * dtor sample empty::          Example of @iface{dtor} interface
                                with empty @method{delete} method.
 * dtor sample non-empty::      Example of @iface{dtor} interface
@@ -396,140 +396,8 @@ the subject @struct{}.  This function is always a correct destructor for a @stru
 @end deftypefun
 
 @c page
-@node dtor sample empty
-@section Example of @iface{dtor} interface with empty @method{delete} method
-
-
-Let's consider a @struct{} with the following definition:
-
-@example
-typedef struct one_t    one_t;
-
-struct one_t @{
-  void *  pointer;
-@};
-@end example
-
-@noindent
-we assume instances of this type are always allocated on the stack or embedded in an enclosing
-@struct{}.  We can implement the @emph{destructor} interface as follows:
-
-@example
-static void
-one_dtor_method_delete (ccstructs_dtor_I I)
-@{
-@}
-
-static void
-one_dtor_method_final (ccstructs_dtor_I I)
-@{
-  CCSTRUCTS_PC(one_t, S, ccstructs_dtor_self(I));
-
-  ccmem_free(ccmem_standard_allocator, S->pointer);
-@}
-
-static ccstructs_dtor_I_methods_t const one_dtor_I_methods = @{
-  .delete       = one_dtor_method_delete,
-  .final        = one_dtor_method_final
-@};
-
-ccstructs_dtor_I
-one_new_I_dtor (one_t * S)
-@{
-  return ccstructs_new_dtor(ccstructs_core(S), &one_dtor_I_methods);
-@}
-@end example
-
-@noindent
-and we can use the interface as follows:
-
-@example
-cce_location_t        L[1];
-
-if (cce_location(L)) @{
-  cce_run_catch_handlers_final(L);
-@} else @{
-  one_t       S = @{
-    .pointer  = ccmem_malloc(L, ccmem_standard_allocator, 256)
-  @};
-  ccstructs_dtor_I   I = one_new_I_dtor(&S);
-
-  ...
-  ccstructs_dtor_delete(I);
-  cce_run_body_handlers(L);
-@}
-@end example
-
-@c page
-@node dtor sample non-empty
-@section Example of @iface{dtor} interface with non--empty @method{delete} method
-
-
-Let's consider a @struct{} with the following definition:
-
-@example
-typedef struct two_t    two_t;
-
-struct two_t @{
-  void *  pointer;
-@};
-@end example
-
-@noindent
-we assume instances of this type are always allocated on the heap.  We can implement the
-@emph{destructor} interface as follows:
-
-@example
-static void
-two_dtor_method_delete (ccstructs_dtor_I I)
-@{
-  CCSTRUCTS_PC(two_t, S, ccstructs_dtor_self(I));
-
-  ccmem_free(ccmem_standard_allocator, S);
-@}
-
-static void
-two_dtor_method_final (ccstructs_dtor_I I)
-@{
-  CCSTRUCTS_PC(two_t, S, ccstructs_dtor_self(I));
-
-  ccmem_free(ccmem_standard_allocator, S->pointer);
-@}
-
-static ccstructs_dtor_I_methods_t const two_dtor_I_methods = @{
-  .delete       = two_dtor_method_delete,
-  .final        = two_dtor_method_final
-@};
-
-ccstructs_dtor_I
-two_new_I_dtor (two_t * S)
-@{
-  return ccstructs_new_dtor(ccstructs_core(S), &two_dtor_I_methods);
-@}
-@end example
-
-@noindent
-and we can use the interface as follows:
-
-@example
-cce_location_t        L[1];
-
-if (cce_location(L)) @{
-  cce_run_catch_handlers_final(L);
-@} else @{
-  two_t * S = ccmem_malloc(L, ccmem_standard_allocator, sizeof(two_t));
-  S->pointer = ccmem_malloc(L, ccmem_standard_allocator, 256)
-  ccstructs_dtor_I   I = two_new_I_dtor(&S);
-
-  ...
-  ccstructs_dtor_delete(I);
-  cce_run_body_handlers(L);
-@}
-@end example
-
-@c page
-@node handlers
-@chapter Exception handlers
+@node dtor handlers
+@section Exception handlers
 
 
 The best way to use the @iface{dtor} interface is through the exception handlers @api{}.
@@ -678,6 +546,138 @@ two_new_guarded_error (cce_destination_t L,
   _Generic((I_H),                                          \
     ccstructs_clean_handler_t *: two_new_guarded_clean,    \
     ccstructs_error_handler_t *: two_new_guarded_error)(L,I_H,S)
+@end example
+
+@c page
+@node dtor sample empty
+@section Example of @iface{dtor} interface with empty @method{delete} method
+
+
+Let's consider a @struct{} with the following definition:
+
+@example
+typedef struct one_t    one_t;
+
+struct one_t @{
+  void *  pointer;
+@};
+@end example
+
+@noindent
+we assume instances of this type are always allocated on the stack or embedded in an enclosing
+@struct{}.  We can implement the @emph{destructor} interface as follows:
+
+@example
+static void
+one_dtor_method_delete (ccstructs_dtor_I I)
+@{
+@}
+
+static void
+one_dtor_method_final (ccstructs_dtor_I I)
+@{
+  CCSTRUCTS_PC(one_t, S, ccstructs_dtor_self(I));
+
+  ccmem_free(ccmem_standard_allocator, S->pointer);
+@}
+
+static ccstructs_dtor_I_methods_t const one_dtor_I_methods = @{
+  .delete       = one_dtor_method_delete,
+  .final        = one_dtor_method_final
+@};
+
+ccstructs_dtor_I
+one_new_I_dtor (one_t * S)
+@{
+  return ccstructs_new_dtor(ccstructs_core(S), &one_dtor_I_methods);
+@}
+@end example
+
+@noindent
+and we can use the interface as follows:
+
+@example
+cce_location_t        L[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  one_t       S = @{
+    .pointer  = ccmem_malloc(L, ccmem_standard_allocator, 256)
+  @};
+  ccstructs_dtor_I   I = one_new_I_dtor(&S);
+
+  ...
+  ccstructs_dtor_delete(I);
+  cce_run_body_handlers(L);
+@}
+@end example
+
+@c page
+@node dtor sample non-empty
+@section Example of @iface{dtor} interface with non--empty @method{delete} method
+
+
+Let's consider a @struct{} with the following definition:
+
+@example
+typedef struct two_t    two_t;
+
+struct two_t @{
+  void *  pointer;
+@};
+@end example
+
+@noindent
+we assume instances of this type are always allocated on the heap.  We can implement the
+@emph{destructor} interface as follows:
+
+@example
+static void
+two_dtor_method_delete (ccstructs_dtor_I I)
+@{
+  CCSTRUCTS_PC(two_t, S, ccstructs_dtor_self(I));
+
+  ccmem_free(ccmem_standard_allocator, S);
+@}
+
+static void
+two_dtor_method_final (ccstructs_dtor_I I)
+@{
+  CCSTRUCTS_PC(two_t, S, ccstructs_dtor_self(I));
+
+  ccmem_free(ccmem_standard_allocator, S->pointer);
+@}
+
+static ccstructs_dtor_I_methods_t const two_dtor_I_methods = @{
+  .delete       = two_dtor_method_delete,
+  .final        = two_dtor_method_final
+@};
+
+ccstructs_dtor_I
+two_new_I_dtor (two_t * S)
+@{
+  return ccstructs_new_dtor(ccstructs_core(S), &two_dtor_I_methods);
+@}
+@end example
+
+@noindent
+and we can use the interface as follows:
+
+@example
+cce_location_t        L[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  two_t * S = ccmem_malloc(L, ccmem_standard_allocator, sizeof(two_t));
+  S->pointer = ccmem_malloc(L, ccmem_standard_allocator, 256)
+  ccstructs_dtor_I   I = two_new_I_dtor(&S);
+
+  ...
+  ccstructs_dtor_delete(I);
+  cce_run_body_handlers(L);
+@}
 @end example
 
 @c page
