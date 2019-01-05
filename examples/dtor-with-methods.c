@@ -55,7 +55,7 @@ static ccstructs_new_dtor_fun_t my_new_alpha_standalone_I_dtor;
 static void my_final_alpha (my_alpha_t const * self)
   __attribute__((__nonnull__(1)));
 
-static void my_alpha_release_struct (my_alpha_t const * self)
+static void my_release_alpha (my_alpha_t const * self)
   __attribute__((__nonnull__(1)));
 
 
@@ -89,27 +89,37 @@ my_init_alpha (my_alpha_t * self, double x, double y, double z)
   self->Z	= z;
 }
 
-my_alpha_t const *
-my_new_alpha (cce_destination_t L, double x, double y, double z)
-{
-  my_alpha_t *	self = ccmem_std_malloc(L, sizeof(my_alpha_t));
-
-  my_init_alpha(self, x, y, z);
-  self->methods	= &my_alpha_methods_standalone_stru;
-  return (my_alpha_t const *) self;
-}
-
 static void
 my_final_alpha (my_alpha_t const * self CCSTRUCTS_UNUSED)
 {
   if (1) { fprintf(stderr, "%-35s: finalised\n", __func__); }
 }
 
+/* ------------------------------------------------------------------ */
+
+static my_alpha_t *
+my_alloc_alpha (cce_destination_t L)
+{
+  return ccmem_std_malloc(L, sizeof(my_alpha_t));
+}
+
 static void
-my_alpha_release_struct (my_alpha_t const * self)
+my_release_alpha (my_alpha_t const * self)
 {
   ccmem_std_free((void *)self);
   if (1) { fprintf(stderr, "%-35s: released\n", __func__); }
+}
+
+/* ------------------------------------------------------------------ */
+
+my_alpha_t const *
+my_new_alpha (cce_destination_t L, double x, double y, double z)
+{
+  my_alpha_t *	self = my_alloc_alpha(L);
+
+  my_init_alpha(self, x, y, z);
+  self->methods	= &my_alpha_methods_standalone_stru;
+  return (my_alpha_t const *) self;
 }
 
 
@@ -173,7 +183,7 @@ my_alpha_standalone_dtor_method_delete (ccstructs_dtor_I I)
 {
   CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
 
-  my_alpha_release_struct(self);
+  my_release_alpha(self);
   if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
 }
 

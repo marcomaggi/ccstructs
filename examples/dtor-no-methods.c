@@ -12,7 +12,7 @@
 	using  no  methods  table   for  the  struct-specific  interface
 	constructors.
 
-  Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   The author hereby  grant permission to use,  copy, modify, distribute,
   and  license this  software  and its  documentation  for any  purpose,
@@ -62,17 +62,6 @@ my_init_alpha (my_alpha_t * self, double x, double y, double z)
   self->Z	= z;
 }
 
-my_alpha_t const *
-/* Instance  constructor   that  allocates  memory  with   the  standard
-   allocator implemented by CCMemory. */
-my_new_alpha (cce_destination_t L, double x, double y, double z)
-{
-  my_alpha_t *	self = ccmem_std_malloc(L, sizeof(my_alpha_t));
-
-  my_init_alpha(self, x, y, z);
-  return (my_alpha_t const *) self;
-}
-
 void
 my_final_alpha (my_alpha_t const * self CCSTRUCTS_UNUSED)
 /* Destructor   function.   Release   all  the   asynchronous  resources
@@ -84,14 +73,35 @@ my_final_alpha (my_alpha_t const * self CCSTRUCTS_UNUSED)
   if (1) { fprintf(stderr, "%-35s: finalised\n", __func__); }
 }
 
+/* ------------------------------------------------------------------ */
+
+static my_alpha_t *
+my_alloc_alpha (cce_destination_t L)
+{
+  return ccmem_std_malloc(L, sizeof(my_alpha_t));
+}
+
 static void
-my_alpha_release_struct (my_alpha_t const * self)
+my_release_alpha (my_alpha_t const * self)
 /* Release the memory  block allocated for the struct  instance usin the
    standard memory  allocator implemented  by CCMemory.  Does  not touch
    the struct's fields. */
 {
   ccmem_std_free((void *)self);
   if (1) { fprintf(stderr, "%-35s: released\n", __func__); }
+}
+
+/* ------------------------------------------------------------------ */
+
+my_alpha_t const *
+my_new_alpha (cce_destination_t L, double x, double y, double z)
+/* Instance  constructor   that  allocates  memory  with   the  standard
+   allocator implemented by CCMemory. */
+{
+  my_alpha_t *	self = my_alloc_alpha(L);
+
+  my_init_alpha(self, x, y, z);
+  return (my_alpha_t const *) self;
 }
 
 void
@@ -104,7 +114,7 @@ my_delete_alpha (my_alpha_t const * self)
    To be used to destroy instances dynamically allocated on the heap. */
 {
   my_final_alpha(self);
-  my_alpha_release_struct(self);
+  my_release_alpha(self);
   if (1) { fprintf(stderr, "%-35s: deleted\n", __func__); }
 }
 
@@ -227,7 +237,7 @@ my_alpha_standalone_dtor_method_delete (ccstructs_dtor_I I)
 {
   CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
 
-  my_alpha_release_struct(self);
+  my_release_alpha(self);
   if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
 }
 
