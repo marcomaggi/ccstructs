@@ -8,7 +8,7 @@
 	This file must be included in all the source files making use of
 	CCStructs.
 
-  Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This program is  free software: you can redistribute  it and/or modify
   it  under the  terms  of  the GNU  Lesser  General  Public License  as
@@ -115,7 +115,12 @@ typedef struct ccstructs_core_t		ccstructs_core_t;
 
 struct ccstructs_core_t;
 
-#define ccstructs_core(S)	((ccstructs_core_t *)(S))
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccstructs_core_t *
+ccstructs_core (void const * S)
+{
+  return ((ccstructs_core_t *)(S));
+}
 
 
 /** --------------------------------------------------------------------

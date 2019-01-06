@@ -178,10 +178,10 @@ least version @value{CCEXCEPTIONS_VERSION}; CCMemory, at least version @value{CC
 run the test suite: this package depends upon the package CCTests, at least version
 @value{CCTESTS_VERSION}.
 
-@value{PACKAGE} installs the single header file @file{ccstructs.h}.  All the function names in the
-@api{} are prefixed with @code{ccstructs_}; all the preprocessor symbol names are prefixed with
-@code{CCSTRUCTS_}; all the type names are prefixed with @code{ccstructs_} and suffixed with
-@code{_t} or @code{_I}.
+@value{PACKAGE} installs the header files @file{ccstructs.h} and @file{ccnames.h}.  All the function
+names in the @api{} are prefixed with @code{ccstructs_}; all the preprocessor symbol names are
+prefixed with @code{CCSTRUCTS_}; all the type names are prefixed with @code{ccstructs_} and suffixed
+with @code{_t} or @code{_I}.
 
 @menu
 * overview linking::            Linking code with the library.
@@ -302,9 +302,9 @@ spiffy_new_I_writable (spiffy_t * S)
 @end example
 
 
-@deftypefn {Preprocessor Macro} {ccstructs_core_t *} ccstructs_core (@var{S})
+@deftypefun {ccstructs_core_t *} ccstructs_core (void const * @var{S})
 Cast the pointer @var{S} to @code{ccstructs_core_t *}.
-@end deftypefn
+@end deftypefun
 
 @c page
 @node dtor
