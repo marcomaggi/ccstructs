@@ -5,8 +5,8 @@
 
   Abstract
 
-	This header file  defines the struct "my_alpha_t"  and shows how
-	to  implement the  main interfaces  for it.   "my_alpha_t" is  a
+        This header file defines the  struct "my_coords_t" and shows how
+	to implement  the main  interfaces for  it.  "my_coords_t"  is a
 	simple  struct with  embedded  fields, no  pointers to  external
 	memory blocks.
 
@@ -56,14 +56,14 @@
 
 
 /** --------------------------------------------------------------------
- ** Type definitions.
+ ** Type definitions: data struct "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-typedef struct my_alpha_t		my_alpha_t;
-typedef struct my_alpha_methods_t	my_alpha_methods_t;
+typedef struct my_coords_t			my_coords_t;
+typedef struct ccname_table_type(my_coords_t)	ccname_table_type(my_coords_t);
 
-struct my_alpha_t {
-  my_alpha_methods_t const *	methods;
+struct my_coords_t {
+  ccname_table_type(my_coords_t) const *	methods;
   double	X;
   double	Y;
   double	Z;
@@ -71,34 +71,34 @@ struct my_alpha_t {
 
 
 /** --------------------------------------------------------------------
- ** Function prototypes: constructors.
+ ** Data struct "my_coords_t": function prototypes, constructors.
  ** ----------------------------------------------------------------- */
 
 /* Constructor function.  Allocate the struct instance on the heap using
    the standard memory allocator implemented by CCMemory. */
-ccstructs_decl my_alpha_t const * my_new_alpha (cce_destination_t L, double x, double y, double z)
+ccstructs_decl my_coords_t const * ccname_new(my_coords_t) (cce_destination_t L, double x, double y, double z)
   __attribute__((__nonnull__((1))));
 
 /* Constructor function.  Initialise an already allocated struct. */
-ccstructs_decl void my_init_alpha (my_alpha_t * self, double x, double y, double z)
+ccstructs_decl void ccname_init(my_coords_t) (my_coords_t * self, double x, double y, double z)
   __attribute__((__nonnull__((1))));
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtor".
+ ** Data struct "my_coords_t": constructors for implemented interfaces.
  ** ----------------------------------------------------------------- */
 
-/* Interface  constructor function.   Return a  new instance  of "dtor"
-   interface which destroys the struct instance. */
-ccstructs_decl ccstructs_dtor_I my_new_alpha_dtor (my_alpha_t const * self)
+/* Interface    constructor   function.     Return   an    instance   of
+   "ccstructs_dtor_I" as implemented by "my_coords_t". */
+ccstructs_decl ccstructs_dtor_I ccname_iface_new(ccstructs_dtor_I, my_coords_t) (my_coords_t const * self)
   __attribute__((__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
- ** Function prototypes: printing.
+ ** Data struct "my_coords_t": function prototypes, printing.
  ** ----------------------------------------------------------------- */
 
-ccstructs_decl void my_print_alpha (cce_destination_t L, FILE * stream, my_alpha_t const * self)
+ccstructs_decl void my_print_alpha (cce_destination_t L, FILE * stream, my_coords_t const * self)
   __attribute__((__nonnull__(1,2,3)));
 
 

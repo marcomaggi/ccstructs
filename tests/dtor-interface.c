@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you  can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -35,7 +35,7 @@
 
 
 /** --------------------------------------------------------------------
- ** Dtor interface: empty delete method.
+ ** Dtor interface: empty release method.
  ** ----------------------------------------------------------------- */
 
 typedef struct one_t	one_t;
@@ -44,16 +44,18 @@ struct one_t {
   void *	pointer;
 };
 
+/* ------------------------------------------------------------------ */
+
 static void
-one_dtor_method_delete (ccstructs_dtor_I I)
+ccname_iface_method(ccstructs_dtor_I, one_t, release) (ccstructs_dtor_I I)
 {
   CCSTRUCTS_PC(one_t, S, ccstructs_dtor_self(I));
 
-  fprintf(stderr, "%s: delete method for %p\n", __func__, (void *)S);
+  fprintf(stderr, "%s: release method for %p\n", __func__, (void *)S);
 }
 
 static void
-one_dtor_method_final (ccstructs_dtor_I I)
+ccname_iface_method(ccstructs_dtor_I, one_t, final) (ccstructs_dtor_I I)
 {
   CCSTRUCTS_PC(one_t, S, ccstructs_dtor_self(I));
 
@@ -61,21 +63,23 @@ one_dtor_method_final (ccstructs_dtor_I I)
   fprintf(stderr, "%s: final method for %p\n", __func__, (void *)S);
 }
 
-static ccstructs_dtor_I_methods_t const one_dtor_I_methods = {
-  .delete	= one_dtor_method_delete,
-  .final	= one_dtor_method_final
+static ccname_iface_table_type(ccstructs_dtor_I) const ccname_iface_table(ccstructs_dtor_I, one_t) = {
+  .release	= ccname_iface_method(ccstructs_dtor_I, one_t, release),
+  .final	= ccname_iface_method(ccstructs_dtor_I, one_t, final)
 };
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_dtor_I
-one_new_I_dtor (one_t const * const S)
+ccname_iface_new(ccstructs_dtor_I, one_t) (one_t const * const S)
 {
-  return ccstructs_new_dtor(ccstructs_core(S), &one_dtor_I_methods);
+  return ccname_new(ccstructs_dtor_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_dtor_I, one_t));
 }
+
+/* ------------------------------------------------------------------ */
 
 void
 test_1_1 (cce_destination_t upper_L)
-/* Call the delete method. */
+/* Call the dtor delete function. */
 {
   cce_location_t	L[1];
 
@@ -85,7 +89,7 @@ test_1_1 (cce_destination_t upper_L)
     one_t	S = {
       .pointer	= ccmem_malloc(L, ccmem_standard_allocator, 256)
     };
-    ccstructs_dtor_I	I = one_new_I_dtor(&S);
+    ccstructs_dtor_I	I = ccname_iface_new(ccstructs_dtor_I, one_t)(&S);
 
     memset(S.pointer, 123, 256);
     ccstructs_dtor_delete(I);
@@ -93,29 +97,9 @@ test_1_1 (cce_destination_t upper_L)
   }
 }
 
-void
-test_1_2 (cce_destination_t upper_L)
-/* Call the final method. */
-{
-  cce_location_t	L[1];
-
-  if (cce_location(L)) {
-    cce_run_catch_handlers_raise(L, upper_L);
-  } else {
-    one_t	S = {
-      .pointer	= ccmem_malloc(L, ccmem_standard_allocator, 256)
-    };
-    ccstructs_dtor_I	I = one_new_I_dtor(&S);
-
-    memset(S.pointer, 123, 256);
-    ccstructs_dtor_final(I);
-    cce_run_body_handlers(L);
-  }
-}
-
 
 /** --------------------------------------------------------------------
- ** Dtor interface: non-empty delete method.
+ ** Dtor interface: non-empty release method.
  ** ----------------------------------------------------------------- */
 
 typedef struct two_t	two_t;
@@ -124,17 +108,37 @@ struct two_t {
   void *	pointer;
 };
 
+two_t *
+ccname_new(two_t) (cce_destination_t upper_L)
+{
+  cce_location_t	L[1];
+  ccmem_error_handler_t	S_H[1];
+  two_t *		S;
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    S          = ccmem_std_malloc_guarded(L, S_H, sizeof(two_t));
+    S->pointer = ccmem_std_malloc(L, 256);
+    memset(S->pointer, 123, 256);
+    cce_run_body_handlers(L);
+  }
+  return S;
+}
+
+/* ------------------------------------------------------------------ */
+
 static void
-two_dtor_method_delete (ccstructs_dtor_I I)
+ccname_iface_method(ccstructs_dtor_I, two_t, release) (ccstructs_dtor_I I)
 {
   CCSTRUCTS_PC(two_t, S, ccstructs_dtor_self(I));
 
   ccmem_free(ccmem_standard_allocator, S);
-  fprintf(stderr, "%s: delete method for %p\n", __func__, (void *)S);
+  fprintf(stderr, "%s: release method for %p\n", __func__, (void *)S);
 }
 
 static void
-two_dtor_method_final (ccstructs_dtor_I I)
+ccname_iface_method(ccstructs_dtor_I, two_t, final) (ccstructs_dtor_I I)
 {
   CCSTRUCTS_PC(two_t, S, ccstructs_dtor_self(I));
 
@@ -142,60 +146,32 @@ two_dtor_method_final (ccstructs_dtor_I I)
   fprintf(stderr, "%s: final method for %p\n", __func__, (void *)S);
 }
 
-static ccstructs_dtor_I_methods_t const two_dtor_I_methods = {
-  .delete	= two_dtor_method_delete,
-  .final	= two_dtor_method_final
+static ccname_iface_table_type(ccstructs_dtor_I) const ccname_iface_table(ccstructs_dtor_I, two_t) = {
+  .release	= ccname_iface_method(ccstructs_dtor_I, two_t, release),
+  .final	= ccname_iface_method(ccstructs_dtor_I, two_t, final)
 };
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_dtor_I
-two_new_I_dtor (two_t const * const S)
+ccname_iface_new(ccstructs_dtor_I, two_t) (two_t const * const S)
 {
-  return ccstructs_new_dtor(ccstructs_core(S), &two_dtor_I_methods);
+  return ccname_new(ccstructs_dtor_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_dtor_I, two_t));
 }
+
+/* ------------------------------------------------------------------ */
 
 void
 test_2_1 (cce_destination_t upper_L)
-/* Call the delete method. */
+/* Call the dtor delete function. */
 {
   cce_location_t	L[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    two_t * S = ccmem_malloc(L, ccmem_standard_allocator, sizeof(two_t));
-
-    S->pointer = ccmem_malloc(L, ccmem_standard_allocator, 256);
-    memset(S->pointer, 123, 256);
-
-    {
-      ccstructs_dtor_I	I = two_new_I_dtor(S);
-      ccstructs_dtor_delete(I);
-    }
-    cce_run_body_handlers(L);
-  }
-}
-
-void
-test_2_2 (cce_destination_t upper_L)
-/* Call the final method. */
-{
-  cce_location_t	L[1];
-
-  if (cce_location(L)) {
-    cce_run_catch_handlers_raise(L, upper_L);
-  } else {
-    two_t * S = ccmem_malloc(L, ccmem_standard_allocator, sizeof(two_t));
-
-    S->pointer = ccmem_malloc(L, ccmem_standard_allocator, 256);
-    memset(S->pointer, 123, 256);
-
-    {
-      ccstructs_dtor_I	I = two_new_I_dtor(S);
-      ccstructs_dtor_final(I);
-    }
-
-    ccmem_free(ccmem_standard_allocator, S);
+    two_t *		S = ccname_new(two_t)(L);
+    ccstructs_dtor_I	I = ccname_iface_new(ccstructs_dtor_I, two_t)(S);
+    ccstructs_dtor_delete(I);
     cce_run_body_handlers(L);
   }
 }
@@ -206,17 +182,15 @@ main (void)
 {
   cctests_init("tests dtor interface");
   {
-    cctests_begin_group("empty delete method");
+    cctests_begin_group("empty release method");
     {
       cctests_run(test_1_1);
-      cctests_run(test_1_2);
     }
     cctests_end_group();
 
-    cctests_begin_group("non-empty delete method");
+    cctests_begin_group("non-empty release method");
     {
       cctests_run(test_2_1);
-      cctests_run(test_2_2);
     }
     cctests_end_group();
   }

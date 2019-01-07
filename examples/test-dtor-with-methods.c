@@ -6,14 +6,14 @@
   Abstract
 
 	This test program checks the behaviour  of the API of the struct
-	"my_alpha_t" and shows how to use the implemented interfaces.
+	"my_coords_t" and shows how to use the implemented interfaces.
 
 	The "dtor-with-methods" example shows  how to implement a struct
 	using  a   methods  table  for  the   struct-specific  interface
 	constructors: every instance of the  struct type holds a pointer
 	to a struct implementing a methods table.
 
-  Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   The author hereby  grant permission to use,  copy, modify, distribute,
   and  license this  software  and its  documentation  for any  purpose,
@@ -94,19 +94,19 @@ flag_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
 void
 test_1_1 (cce_destination_t upper_L)
 /* Allocate the  struct instance on  the stack,  then destroy it  with a
-   "clean" handler using the "dtor" interface. */
+   "clean" handler using the interface "ccstructs_dtor_I". */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
   cce_error_handler_t		FE_H[1];
-  my_alpha_t			A[1];
+  my_coords_t			A[1];
   ccstructs_clean_handler_t	A_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_init_alpha(A, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, my_new_alpha_dtor(A));
+    ccname_init(my_coords_t)(A, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -119,12 +119,12 @@ test_1_1 (cce_destination_t upper_L)
 void
 test_1_2 (cce_destination_t upper_L)
 /* Allocate the  struct instance on the  stack, then destroy it  with an
-   "error" handler using the "dtor" interface. */
+   "error" handler using the interface "ccstructs_dtor_I". */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
   cce_error_handler_t		FE_H[1];
-  my_alpha_t			A[1];
+  my_coords_t			A[1];
   ccstructs_error_handler_t	A_H[1];
 
   if (cce_location(L)) {
@@ -134,8 +134,8 @@ test_1_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    my_init_alpha(A, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, my_new_alpha_dtor(A));
+    ccname_init(my_coords_t)(A, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -154,19 +154,19 @@ test_1_2 (cce_destination_t upper_L)
 void
 test_2_1 (cce_destination_t upper_L)
 /* Allocate the  struct instance  on the  heap, then  destroy it  with a
-   "clean" handler using the "dtor" interface. */
+   "clean" handler using the "ccstructs_dtor_I" interface. */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
   cce_error_handler_t		FE_H[1];
-  my_alpha_t const *		A;
+  my_coords_t const *		A;
   ccstructs_clean_handler_t	A_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    A = my_new_alpha(L, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, my_new_alpha_dtor(A));
+    A = ccname_new(my_coords_t)(L, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -179,12 +179,12 @@ test_2_1 (cce_destination_t upper_L)
 void
 test_2_2 (cce_destination_t upper_L)
 /* Allocate the  struct on  the heap,  then destroy  it with  an "error"
-   handler using the "dtor" interface. */
+   handler using the "ccstructs_dtor_I" interface. */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
   cce_error_handler_t		FE_H[1];
-  my_alpha_t const *		A;
+  my_coords_t const *		A;
   ccstructs_error_handler_t	A_H[1];
 
   if (cce_location(L)) {
@@ -194,8 +194,8 @@ test_2_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    A = my_new_alpha(L, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, my_new_alpha_dtor(A));
+    A = ccname_new(my_coords_t)(L, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);

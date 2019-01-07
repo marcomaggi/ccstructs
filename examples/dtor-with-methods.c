@@ -5,8 +5,9 @@
 
   Abstract
 
-	This body file defines the API to handle the struct "my_alpha_t"
-	and shows how to implement the main interfaces for it.
+	This  body   file  defines   the  API   to  handle   the  struct
+	"my_coords_t" and shows how to implement the main interfaces for
+	it.
 
 	The "dtor-with-methods" example shows  how to implement a struct
 	using  a   methods  table  for  the   struct-specific  interface
@@ -49,179 +50,196 @@
 #include <stdlib.h>
 #include <errno.h>
 
-static ccstructs_new_dtor_fun_t my_new_alpha_embedded_I_dtor;
-static ccstructs_new_dtor_fun_t my_new_alpha_standalone_I_dtor;
-
-static void my_final_alpha (my_alpha_t const * self)
-  __attribute__((__nonnull__(1)));
-
-static void my_release_alpha (my_alpha_t const * self)
-  __attribute__((__nonnull__(1)));
-
 
 /** --------------------------------------------------------------------
- ** Struct methods table.
+ ** Data struct "my_coords_t": methods table.
  ** ----------------------------------------------------------------- */
 
-struct my_alpha_methods_t {
-  ccstructs_new_dtor_fun_t *		new_dtor;
+/* Type  of interface  constructor  functions.  Functions  of this  type
+   build   instances    of   "ccstructs_dtor_I"   as    implemented   by
+   "my_coords_t". */
+typedef ccstructs_dtor_I ccname_iface_new_type(ccstructs_dtor_I, my_coords_t) (my_coords_t const * self);
+
+/* Function prototype: constructor for "ccstructs_dtor_I" as implemented
+   by "my_coords_t".  This variant destroys embedded instances. */
+static ccname_iface_new_type(ccstructs_dtor_I, my_coords_t) ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded);
+
+/* Function prototype: constructor for "ccstructs_dtor_I" as implemented
+   by "my_coords_t".  This variant destroys standalone instances. */
+static ccname_iface_new_type(ccstructs_dtor_I, my_coords_t) ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone);
+
+/* Table of methods for "my_coords_t". */
+struct ccname_table_type(my_coords_t) {
+  ccname_iface_new_type(ccstructs_dtor_I, my_coords_t) *	new_dtor;
 };
 
-static my_alpha_methods_t const my_alpha_methods_embedded_stru = {
-  .new_dtor	= my_new_alpha_embedded_I_dtor
+/* Methods  table  for  "my_coords_t":  this  variant  is  for  embedded
+   instances. */
+static ccname_table_type(my_coords_t) const ccname_table(my_coords_t, embedded) = {
+  .new_dtor	= ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded)
 };
 
-static my_alpha_methods_t const my_alpha_methods_standalone_stru = {
-  .new_dtor	= my_new_alpha_standalone_I_dtor
+/* Methods  table  for "my_coords_t":  this  variant  is for  standalone
+   instances. */
+static ccname_table_type(my_coords_t) const ccname_table(my_coords_t, standalone) = {
+  .new_dtor	= ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone)
 };
 
 
 /** --------------------------------------------------------------------
- ** Constructors and destructors.
+ ** Data struct "my_coords_t": constructors and destructors.
  ** ----------------------------------------------------------------- */
 
 void
-my_init_alpha (my_alpha_t * self, double x, double y, double z)
+ccname_init(my_coords_t) (my_coords_t * self, double x, double y, double z)
 {
-  self->methods	= &my_alpha_methods_embedded_stru;
+  self->methods	= &ccname_table(my_coords_t, embedded);
   self->X	= x;
   self->Y	= y;
   self->Z	= z;
 }
 
+my_coords_t const *
+ccname_new(my_coords_t) (cce_destination_t L, double x, double y, double z)
+{
+  my_coords_t *	self = ccmem_std_malloc(L, sizeof(my_coords_t));
+
+  ccname_init(my_coords_t)(self, x, y, z);
+  self->methods	= &ccname_table(my_coords_t, standalone);
+  return (my_coords_t const *) self;
+}
+
 static void
-my_final_alpha (my_alpha_t const * self CCSTRUCTS_UNUSED)
+ccname_final(my_coords_t) (my_coords_t const * self CCSTRUCTS_UNUSED)
 {
   if (1) { fprintf(stderr, "%-35s: finalised\n", __func__); }
 }
 
-/* ------------------------------------------------------------------ */
-
-static my_alpha_t *
-my_alloc_alpha (cce_destination_t L)
-{
-  return ccmem_std_malloc(L, sizeof(my_alpha_t));
-}
-
 static void
-my_release_alpha (my_alpha_t const * self)
+ccname_release(my_coords_t) (my_coords_t const * self)
 {
   ccmem_std_free((void *)self);
   if (1) { fprintf(stderr, "%-35s: released\n", __func__); }
 }
 
-/* ------------------------------------------------------------------ */
-
-my_alpha_t const *
-my_new_alpha (cce_destination_t L, double x, double y, double z)
+void
+ccname_delete(my_coords_t) (my_coords_t const * self)
 {
-  my_alpha_t *	self = my_alloc_alpha(L);
-
-  my_init_alpha(self, x, y, z);
-  self->methods	= &my_alpha_methods_standalone_stru;
-  return (my_alpha_t const *) self;
+  ccname_final(my_coords_t)(self);
+  ccname_release(my_coords_t)(self);
+  if (1) { fprintf(stderr, "%-35s: delete\n", __func__); }
 }
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtor": embedded struct.
+ ** Interface "ccstructs_dtor_I" for "my_coords_t": embedded structs.
  ** ----------------------------------------------------------------- */
 
-/* This is for struct instances allocated on the stack or embedded in an
-   enclosing struct. */
-
-/* Interface "dtor": "final()" method. */
 static void
-my_alpha_embedded_dtor_method_final (ccstructs_dtor_I I)
+ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, final) (ccstructs_dtor_I I)
+/* Implementation   of   the   method   "final()"   in   the   interface
+   "ccstructs_dtor_I"  as implemented  by  "my_coords_t".  This  variant
+   finalises embedded structs. */
 {
-  CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
+  CCSTRUCTS_PC(my_coords_t, self, ccstructs_dtor_self(I));
 
-  my_final_alpha(self);
+  ccname_final(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: finalised by dtor\n", __func__); }
 }
 
-/* Interface "dtor": "delete()" method. */
 static void
-my_alpha_embedded_dtor_method_delete (ccstructs_dtor_I I CCSTRUCTS_UNUSED)
+ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, release) (ccstructs_dtor_I I CCSTRUCTS_UNUSED)
+/* Implementation   of  the   method   "release()"   in  the   interface
+   "ccstructs_dtor_I" as implemented by  "my_coords_t".  This variant is
+   for embedded structs so: it does nothing. */
 {
-  if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
+  if (1) { fprintf(stderr, "%-35s: released by dtor\n", __func__); }
 }
 
-/* Methods table  for the  "dtor" interface. */
-static ccstructs_dtor_I_methods_t const my_alpha_embedded_dtor_I_methods = {
-  .final	= my_alpha_embedded_dtor_method_final,
-  .delete	= my_alpha_embedded_dtor_method_delete
+/* Methods table for the  interface "ccstructs_dtor_I" as implemented by
+   "my_coords_t".  This variant is for embedded structs. */
+static ccname_iface_table_type(ccstructs_dtor_I) const ccname_iface_table(ccstructs_dtor_I, my_coords_t, embedded) = {
+  .final	= ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, final),
+  .release	= ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, release)
 };
-
-/* Constructor for the "dtor" interface. */
-static ccstructs_dtor_I
-my_new_alpha_embedded_I_dtor (ccstructs_core_t const * const self)
-{
-  return ccstructs_new_dtor(self, &my_alpha_embedded_dtor_I_methods);
-}
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtor": standalone struct.
+ ** Interface "ccstructs_dtor_I" for "my_coords_t": standalone structs.
  ** ----------------------------------------------------------------- */
 
-/* This is for struct instances allocated on the heap. */
-
-/* Interface "dtor": "final()" method. */
 static void
-my_alpha_standalone_dtor_method_final (ccstructs_dtor_I I)
+ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, final) (ccstructs_dtor_I I)
+/* Implementation   of   the   method   "final()"   in   the   interface
+   "ccstructs_dtor_I"  as implemented  by  "my_coords_t".  This  variant
+   finalises standalone structs. */
 {
-  CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
+  CCSTRUCTS_PC(my_coords_t, self, ccstructs_dtor_self(I));
 
-  my_final_alpha(self);
+  ccname_final(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: finalised by dtor\n", __func__); }
 }
 
-/* Interface "dtor": "delete()" method. */
 static void
-my_alpha_standalone_dtor_method_delete (ccstructs_dtor_I I)
+ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, release) (ccstructs_dtor_I I)
+/* Implementation   of  the   method   "release()"   in  the   interface
+   "ccstructs_dtor_I"  as implemented  by  "my_coords_t".  This  variant
+   releases standalone structs. */
 {
-  CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
+  CCSTRUCTS_PC(my_coords_t, self, ccstructs_dtor_self(I));
 
-  my_release_alpha(self);
-  if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
+  ccname_release(my_coords_t)(self);
+  if (1) { fprintf(stderr, "%-35s: released by dtor\n", __func__); }
 }
 
-/* Methods table for the "dtor" interface. */
-static ccstructs_dtor_I_methods_t const my_alpha_standalone_dtor_I_methods = {
-  .final	= my_alpha_standalone_dtor_method_final,
-  .delete	= my_alpha_standalone_dtor_method_delete
+/* Methods table for the  interface "ccstructs_dtor_I" as implemented by
+   "my_coords_t".  This variant is for standalone structs. */
+static ccname_iface_table_type(ccstructs_dtor_I) const ccname_iface_table(ccstructs_dtor_I, my_coords_t, standalone) = {
+  .final	= ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, final),
+  .release	= ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, release)
 };
 
-/* Constructor for the "dtor" interface. */
+
+/** --------------------------------------------------------------------
+ ** Data struct "my_coords_t": methods implementation.
+ ** ----------------------------------------------------------------- */
+
 static ccstructs_dtor_I
-my_new_alpha_standalone_I_dtor (ccstructs_core_t const * const self)
+ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded) (my_coords_t const * const self)
+/* Implement the method "new_dtor()"  for "my_coords_t": constructor for
+   "ccstructs_dtor_I".  This variant destroys embedded structs. */
 {
-  return ccstructs_new_dtor(self, &my_alpha_standalone_dtor_I_methods);
+  return ccname_new(ccstructs_dtor_I)(ccstructs_core(self), &ccname_iface_table(ccstructs_dtor_I, my_coords_t, embedded));
+}
+
+static ccstructs_dtor_I
+ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone) (my_coords_t const * const self)
+/* Implement the  method "new_dtor()" for "my_coords_t":  constructor for
+   "ccstructs_dtor_I".  This variant destroys embedded structs. */
+{
+  return ccname_new(ccstructs_dtor_I)(ccstructs_core(self), &ccname_iface_table(ccstructs_dtor_I, my_coords_t, standalone));
 }
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtor": constructors.
+ ** Data struct "my_coords_t": constructors of implemented interfaces.
  ** ----------------------------------------------------------------- */
 
-/* Interface  constructor function.   Return a  new instance  of "dtor"
-   interface which destroys the struct instance. */
 ccstructs_dtor_I
-my_new_alpha_dtor (my_alpha_t const * const self)
+ccname_iface_new(ccstructs_dtor_I, my_coords_t) (my_coords_t const * const self)
+/* Interface   constructor   for   "ccstructs_dtor_I"   implemented   by
+   "my_coords_t". */
 {
-  return self->methods->new_dtor(ccstructs_core(self));
+  return self->methods->new_dtor(self);
 }
-
-
 
 
 /** --------------------------------------------------------------------
- ** Printing.
+ ** Data struct "my_coords_t": printing.
  ** ----------------------------------------------------------------- */
 
 void
-my_print_alpha (cce_destination_t L, FILE * stream, my_alpha_t const * const self)
+my_print_alpha (cce_destination_t L, FILE * stream, my_coords_t const * const self)
 {
   int	rv;
 

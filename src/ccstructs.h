@@ -87,6 +87,7 @@ extern "C" {
 
 #include <ccexceptions.h>
 #include <ccmemory.h>
+#include <ccnames.h>
 
 
 /** --------------------------------------------------------------------
@@ -115,8 +116,8 @@ typedef struct ccstructs_core_t		ccstructs_core_t;
 
 struct ccstructs_core_t;
 
-__attribute__((__always_inline__,__nonnull__(1)))
-static inline ccstructs_core_t *
+__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+static inline ccstructs_core_t const *
 ccstructs_core (void const * S)
 {
   return ((ccstructs_core_t *)(S));
@@ -127,35 +128,31 @@ ccstructs_core (void const * S)
  ** Generic struct handling: destructors interface.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccstructs_dtor_I_methods_t	ccstructs_dtor_I_methods_t;
-typedef struct ccstructs_dtor_I			ccstructs_dtor_I;
+typedef struct ccstructs_dtor_I					ccstructs_dtor_I;
+typedef struct ccname_iface_table_type(ccstructs_dtor_I)	ccname_iface_table_type(ccstructs_dtor_I);
 
 struct ccstructs_dtor_I {
-  ccstructs_dtor_I_methods_t	const * methods;
-  ccstructs_core_t		const * self;
+  ccname_iface_table_type(ccstructs_dtor_I)	const * methods;
+  ccstructs_core_t				const * self;
 };
-
-/* Release the memory allocated for the struct, if needed. */
-typedef void ccstructs_dtor_I_delete_fun_t (ccstructs_dtor_I I);
 
 /* Release all  the asynchronous  resources owned by  the fields  of the
    struct, if any. */
-typedef void ccstructs_dtor_I_final_fun_t (ccstructs_dtor_I I);
+typedef void ccname_iface_method_type(ccstructs_dtor_I, final) (ccstructs_dtor_I I);
 
-struct ccstructs_dtor_I_methods_t {
-  ccstructs_dtor_I_delete_fun_t	* delete;
-  ccstructs_dtor_I_final_fun_t	* final;
+/* Release the memory allocated for the struct, if needed. */
+typedef void ccname_iface_method_type(ccstructs_dtor_I, release) (ccstructs_dtor_I I);
+
+struct ccname_iface_table_type(ccstructs_dtor_I) {
+  ccname_iface_method_type(ccstructs_dtor_I, final)	* final;
+  ccname_iface_method_type(ccstructs_dtor_I, release)	* release;
 };
-
-/* Type   of  functions   implementing   a  constructor   for  a   dtor
-   interface. */
-typedef ccstructs_dtor_I ccstructs_new_dtor_fun_t (ccstructs_core_t const * self);
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
 static inline ccstructs_dtor_I
-ccstructs_new_dtor (ccstructs_core_t const * S, ccstructs_dtor_I_methods_t const * const M)
+ccname_new(ccstructs_dtor_I)(ccstructs_core_t const * S, ccname_iface_table_type(ccstructs_dtor_I) const * M)
 {
   ccstructs_dtor_I	I = {
     .methods	= M,
@@ -173,17 +170,10 @@ ccstructs_dtor_self (ccstructs_dtor_I I)
 
 __attribute__((__always_inline__))
 static inline void
-ccstructs_dtor_final (ccstructs_dtor_I I)
-{
-  I.methods->final(I);
-}
-
-__attribute__((__always_inline__))
-static inline void
 ccstructs_dtor_delete (ccstructs_dtor_I I)
 {
   I.methods->final(I);
-  I.methods->delete(I);
+  I.methods->release(I);
 }
 
 
@@ -240,7 +230,7 @@ struct ccstructs_writable_I_methods_t {
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
 static inline ccstructs_writable_I
-ccstructs_new_writable (ccstructs_core_t * S, ccstructs_writable_I_methods_t const * const M)
+ccstructs_new_writable (ccstructs_core_t const * S, ccstructs_writable_I_methods_t const * const M)
 {
   ccstructs_writable_I	I = {
     .methods	= M,
@@ -290,7 +280,7 @@ struct ccstructs_serialisable_I_methods_t {
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
 static inline ccstructs_serialisable_I
-ccstructs_new_serialisable (ccstructs_core_t * S, ccstructs_serialisable_I_methods_t const * const M)
+ccstructs_new_serialisable (ccstructs_core_t const * S, ccstructs_serialisable_I_methods_t const * const M)
 {
   ccstructs_serialisable_I	I = {
     .methods	= M,

@@ -9,7 +9,7 @@ AM_CFLAGS		= $(MMUX_CFLAGS) -I$(srcdir)/src
 AM_ETAGSFLAGS		= \
 	$(CCEXCEPTIONS_HEADER)		\
 	$(CCMEMORY_HEADER)		\
-	--regex='{c}/"\\_<\\(ccname_\\(?:alloc\\|delete\\|final\\|i\\(?:face_\\(?:method\\(?:_type\\)?\\|new\\|table\\(?:_type\\)?\\)\\|nit\\)\\|method\\(?:_type\\)?\\|new\\|\\(?:releas\\|tabl\\(?:e_typ\\)?\\)e\\)\\)\\_>"/'
+	--regex='{c}/"\\_<\\(ccname_\\(?:alloc\\|delete\\|final\\|i\\(?:face_\\(?:method\\(?:_type\\)?\\|new\\(?:_type\\)?\\|table\\(?:_type\\)?\\)\\|nit\\)\\|method\\(?:_type\\)?\\|new\\|\\(?:releas\\|tabl\\(?:e_typ\\)?\\)e\\)\\)\\_>"/'
 
 ## --------------------------------------------------------------------
 
@@ -124,8 +124,7 @@ noinst_PROGRAMS	=					\
 	examples/ccnames-iface-struct-no-methods	\
 	examples/ccnames-iface-struct-with-methods	\
 	examples/test-dtor-no-methods			\
-	examples/test-dtor-with-methods			\
-	examples/test-dtor-with-methods-and-names
+	examples/test-dtor-with-methods
 endif
 
 ccstructs_examples_cppflags	= -I$(srcdir)/src -I$(srcdir)/examples $(CCTESTS_CFLAGS)
@@ -139,7 +138,6 @@ examples: $(noinst_PROGRAMS)
 	-examples/ccnames-iface-no-methods
 	-examples/test-dtor-no-methods
 	-examples/test-dtor-with-methods
-	-examples/test-dtor-with-methods-and-names
 
 ## --------------------------------------------------------------------
 
@@ -204,19 +202,6 @@ examples_test_dtor_with_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
 examples_test_dtor_with_methods_LDADD		= $(ccstructs_examples_ldadd)
 
 $(examples_test_dtor_with_methods_OBJECTS): libccstructs.la
-
-## --------------------------------------------------------------------
-
-examples_test_dtor_with_methods_and_names_SOURCES =	\
-	examples/dtor-with-methods-and-names.h		\
-	examples/dtor-with-methods-and-names.c		\
-	examples/test-dtor-with-methods-and-names.c	\
-	src/ccnames.h
-
-examples_test_dtor_with_methods_and_names_CPPFLAGS	= $(ccstructs_examples_cppflags)
-examples_test_dtor_with_methods_and_names_LDADD		= $(ccstructs_examples_ldadd)
-
-$(examples_test_dtor_with_methods_and_names_OBJECTS): libccstructs.la
 
 
 #### Valgrind analysis

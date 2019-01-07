@@ -6,13 +6,13 @@
   Abstract
 
 	This test program checks the behaviour  of the API of the struct
-	"my_alpha_t" and shows how to use the implemented interfaces.
+	"my_coords_t" and shows how to use the implemented interfaces.
 
 	The "dtor-no-methods"  example shows  how to implement  a struct
 	using  no  methods  table   for  the  struct-specific  interface
 	constructors.
 
-  Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   The author hereby  grant permission to use,  copy, modify, distribute,
   and  license this  software  and its  documentation  for any  purpose,
@@ -96,16 +96,16 @@ test_1_1 (cce_destination_t upper_L)
    function. */
 {
   cce_location_t	L[1];
-  my_alpha_t		A[1];
+  my_coords_t		A[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_init_alpha(A, 1.0, 2.0, 3.0);
+    ccname_init(my_coords_t)(A, 1.0, 2.0, 3.0);
     /* If  this  call  raises  an  exception: we  may  have  a  resource
        leakage. */
-    my_print_alpha(L, stderr, A);
-    my_final_alpha(A);
+    my_print_coords(L, stderr, A);
+    ccname_final(my_coords_t)(A);
     cce_run_body_handlers(L);
   }
 }
@@ -121,16 +121,16 @@ test_2_1 (cce_destination_t upper_L)
    function. */
 {
   cce_location_t	L[1];
-  my_alpha_t const *	A;
+  my_coords_t const *	A;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    A = my_new_alpha(L, 1.0, 2.0, 3.0);
+    A = ccname_new(my_coords_t)(L, 1.0, 2.0, 3.0);
     /* If  this  call  raises  an  exception: we  may  have  a  resource
        leakage. */
-    my_print_alpha(L, stderr, A);
-    my_delete_alpha(A);
+    my_print_coords(L, stderr, A);
+    ccname_delete(my_coords_t)(A);
     cce_run_body_handlers(L);
   }
 }
@@ -148,19 +148,19 @@ test_3_1 (cce_destination_t upper_L)
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_alpha_t		A[1];
+  my_coords_t		A[1];
   cce_clean_handler_t	A_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_init_alpha(A, 1.0, 2.0, 3.0);
-    my_alpha_register_clean_handler_final(L, A_H, A);
+    ccname_init(my_coords_t)(A, 1.0, 2.0, 3.0);
+    my_coords_register_clean_handler_final(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    my_print_alpha(L, stderr, A);
+    my_print_coords(L, stderr, A);
     cce_run_body_handlers(L);
   }
 }
@@ -173,7 +173,7 @@ test_3_2 (cce_destination_t upper_L)
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_alpha_t		A[1];
+  my_coords_t		A[1];
   cce_error_handler_t	A_H[1];
 
   if (cce_location(L)) {
@@ -183,13 +183,13 @@ test_3_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    my_init_alpha(A, 1.0, 2.0, 3.0);
-    my_alpha_register_error_handler_final(L, A_H, A);
+    ccname_init(my_coords_t)(A, 1.0, 2.0, 3.0);
+    my_coords_register_error_handler_final(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    my_print_alpha(L, stderr, A);
+    my_print_coords(L, stderr, A);
     cce_raise(L, cctests_condition_new_signal_1());
     cce_run_body_handlers(L);
   }
@@ -208,19 +208,19 @@ test_4_1 (cce_destination_t upper_L)
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_alpha_t const *	A;
+  my_coords_t const *	A;
   cce_clean_handler_t	A_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    A = my_new_alpha(L, 1.0, 2.0, 3.0);
-    my_alpha_register_clean_handler_delete(L, A_H, A);
+    A = ccname_new(my_coords_t)(L, 1.0, 2.0, 3.0);
+    my_coords_register_clean_handler_delete(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    my_print_alpha(L, stderr, A);
+    my_print_coords(L, stderr, A);
     cce_run_body_handlers(L);
   }
 }
@@ -233,7 +233,7 @@ test_4_2 (cce_destination_t upper_L)
   cce_location_t	L[1];
   cce_clean_handler_t	FC_H[1];
   cce_error_handler_t	FE_H[1];
-  my_alpha_t const *	A;
+  my_coords_t const *	A;
   cce_error_handler_t	A_H[1];
 
   if (cce_location(L)) {
@@ -243,13 +243,13 @@ test_4_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    A = my_new_alpha(L, 1.0, 2.0, 3.0);
-    my_alpha_register_error_handler_delete(L, A_H, A);
+    A = ccname_new(my_coords_t)(L, 1.0, 2.0, 3.0);
+    my_coords_register_error_handler_delete(L, A_H, A);
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    my_print_alpha(L, stderr, A);
+    my_print_coords(L, stderr, A);
     cce_raise(L, cctests_condition_new_signal_1());
     cce_run_body_handlers(L);
   }
@@ -257,30 +257,30 @@ test_4_2 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Allocation on the stack, dtor handlers.
+ ** Allocation on the stack, "ccstructs_dtor_I" handlers.
  ** ----------------------------------------------------------------- */
 
 void
 test_5_1 (cce_destination_t upper_L)
 /* Allocate the  struct on  the stack,  then destroy  it with  a "clean"
-   handler using the "embedded" dtor interface. */
+   handler using the "embedded" "ccstructs_dtor_I" interface. */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
   cce_error_handler_t		FE_H[1];
-  my_alpha_t			A[1];
+  my_coords_t			A[1];
   ccstructs_clean_handler_t	A_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    my_init_alpha(A, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, my_new_alpha_embedded_I_dtor(A));
+    ccname_init(my_coords_t)(A, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    my_print_alpha(L, stderr, A);
+    my_print_coords(L, stderr, A);
     cce_run_body_handlers(L);
   }
 }
@@ -288,12 +288,12 @@ test_5_1 (cce_destination_t upper_L)
 void
 test_5_2 (cce_destination_t upper_L)
 /* Allocate the  struct on the  stack, then  destroy it with  an "error"
-   handler using the "embedded" dtor interface. */
+   handler using the "embedded" "ccstructs_dtor_I" interface. */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
   cce_error_handler_t		FE_H[1];
-  my_alpha_t			A[1];
+  my_coords_t			A[1];
   ccstructs_error_handler_t	A_H[1];
 
   if (cce_location(L)) {
@@ -303,13 +303,13 @@ test_5_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    my_init_alpha(A, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, my_new_alpha_embedded_I_dtor(A));
+    ccname_init(my_coords_t)(A, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    my_print_alpha(L, stderr, A);
+    my_print_coords(L, stderr, A);
     cce_raise(L, cctests_condition_new_signal_1());
     cce_run_body_handlers(L);
   }
@@ -317,30 +317,30 @@ test_5_2 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Allocation on the heap, dtor handlers.
+ ** Allocation on the heap, "ccstructs_dtor_I" handlers.
  ** ----------------------------------------------------------------- */
 
 void
 test_6_1 (cce_destination_t upper_L)
 /* Allocate  the struct  on the  heap, then  destroy it  with a  "clean"
-   handler using the "standalone" dtor interface. */
+   handler using the "standalone" "ccstructs_dtor_I" interface. */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
   cce_error_handler_t		FE_H[1];
-  my_alpha_t const *		A;
+  my_coords_t const *		A;
   ccstructs_clean_handler_t	A_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    A = my_new_alpha(L, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, my_new_alpha_standalone_I_dtor(A));
+    A = ccname_new(my_coords_t)(L, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    my_print_alpha(L, stderr, A);
+    my_print_coords(L, stderr, A);
     cce_run_body_handlers(L);
   }
 }
@@ -348,12 +348,12 @@ test_6_1 (cce_destination_t upper_L)
 void
 test_6_2 (cce_destination_t upper_L)
 /* Allocate the  struct on  the heap,  then destroy  it with  an "error"
-   handler using the "standalone" dtor interface. */
+   handler using the "standalone" "ccstructs_dtor_I" interface. */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
   cce_error_handler_t		FE_H[1];
-  my_alpha_t const *		A;
+  my_coords_t const *		A;
   ccstructs_error_handler_t	A_H[1];
 
   if (cce_location(L)) {
@@ -363,13 +363,13 @@ test_6_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    A = my_new_alpha(L, 1.0, 2.0, 3.0);
-    ccstructs_handler_init(L, A_H, my_new_alpha_standalone_I_dtor(A));
+    A = ccname_new(my_coords_t)(L, 1.0, 2.0, 3.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    my_print_alpha(L, stderr, A);
+    my_print_coords(L, stderr, A);
     cce_raise(L, cctests_condition_new_signal_1());
     cce_run_body_handlers(L);
   }

@@ -5,8 +5,9 @@
 
   Abstract
 
-	This body file defines the API to handle the struct "my_alpha_t"
-	and shows how to implement the main interfaces for it.
+	This  body   file  defines   the  API   to  handle   the  struct
+	"my_coords_t" and shows how to implement the main interfaces for
+	it.
 
 	The "dtor-no-methods"  example shows  how to implement  a struct
 	using  no  methods  table   for  the  struct-specific  interface
@@ -54,8 +55,9 @@
  ** ----------------------------------------------------------------- */
 
 void
-my_init_alpha (my_alpha_t * self, double x, double y, double z)
-/* Initialise an already allocated struct. */
+ccname_init(my_coords_t) (my_coords_t * self, double x, double y, double z)
+/* Constructor for embedded instances.   Initialise an already allocated
+   struct. */
 {
   self->X	= x;
   self->Y	= y;
@@ -63,26 +65,24 @@ my_init_alpha (my_alpha_t * self, double x, double y, double z)
 }
 
 void
-my_final_alpha (my_alpha_t const * self CCSTRUCTS_UNUSED)
-/* Destructor   function.   Release   all  the   asynchronous  resources
-   associated to the struct instance; does not touch the struct itself.
-
-   To be  used to destroy instances  allocated on the stack  or embedded
-   into an enclosing struct instance. */
+ccname_final(my_coords_t) (my_coords_t const * self CCSTRUCTS_UNUSED)
+/* Destructor  for embedded  instances.   Release  all the  asynchronous
+   resources  associated to  the  struct instance;  does  not touch  the
+   struct itself. */
 {
   if (1) { fprintf(stderr, "%-35s: finalised\n", __func__); }
 }
 
 /* ------------------------------------------------------------------ */
 
-static my_alpha_t *
-my_alloc_alpha (cce_destination_t L)
+static my_coords_t *
+ccname_alloc(my_coords_t) (cce_destination_t L)
 {
-  return ccmem_std_malloc(L, sizeof(my_alpha_t));
+  return ccmem_std_malloc(L, sizeof(my_coords_t));
 }
 
 static void
-my_release_alpha (my_alpha_t const * self)
+ccname_release(my_coords_t) (my_coords_t const * self)
 /* Release the memory  block allocated for the struct  instance usin the
    standard memory  allocator implemented  by CCMemory.  Does  not touch
    the struct's fields. */
@@ -93,28 +93,25 @@ my_release_alpha (my_alpha_t const * self)
 
 /* ------------------------------------------------------------------ */
 
-my_alpha_t const *
-my_new_alpha (cce_destination_t L, double x, double y, double z)
-/* Instance  constructor   that  allocates  memory  with   the  standard
-   allocator implemented by CCMemory. */
+my_coords_t const *
+ccname_new(my_coords_t) (cce_destination_t L, double x, double y, double z)
+/* Constructor for  standalone instances.   Uses the  standard allocator
+   implemented by CCMemory. */
 {
-  my_alpha_t *	self = my_alloc_alpha(L);
+  my_coords_t *	self = ccname_alloc(my_coords_t)(L);
 
-  my_init_alpha(self, x, y, z);
-  return (my_alpha_t const *) self;
+  ccname_init(my_coords_t)(self, x, y, z);
+  return (my_coords_t const *) self;
 }
 
 void
-my_delete_alpha (my_alpha_t const * self)
-/* Destructor   function.   Release   all  the   asynchronous  resources
-   associated to the struct instance; release the memory block allocated
-   for  the   struct  instance  using  the   standard  memory  allocator
-   implemented by CCMemory.
-
-   To be used to destroy instances dynamically allocated on the heap. */
+ccname_delete(my_coords_t) (my_coords_t const * self)
+/* Destructor for  standalone instances.   Release all  the asynchronous
+   resources associated to the struct instance; release the memory block
+   allocated for the struct instance. */
 {
-  my_final_alpha(self);
-  my_release_alpha(self);
+  ccname_final(my_coords_t)(self);
+  ccname_release(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: deleted\n", __func__); }
 }
 
@@ -124,31 +121,29 @@ my_delete_alpha (my_alpha_t const * self)
  ** ----------------------------------------------------------------- */
 
 static void
-my_alpha_handler_final (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H)
-/* Destructor   handler.   Release   all   the  asynchronous   resources
-   associated to the struct instance; does not touch the struct itself.
-
-   To be  used to destroy instances  allocated on the stack  or embedded
-   into an enclosing struct instance. */
+my_coords_handler_final (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H)
+/* Destructor  handler   for  embedded   instances.   Release   all  the
+   asynchronous resources  associated to  the struct instance;  does not
+   touch the struct itself. */
 {
-  CCSTRUCTS_PC(my_alpha_t, self, H->pointer);
+  CCSTRUCTS_PC(my_coords_t, self, H->pointer);
 
-  my_final_alpha(self);
+  ccname_final(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: finalised by plain handler\n", __func__); }
 }
 
 void
-my_alpha_register_clean_handler_final (cce_destination_t L, cce_clean_handler_t * H, my_alpha_t const * self)
+my_coords_register_clean_handler_final (cce_destination_t L, cce_clean_handler_t * H, my_coords_t const * self)
 {
-  H->handler.function	= my_alpha_handler_final;
+  H->handler.function	= my_coords_handler_final;
   H->handler.pointer	= (void *)self;
   cce_register_clean_handler(L, H);
 }
 
 void
-my_alpha_register_error_handler_final (cce_destination_t L, cce_error_handler_t * H, my_alpha_t const * self)
+my_coords_register_error_handler_final (cce_destination_t L, cce_error_handler_t * H, my_coords_t const * self)
 {
-  H->handler.function	= my_alpha_handler_final;
+  H->handler.function	= my_coords_handler_final;
   H->handler.pointer	= (void *)self;
   cce_register_error_handler(L, H);
 }
@@ -156,112 +151,99 @@ my_alpha_register_error_handler_final (cce_destination_t L, cce_error_handler_t 
 /* ------------------------------------------------------------------ */
 
 static void
-my_alpha_handler_delete (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H)
-/* Destructor   handler.   Release   all   the  asynchronous   resources
-   associated to the struct instance; release the memory block allocated
-   for  the   struct  instance  using  the   standard  memory  allocator
-   implemented by CCMemory.
+my_coords_handler_delete (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H)
+/* Destructor  handler  for  standalone   instances.   Release  all  the
+   asynchronous resources associated to the struct instance; release the
+   memory block  allocated for  the struct  instance using  the standard
+   memory allocator implemented by CCMemory.
 
    To be used to destroy instances dynamically allocated on the heap. */
 {
-  CCSTRUCTS_PC(my_alpha_t, self, H->pointer);
+  CCSTRUCTS_PC(my_coords_t, self, H->pointer);
 
-  my_delete_alpha(self);
+  ccname_delete(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: deleted by plain handler\n", __func__); }
 }
 
 void
-my_alpha_register_clean_handler_delete (cce_destination_t L, cce_clean_handler_t * H, my_alpha_t const * self)
+my_coords_register_clean_handler_delete (cce_destination_t L, cce_clean_handler_t * H, my_coords_t const * self)
 {
-  H->handler.function	= my_alpha_handler_delete;
+  H->handler.function	= my_coords_handler_delete;
   H->handler.pointer	= (void *)self;
   cce_register_clean_handler(L, H);
 }
 
 void
-my_alpha_register_error_handler_delete (cce_destination_t L, cce_error_handler_t * H, my_alpha_t const * self)
+my_coords_register_error_handler_delete (cce_destination_t L, cce_error_handler_t * H, my_coords_t const * self)
 {
-  H->handler.function	= my_alpha_handler_delete;
+  H->handler.function	= my_coords_handler_delete;
   H->handler.pointer	= (void *)self;
   cce_register_error_handler(L, H);
 }
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtor": embedded struct.
+ ** Interface "ccstructs_dtor_I": embedded instances.
  ** ----------------------------------------------------------------- */
 
-/* This is for struct instances allocated on the stack or embedded in an
-   enclosing struct. */
-
-/* Interface "dtor": "delete()" method. */
 static void
-my_alpha_embedded_dtor_method_delete (ccstructs_dtor_I I CCSTRUCTS_UNUSED)
+ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, release) (ccstructs_dtor_I I CCSTRUCTS_UNUSED)
 {
   if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
 }
 
-/* Interface "dtor": "final()" method. */
 static void
-my_alpha_embedded_dtor_method_final (ccstructs_dtor_I I)
+ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, final) (ccstructs_dtor_I I)
 {
-  CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
+  CCSTRUCTS_PC(my_coords_t, self, ccstructs_dtor_self(I));
 
-  my_final_alpha(self);
+  ccname_final(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: finalised by dtor\n", __func__); }
 }
 
-/* Methods table  for the  "dtor" interface. */
-static ccstructs_dtor_I_methods_t const my_alpha_embedded_dtor_I_methods = {
-  .final	= my_alpha_embedded_dtor_method_final,
-  .delete	= my_alpha_embedded_dtor_method_delete
+static ccname_iface_table_type(ccstructs_dtor_I) const ccname_iface_table(ccstructs_dtor_I, my_coords_t, embedded) = {
+  .final	= ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, final),
+  .release	= ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, release)
 };
 
-/* Constructor for the "dtor" interface. */
 ccstructs_dtor_I
-my_new_alpha_embedded_I_dtor (my_alpha_t const * const self)
+ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded) (my_coords_t const * const self)
 {
-  return ccstructs_new_dtor(ccstructs_core(self), &my_alpha_embedded_dtor_I_methods);
+  return ccname_new(ccstructs_dtor_I)(ccstructs_core(self), &ccname_iface_table(ccstructs_dtor_I, my_coords_t, embedded));
 }
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtor": standalone struct.
+ ** Interface "ccstructs_dtor_I": standalone instances.
  ** ----------------------------------------------------------------- */
 
-/* This is for struct instances allocated on the heap. */
-
-/* Interface "dtor": "delete()" method. */
 static void
-my_alpha_standalone_dtor_method_delete (ccstructs_dtor_I I)
+ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, release) (ccstructs_dtor_I I)
 {
-  CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
+  CCSTRUCTS_PC(my_coords_t, self, ccstructs_dtor_self(I));
 
-  my_release_alpha(self);
+  ccname_release(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
 }
 
-/* Interface "dtor": "final()" method. */
 static void
-my_alpha_standalone_dtor_method_final (ccstructs_dtor_I I)
+ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, final) (ccstructs_dtor_I I)
 {
-  CCSTRUCTS_PC(my_alpha_t, self, ccstructs_dtor_self(I));
+  CCSTRUCTS_PC(my_coords_t, self, ccstructs_dtor_self(I));
 
-  my_final_alpha(self);
+  ccname_final(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: finalised by dtor\n", __func__); }
 }
 
-/* Methods table for the "dtor" interface. */
-static ccstructs_dtor_I_methods_t const my_alpha_standalone_dtor_I_methods = {
-  .final	= my_alpha_standalone_dtor_method_final,
-  .delete	= my_alpha_standalone_dtor_method_delete
+static ccname_iface_table_type(ccstructs_dtor_I) const ccname_iface_table(ccstructs_dtor_I, my_coords_t, standalone) = {
+  .final	= ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, final),
+  .release	= ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, release)
 };
 
-/* Constructor for the "dtor" interface. */
 ccstructs_dtor_I
-my_new_alpha_standalone_I_dtor (my_alpha_t const * const self)
+ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone) (my_coords_t const * const self)
 {
-  return ccstructs_new_dtor(ccstructs_core(self), &my_alpha_standalone_dtor_I_methods);
+  return ccname_new(ccstructs_dtor_I)(ccstructs_core(self), &ccname_iface_table(ccstructs_dtor_I, my_coords_t, standalone));
 }
 
 
@@ -270,12 +252,12 @@ my_new_alpha_standalone_I_dtor (my_alpha_t const * const self)
  ** ----------------------------------------------------------------- */
 
 void
-my_print_alpha (cce_destination_t L, FILE * stream, my_alpha_t const * const self)
+my_print_coords (cce_destination_t L, FILE * stream, my_coords_t const * const self)
 {
   int	rv;
 
   errno = 0;
-  rv = fprintf(stream, "alpha: X=%f, Y=%f, Z=%f\n", self->X, self->Y, self->Z);
+  rv = fprintf(stream, "coords: X=%f, Y=%f, Z=%f\n", self->X, self->Y, self->Z);
   if (rv < 0) {
     cce_raise(L, cce_condition_new_errno_clear());
   }

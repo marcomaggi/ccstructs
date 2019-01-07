@@ -49,6 +49,52 @@
 
 
 /** --------------------------------------------------------------------
+ ** Interface "my_printable_I": public API definition.
+ ** ----------------------------------------------------------------- */
+
+typedef struct my_printable_I				my_printable_I;
+typedef struct ccname_iface_table_type(my_printable_I)	ccname_iface_table_type(my_printable_I);
+
+struct my_printable_I {
+  ccname_iface_table_type(my_printable_I)	const * methods;
+  ccstructs_core_t				const * self;
+};
+
+typedef void ccname_iface_method_type(my_printable_I, print) (my_printable_I I, FILE * stream);
+
+struct ccname_iface_table_type(my_printable_I) {
+  ccname_iface_method_type(my_printable_I, print) *	print;
+};
+
+__attribute__((__always_inline__,__nonnull__(1,2)))
+static inline my_printable_I
+ccname_new(my_printable_t) (ccstructs_core_t const * S, ccname_iface_table_type(my_printable_I) const * M)
+/* Low-level constructor for "my_printable_I" interfaces. */
+{
+  my_printable_I	I = {
+    .methods	= M,
+    .self	= S
+  };
+  return I;
+}
+
+__attribute__((__always_inline__,__returns_nonnull__))
+static inline ccstructs_core_t const *
+my_printable_self (my_printable_I I)
+{
+  return I.self;
+}
+
+__attribute__((__always_inline__,__nonnull__(2)))
+static inline void
+my_printable_print (my_printable_I I, FILE * stream)
+/* Call the interface method "print()". */
+{
+  I.methods->print(I, stream);
+}
+
+
+/** --------------------------------------------------------------------
  ** Type definitions: data struct "my_coords_t".
  ** ----------------------------------------------------------------- */
 
@@ -64,51 +110,27 @@ struct my_coords_t {
   double	Y;
 };
 
-/* Function  type of  method functions  building a  new "my_printable_I"
-   implementation for "my_coords_t". */
-typedef my_printable_I ccname_method_type(my_coords_t, new_printable) (my_coords_t * self);
+/* Function type of method functions  building a new "my_printable_I" as
+   implemented by "my_coords_t". */
+typedef my_printable_I ccname_iface_new_type(my_printable_I, my_coords_t, printable) (my_coords_t const * self);
 
 /* The methods table for "my_coords_t". */
 struct ccname_table_type(my_coords_t) {
-  /* Return  an   interface  struct  that  prints   the  coordinates  in
-     rectangular form. */
-  ccname_method_type(my_coords_t, new_printable) *	new_printable_rec;
-  /* Return an  interface struct  that prints  the coordinates  in polar
-     form. */
-  ccname_method_type(my_coords_t, new_printable) *	new_printable_pol;
+  ccname_iface_new_type(my_printable_I, my_coords_t, printable) *	new_printable;
 };
 
 /* Prototypes of methods for "my_coords_t". */
-static ccname_method_type(my_coords_t, new_printable) ccname_method(my_coords_t, new_printable_rec);
-static ccname_method_type(my_coords_t, new_printable) ccname_method(my_coords_t, new_printable_pol);
+static ccname_iface_new_type(my_printable_I, my_coords_t, printable) ccname_iface_new(my_printable_I, my_coords_t, rec);
+static ccname_iface_new_type(my_printable_I, my_coords_t, printable) ccname_iface_new(my_printable_I, my_coords_t, pol);
 
-/* Statically allocated table of methods for "my_coords_t". */
-static ccname_table_type(my_coords_t) const ccname_table(my_coords_t) = {
-  .new_printable_rec	= ccname_method(my_coords_t, new_printable_rec),
-  .new_printable_pol	= ccname_method(my_coords_t, new_printable_pol)
+/* Statically allocated table of methods for "my_coords_t": rectangular coordinates. */
+static ccname_table_type(my_coords_t) const ccname_table(my_coords_t, rec) = {
+  .new_printable	= ccname_iface_new(my_printable_I, my_coords_t, rec)
 };
 
-
-/** --------------------------------------------------------------------
- ** Type definitions: interface struct "my_printable_I".
- ** ----------------------------------------------------------------- */
-
-typedef struct my_printable_I				my_printable_I;
-typedef struct ccname_iface_table_type(my_printable_I)	ccname_iface_table_type(my_printable_I);
-
-struct my_printable_I {
-  ccname_iface_table_type(my_printable_I)	const * methods;
-  ccstructs_core_t				const * self;
-};
-
-/* Function type of method functions of "my_printable_I": print the data
-   struct to a stream. */
-typedef void ccname_iface_method_type(my_printable_I, print) (my_printable_I I, FILE * stream);
-
-/* Methods table  for the  interface "my_printable_I".   We need  one of
-   these for every data struct that implements this interface. */
-struct ccname_iface_table_type(my_printable_I) {
-  ccname_iface_method_type(my_printable_I, print) *	print;
+/* Statically allocated table of methods for "my_coords_t": polar coordinates. */
+static ccname_table_type(my_coords_t) const ccname_table(my_coords_t, pol) = {
+  .new_printable	= ccname_iface_new(my_printable_I, my_coords_t, pol)
 };
 
 
@@ -119,7 +141,7 @@ struct ccname_iface_table_type(my_printable_I) {
 void
 ccname_init(my_coords_t, rec) (my_coords_t * S, double X, double Y)
 {
-  S->methods = &ccname_table(my_coords_t);
+  S->methods = &ccname_table(my_coords_t, rec);
   S->X = X;
   S->Y = Y;
 }
@@ -127,7 +149,7 @@ ccname_init(my_coords_t, rec) (my_coords_t * S, double X, double Y)
 void
 ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
 {
-  S->methods = &ccname_table(my_coords_t);
+  S->methods = &ccname_table(my_coords_t, pol);
   S->X = RHO * cos(THETA);
   S->Y = RHO * sin(THETA);
 }
@@ -176,38 +198,15 @@ ccname_delete(my_coords_t) (my_coords_t * S)
 
 
 /** --------------------------------------------------------------------
- ** Interface "my_printable_i": public API functions.
- ** ----------------------------------------------------------------- */
-
-my_printable_I
-ccname_new(my_printable_t) (ccstructs_core_t const * S, ccname_iface_table_type(my_printable_I) const * M)
-/* Low-level constructor for "my_printable_I" interfaces. */
-{
-  my_printable_I	I = {
-    .methods	= M,
-    .self	= S
-  };
-  return I;
-}
-
-void
-my_printable_print (my_printable_I I, FILE * stream)
-/* Call the interface method "print()". */
-{
-  I.methods->print(I, stream);
-}
-
-
-/** --------------------------------------------------------------------
  ** Interface "my_printable_I" for "my_coords_t": rectangular coordinates.
  ** ----------------------------------------------------------------- */
 
 static void
-ccname_iface_method(my_printable_I, my_coords_t, print_rec) (my_printable_I I, FILE * stream)
+ccname_iface_method(my_printable_I, my_coords_t, rec, print) (my_printable_I I, FILE * stream)
 /* Implement the  "print" method of "my_printable_I"  for "my_coords_t".
    This variant prints the coordinates in rectangular form. */
 {
-  CCSTRUCTS_PC(my_coords_t, S, I.self);
+  CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
 
   fprintf(stream, "X=%f, Y=%f\n", S->X, S->Y);
 }
@@ -215,8 +214,16 @@ ccname_iface_method(my_printable_I, my_coords_t, print_rec) (my_printable_I I, F
 /* Methods  table  for  "my_printable_I" implemented  by  "my_coords_t".
    This variant prints the coordinates in rectangular form. */
 static ccname_iface_table_type(my_printable_I) const ccname_iface_table(my_printable_I, my_coords_t, rec) = {
-  .print	= ccname_iface_method(my_printable_I, my_coords_t, print_rec)
+  .print	= ccname_iface_method(my_printable_I, my_coords_t, rec, print)
 };
+
+static my_printable_I
+ccname_iface_new(my_printable_I, my_coords_t, rec) (my_coords_t const * S)
+/* Interface constructor.  The returned interface prints the coordinates
+   in rectangular form. */
+{
+  return ccname_new(my_printable_t)(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t, rec));
+}
 
 
 /** --------------------------------------------------------------------
@@ -224,11 +231,11 @@ static ccname_iface_table_type(my_printable_I) const ccname_iface_table(my_print
  ** ----------------------------------------------------------------- */
 
 static void
-ccname_iface_method(my_printable_I, my_coords_t, print_pol) (my_printable_I I, FILE * stream)
+ccname_iface_method(my_printable_I, my_coords_t, pol, print) (my_printable_I I, FILE * stream)
 /* Implement the  "print" method of "my_printable_I"  for "my_coords_t".
    This variant prints the coordinates in polar form. */
 {
-  CCSTRUCTS_PC(my_coords_t, S, I.self);
+  CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
   double	RHO   = hypot(S->X, S->Y);
   double	THETA = atan2(S->Y, S->X);
 
@@ -238,26 +245,13 @@ ccname_iface_method(my_printable_I, my_coords_t, print_pol) (my_printable_I I, F
 /* Methods  table  for  "my_printable_I" implemented  by  "my_coords_t".
    This variant prints the coordinates in polar form. */
 static ccname_iface_table_type(my_printable_I) const ccname_iface_table(my_printable_I, my_coords_t, pol) = {
-  .print	= ccname_iface_method(my_printable_I, my_coords_t, print_pol)
+  .print	= ccname_iface_method(my_printable_I, my_coords_t, pol, print)
 };
 
-
-/** --------------------------------------------------------------------
- ** Data struct "my_coords_t": methods implementation.
- ** ----------------------------------------------------------------- */
-
 static my_printable_I
-ccname_method(my_coords_t, new_printable_rec) (my_coords_t * S)
-/* Implement  the method  "new_printable_rec()"  of "my_coords_t".   The
-   returned interface prints the coordinates in rectangular form. */
-{
-  return ccname_new(my_printable_t)(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t, rec));
-}
-
-static my_printable_I
-ccname_method(my_coords_t, new_printable_pol) (my_coords_t * S)
-/* Implement  the method  "new_printable_pol()"  of "my_coords_t".   The
-   returned interface prints the coordinates in polar form. */
+ccname_iface_new(my_printable_I, my_coords_t, pol) (my_coords_t const * S)
+/* Interface constructor.  The returned interface prints the coordinates
+   in polar form. */
 {
   return ccname_new(my_printable_t)(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t, pol));
 }
@@ -268,19 +262,10 @@ ccname_method(my_coords_t, new_printable_pol) (my_coords_t * S)
  ** ----------------------------------------------------------------- */
 
 my_printable_I
-ccname_iface_new(my_printable_I, my_coords_t, rec) (my_coords_t * S)
-/* Constructor for "my_printable_I"  implemented by "my_coords_t".  This
-   variant prints the coordinates in polar form. */
+ccname_iface_new(my_printable_I, my_coords_t) (my_coords_t * S)
+/* Constructor for "my_printable_I"  implemented by "my_coords_t". */
 {
-  return S->methods->new_printable_rec(S);
-}
-
-my_printable_I
-ccname_iface_new(my_printable_I, my_coords_t, pol) (my_coords_t * S)
-/* Constructor for "my_printable_I"  implemented by "my_coords_t".  This
-   variant prints the coordinates in polar form. */
-{
-  return S->methods->new_printable_pol(S);
+  return S->methods->new_printable(S);
 }
 
 
@@ -292,19 +277,21 @@ int
 main (void)
 {
   cce_location_t	L[1];
-  my_coords_t *		S;
+  my_coords_t		*SR, *SP;
   my_printable_I	IR, IP;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_final(L);
   } else {
-    S  = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    IR = ccname_iface_new(my_printable_I, my_coords_t, rec)(S);
-    IP = ccname_iface_new(my_printable_I, my_coords_t, pol)(S);
+    SR = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
+    SP = ccname_new(my_coords_t, pol)(L, 1.0, 2.0);
+    IR = ccname_iface_new(my_printable_I, my_coords_t)(SR);
+    IP = ccname_iface_new(my_printable_I, my_coords_t)(SP);
 
     my_printable_print(IR, stdout);
     my_printable_print(IP, stdout);
-    ccname_delete(my_coords_t)(S);
+    ccname_delete(my_coords_t)(SR);
+    ccname_delete(my_coords_t)(SP);
   }
   exit(EXIT_SUCCESS);
 }

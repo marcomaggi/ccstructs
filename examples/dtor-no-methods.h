@@ -5,8 +5,8 @@
 
   Abstract
 
-	This header file  defines the struct "my_alpha_t"  and shows how
-	to  implement the  main interfaces  for it.   "my_alpha_t" is  a
+	This header file defines the  struct "my_coords_t" and shows how
+	to implement  the main  interfaces for  it.  "my_coords_t"  is a
 	simple  struct with  embedded  fields, no  pointers to  external
 	memory blocks.
 
@@ -58,9 +58,9 @@
  ** Type definitions.
  ** ----------------------------------------------------------------- */
 
-typedef struct my_alpha_t		my_alpha_t;
+typedef struct my_coords_t		my_coords_t;
 
-struct my_alpha_t {
+struct my_coords_t {
   double	X;
   double	Y;
   double	Z;
@@ -71,26 +71,26 @@ struct my_alpha_t {
  ** Function prototypes: constructors and destructors.
  ** ----------------------------------------------------------------- */
 
-/* Constructor function that allocates the  struct on the heap using the
-   standard memory allocator implemented by CCMemory. */
-ccstructs_decl my_alpha_t const * my_new_alpha (cce_destination_t L, double x, double y, double z)
-  __attribute__((__nonnull__((1))));
-
 /* Initialisation  function   that  initialises  an   already  allocated
    struct. */
-ccstructs_decl void my_init_alpha (my_alpha_t * self, double x, double y, double z)
+ccstructs_decl void ccname_init(my_coords_t) (my_coords_t * self, double x, double y, double z)
   __attribute__((__nonnull__((1))));
 
 /* Finalisation function.  Releases all the asynchronous resources owned
    by  the  struct,   if  any.   The  struct's  memory   block  is  left
    untouched. */
-ccstructs_decl void my_final_alpha (my_alpha_t const * self)
+ccstructs_decl void ccname_final(my_coords_t) (my_coords_t const * self)
+  __attribute__((__nonnull__((1))));
+
+/* Constructor function that allocates the  struct on the heap using the
+   standard memory allocator implemented by CCMemory. */
+ccstructs_decl my_coords_t const * ccname_new(my_coords_t) (cce_destination_t L, double x, double y, double z)
   __attribute__((__nonnull__((1))));
 
 /* Destructor function.   Releases all the asynchronous  resources owned
    by the struct,  if any.  The struct's memory block  is released using
    the standard memory allocator implemented by CCMemory.  */
-ccstructs_decl void my_delete_alpha (my_alpha_t const * self)
+ccstructs_decl void ccname_delete(my_coords_t) (my_coords_t const * self)
   __attribute__((__nonnull__((1))));
 
 
@@ -98,39 +98,40 @@ ccstructs_decl void my_delete_alpha (my_alpha_t const * self)
  ** Function prototypes: plain exception handlers.
  ** ----------------------------------------------------------------- */
 
-/* Initialises a "clean" exception handler that calls "my_final_alpha()"
-   as destructor function. */
-ccstructs_decl void my_alpha_register_clean_handler_final (cce_destination_t L, cce_clean_handler_t * H, my_alpha_t const * self)
+/* Initialises    a    "clean"     exception    handler    that    calls
+   "ccname_final(my_coords_t)()" as destructor function. */
+ccstructs_decl void my_coords_register_clean_handler_final (cce_destination_t L, cce_clean_handler_t * H, my_coords_t const * self)
   __attribute__((__nonnull__(1,2,3)));
 
 /* Initialises    an    "error"    exception    handler    that    calls
-   "my_final_alpha()" as destructor function. */
-ccstructs_decl void my_alpha_register_error_handler_final (cce_destination_t L, cce_error_handler_t * H, my_alpha_t const * self)
+   "ccname_final(my_coords_t)()" as destructor function. */
+ccstructs_decl void my_coords_register_error_handler_final (cce_destination_t L, cce_error_handler_t * H, my_coords_t const * self)
   __attribute__((__nonnull__(1,2,3)));
 
 /* Initialises    a    "clean"     exception    handler    that    calls
-   "my_delete_alpha()" as destructor function. */
-ccstructs_decl void my_alpha_register_clean_handler_delete (cce_destination_t L, cce_clean_handler_t * H, my_alpha_t const * self)
+   "ccname_delete(my_coords_t)()" as destructor function. */
+ccstructs_decl void my_coords_register_clean_handler_delete (cce_destination_t L, cce_clean_handler_t * H, my_coords_t const * self)
   __attribute__((__nonnull__(1,2,3)));
 
 /* Initialises    an    "error"    exception    handler    that    calls
-   "my_delete_alpha()" as destructor function. */
-ccstructs_decl void my_alpha_register_error_handler_delete (cce_destination_t L, cce_error_handler_t * H, my_alpha_t const * self)
+   "ccname_delete(my_coords_t)()" as destructor function. */
+ccstructs_decl void my_coords_register_error_handler_delete (cce_destination_t L, cce_error_handler_t * H, my_coords_t const * self)
   __attribute__((__nonnull__(1,2,3)));
 
 
 /** --------------------------------------------------------------------
- ** Interface "dtor".
+ ** Interface "ccstructs_dtor_t".
  ** ----------------------------------------------------------------- */
 
-/* Constructor  for   a  "dtor"  interface  that   finalises  instances
-   allocated on the stack or embedded into enclosing structs. */
-ccstructs_decl ccstructs_dtor_I my_new_alpha_embedded_I_dtor (my_alpha_t const * self)
+/* Constructor   for  a   "ccstructs_dtor_I"  interface   that  destroys
+   instances  allocated   on  the  stack  or   embedded  into  enclosing
+   structs. */
+ccstructs_decl ccstructs_dtor_I ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded) (my_coords_t const * self)
   __attribute__((__nonnull__(1)));
 
-/* Constructor  for  a  "dtor"   interface  that  finalises  standalone
-   instances dynamically allocated on the heap. */
-ccstructs_decl ccstructs_dtor_I my_new_alpha_standalone_I_dtor (my_alpha_t const * self)
+/* Constructor   for  a   "ccstructs_dtor_I"  interface   that  destroys
+   standalone instances dynamically allocated on the heap. */
+ccstructs_decl ccstructs_dtor_I ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone) (my_coords_t const * self)
   __attribute__((__nonnull__(1)));
 
 
@@ -138,7 +139,7 @@ ccstructs_decl ccstructs_dtor_I my_new_alpha_standalone_I_dtor (my_alpha_t const
  ** Function prototypes: printing.
  ** ----------------------------------------------------------------- */
 
-ccstructs_decl void my_print_alpha (cce_destination_t L, FILE * stream, my_alpha_t const * self)
+ccstructs_decl void my_print_coords (cce_destination_t L, FILE * stream, my_coords_t const * self)
   __attribute__((__nonnull__(1,2,3)));
 
 

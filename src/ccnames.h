@@ -156,39 +156,6 @@ extern "C" {
    type. */
 #define _CCNAME_METHOD(STRUCT_TYPE, VARIANT, METHOD_NAME) STRUCT_TYPE ## __ ## VARIANT ## __method__ ## METHOD_NAME
 
-/* Given an  interface type name,  a struct  type name, and  a (possibly
-   empty)  variant  specification:  expand  into the  name  of  the  API
-   function "new()"  used to instantiate  that variant of  the interface
-   type for that struct type. */
-#define _CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, VARIANT)	\
-  _CCNAME_NEW(IFACE_TYPE ## __ ## STRUCT_TYPE, VARIANT)
-
-/* Given an interface  type name and an  optional variant specification:
-   expand into  the name  of the  methods table  type for  the interface
-   type. */
-#define _CCNAME_IFACE_TABLE_TYPE(IFACE_TYPE, VARIANT)		\
-  _CCNAME_TABLE_TYPE(IFACE_TYPE, VARIANT)
-
-/* Given an  interface type name,  a struct  type name, and  a (possibly
-   empty) variant  specification: expand  into the  name of  the methods
-   table for that variant of the interface implementation for the struct
-   type. */
-#define _CCNAME_IFACE_TABLE(IFACE_TYPE, STRUCT_TYPE, VARIANT)	\
-  _CCNAME_TABLE(IFACE_TYPE ## __ ## STRUCT_TYPE, VARIANT)
-
-/* Given   an  interface   type   name,  a   (possibly  empty)   variant
-   specification, and  a method name: expand  into the type name  of the
-   method function for that variant of the interface implementation. */
-#define _CCNAME_IFACE_METHOD_TYPE(IFACE_TYPE, VARIANT, METHOD_NAME)	\
-  IFACE_TYPE ## __ ## VARIANT ## __method__ ## METHOD_NAME ## __fun_t
-
-/* Given an interface type name, a  struct type name, a (possibly empty)
-   variant specification, and a method name: expand into the name of the
-   method function for that variant  of the interface implementation for
-   the struct type. */
-#define _CCNAME_IFACE_METHOD(IFACE_TYPE, STRUCT_TYPE, VARIANT, METHOD_NAME)	\
-  IFACE_TYPE ## __ ## STRUCT_TYPE ## __ ## VARIANT ## __method__ ## METHOD_NAME
-
 
 /** --------------------------------------------------------------------
  ** Automatically generated names API: data structs.
@@ -256,6 +223,56 @@ extern "C" {
 /** --------------------------------------------------------------------
  ** Automatically generated names API: interface structs.
  ** ----------------------------------------------------------------- */
+
+/* Given an  interface type name,  a (possibly empty) struct  type name,
+   and  a  (possibly  empty)  variant  specification:  expand  into  the
+   function  type  of the  selected  variant  of interface  constructors
+   implemented by the struct type. */
+#define _CCNAME_IFACE_NEW_TYPE(IFACE_TYPE, STRUCT_TYPE, VARIANT)	\
+  IFACE_TYPE ## __ ## STRUCT_TYPE ## __ ## VARIANT ## __new__fun_t
+
+/* Given an  interface type name,  a struct  type name, and  a (possibly
+   empty)  variant  specification:  expand  into the  name  of  the  API
+   function "new()"  used to instantiate  that variant of  the interface
+   type for that struct type. */
+#define _CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, VARIANT)	\
+  _CCNAME_NEW(IFACE_TYPE ## __ ## STRUCT_TYPE, VARIANT)
+
+/* Given an interface  type name and an  optional variant specification:
+   expand into  the name  of the  methods table  type for  the interface
+   type. */
+#define _CCNAME_IFACE_TABLE_TYPE(IFACE_TYPE, VARIANT)		\
+  _CCNAME_TABLE_TYPE(IFACE_TYPE, VARIANT)
+
+/* Given an  interface type name,  a struct  type name, and  a (possibly
+   empty) variant  specification: expand  into the  name of  the methods
+   table for that variant of the interface implementation for the struct
+   type. */
+#define _CCNAME_IFACE_TABLE(IFACE_TYPE, STRUCT_TYPE, VARIANT)	\
+  _CCNAME_TABLE(IFACE_TYPE ## __ ## STRUCT_TYPE, VARIANT)
+
+/* Given   an  interface   type   name,  a   (possibly  empty)   variant
+   specification, and  a method name: expand  into the type name  of the
+   method function for that variant of the interface implementation. */
+#define _CCNAME_IFACE_METHOD_TYPE(IFACE_TYPE, VARIANT, METHOD_NAME)	\
+  IFACE_TYPE ## __ ## VARIANT ## __method__ ## METHOD_NAME ## __fun_t
+
+/* Given an interface type name, a  struct type name, a (possibly empty)
+   variant specification, and a method name: expand into the name of the
+   method function for that variant  of the interface implementation for
+   the struct type. */
+#define _CCNAME_IFACE_METHOD(IFACE_TYPE, STRUCT_TYPE, VARIANT, METHOD_NAME)	\
+  IFACE_TYPE ## __ ## STRUCT_TYPE ## __ ## VARIANT ## __method__ ## METHOD_NAME
+
+/* ------------------------------------------------------------------ */
+
+/* Given an  interface type name,  an optional  struct type name  and an
+   optional  variant specification:  expand  into the  function type  of
+   interface implementation constructors. */
+#define ccname_iface_new_type_1(IFACE_TYPE)				_CCNAME_IFACE_NEW_TYPE(IFACE_TYPE,,)
+#define ccname_iface_new_type_2(IFACE_TYPE, STRUCT_TYPE)		_CCNAME_IFACE_NEW_TYPE(IFACE_TYPE, STRUCT_TYPE,)
+#define ccname_iface_new_type_3(IFACE_TYPE, STRUCT_TYPE, VARIANT)	_CCNAME_IFACE_NEW_TYPE(IFACE_TYPE, STRUCT_TYPE, VARIANT)
+#define ccname_iface_new_type(...)					_CCNAMES_VFUNC(ccname_iface_new_type, __VA_ARGS__)
 
 /* Given an interface type name, a struct type name, an optional variant
    specification: expand into the name  of the API function "new()" that

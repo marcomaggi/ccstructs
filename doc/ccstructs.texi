@@ -296,8 +296,8 @@ interface:
 ccstructs_writable_I
 spiffy_new_I_writable (spiffy_t * S)
 @{
-  return ccstructs_new_writable(ccstructs_core(S),
-     &spiffy_writable_I_methods);
+  return ccname_new(ccstructs_writable_I(ccstructs_core(S)),
+                    &ccname_iface_table(ccstructs_writable_I));
 @}
 @end example
 
@@ -316,13 +316,11 @@ use the @iface{dtor} interface is through the exception handlers @api{}, @ref{dt
 Exception handlers}.
 
 @menu
-* dtor typedefs::              @iface{dtor} interface: type definitions.
-* dtor operations::            @iface{dtor} interface: operations.
-* dtor handlers::              Exception handlers.
-* dtor sample empty::          Example of @iface{dtor} interface
-                               with empty @method{delete} method.
-* dtor sample non-empty::      Example of @iface{dtor} interface
-                               with non-empty @method{delete} method.
+* dtor typedefs::               @iface{dtor} interface: type definitions.
+* dtor operations::             @iface{dtor} interface: operations.
+* dtor handlers::               Exception handlers.
+* dtor sample::                 Example of @iface{dtor} interface
+                                implementation.
 @end menu
 
 @c page
@@ -336,36 +334,29 @@ value to function calls.
 @end deftp
 
 
-@deftp {Struct Typedef} ccstructs_dtor_I_methods_t
+@deftp {Struct Typedef} {ccname_iface_table_type(ccstructs_dtor_I)}
 Type of methods table for the @iface{dtor} interface.  It has the following fields:
 
 @table @code
-@item ccstructs_dtor_I_delete_fun_t * delete
-Pointer to function implementing the @method{delete} method.  This method releases the memory
-allocated for the @struct{} itself, if needed.
+@item ccname_iface_method_type(ccstructs_dtor_I, final) * final
+Pointer to function implementing the @method{final} method.
 
-@item ccstructs_dtor_I_final_fun_t * final
-Pointer to function implementing the @method{final} method.  Release all the asynchronous resources
-owned by the fields of the @struct{}, if any.  The @struct{} itself is left alone.
+@item ccname_iface_method_type(ccstructs_dtor_I, release) * release
+Pointer to function implementing the @method{release} method.
 @end table
 @end deftp
 
 
-@deftypefn {Function Prototype} void ccstructs_dtor_I_delete_fun_t (ccstructs_dtor_I @var{I})
-Type of functions implementing the @method{delete} method.  This method releases the memory allocated
-for the @struct{} itself, if needed; if a @struct{} is allocated on the stack or embedded into an
-enclosing @struct{}: this method should do nothing.
-@end deftypefn
-
-
-@deftypefn {Function Prototype} void ccstructs_dtor_I_final_fun_t (ccstructs_dtor_I @var{I})
+@deftypefn {Function Prototype} void {ccname_iface_method_type(ccstructs_dtor_I, final)} (ccstructs_dtor_I @var{I})
 Type of functions implementing the @method{final} method.  Release all the asynchronous resources
 owned by the fields of the @struct{}, if any.  The @struct{} itself is left alone.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} ccstructs_dtor_I ccstructs_new_dtor_fun_t (ccstructs_core_t const * @var{self})
-Type of functions implementing the constructor for @iface{dtor} interfaces.
+@deftypefn {Function Prototype} void {ccname_iface_method_type(ccstructs_dtor_I, release)} (ccstructs_dtor_I @var{I})
+Type of functions implementing the @method{release} method.  This method releases the memory
+allocated for the @struct{} itself, if needed; if a @struct{} is allocated on the stack or embedded
+into an enclosing @struct{}: this method should do nothing.
 @end deftypefn
 
 @c page
@@ -373,8 +364,9 @@ Type of functions implementing the constructor for @iface{dtor} interfaces.
 @section @iface{dtor} interface: operations
 
 
-@deftypefun ccstructs_dtor_I ccstructs_new_dtor (ccstructs_core_t const * @var{S}, ccstructs_dtor_I_methods_t const * @var{M})
-Build and return a new @iface{dtor} interface @struct{}.
+@deftypefun ccstructs_dtor_I {ccname_new(ccstructs_dtor_I)} (ccstructs_core_t const * @var{S}, ccname_iface_table_type(ccstructs_dtor_I) const * @var{M})
+Build and return a new @iface{dtor} interface instance as implemented for the @struct{} type of
+@var{S}.
 @end deftypefun
 
 
@@ -383,15 +375,8 @@ Return a pointer to the subject @struct{} to which the interface belongs.
 @end deftypefun
 
 
-@deftypefun void ccstructs_dtor_final (ccstructs_dtor_I @var{I})
-Apply the @method{final} method to the subject @struct{}.  This function is the faster destructor
-for a @struct{} allocated on the stack or embedded in an enclosing @struct{}; calling the
-@method{delete} method is slower.
-@end deftypefun
-
-
 @deftypefun void ccstructs_dtor_delete (ccstructs_dtor_I @var{I})
-Apply the @method{final} method to the subject @struct{}, then apply the @method{delete} method to
+Apply the @method{final} method to the subject @struct{}, then apply the @method{release} method to
 the subject @struct{}.  This function is always a correct destructor for a @struct{}.
 @end deftypefun
 
@@ -438,13 +423,17 @@ The macro use expands to a call to @cfunc{ccstructs_error_handler_init}.
 @end table
 @end deftypefn
 
+@c page
+@node dtor sample
+@section Example of @iface{dtor} interface implementation
+
 
 As example, let's consider this @struct{} definition:
 
 @example
-typedef struct two_t    two_t;
+typedef struct alpha_t    alpha_t;
 
-struct two_t @{
+struct alpha_t @{
   void *  pointer;
 @};
 @end example
@@ -453,17 +442,17 @@ struct two_t @{
 for it we define a constructor as follows:
 
 @example
-two_t *
-two_new (cce_destination_t upper_L, int init)
+alpha_t *
+ccname_new(alpha_t) (cce_destination_t upper_L, int init)
 @{
   cce_location_t        L[1];
   cce_error_handler_t   S_H[1];
-  two_t *               S;
+  alpha_t *               S;
 
   if (cce_location(L)) @{
     cce_run_catch_handlers_raise(L, upper_L);
   @} else @{
-    S           = cce_sys_malloc_guarded(L, S_H, sizeof(two_t));
+    S           = cce_sys_malloc_guarded(L, S_H, sizeof(alpha_t));
     S->pointer  = cce_sys_malloc(L, 256);
     memset(S->pointer, init, 256);
     cce_run_body_handlers(L);
@@ -475,70 +464,77 @@ two_new (cce_destination_t upper_L, int init)
 @noindent
 we can implement the @iface{dtor} interface as follows:
 
-@example
+@smallexample
 static void
-two_dtor_method_delete (ccstructs_dtor_I I)
+ccname_iface_method(ccstructs_dtor_I, alpha_t, final) (ccstructs_dtor_I I)
 @{
-  CCSTRUCTS_PC(two_t, S, ccstructs_dtor_self(I));
-
-  free(S);
-@}
-
-static void
-two_dtor_method_final (ccstructs_dtor_I I)
-@{
-  CCSTRUCTS_PC(two_t, S, ccstructs_dtor_self(I));
+  CCSTRUCTS_PC(alpha_t, S, ccstructs_dtor_self(I));
 
   free(S->pointer);
 @}
 
-static ccstructs_dtor_I_methods_t const two_dtor_I_methods = @{
-  .delete       = two_dtor_method_delete,
-  .final        = two_dtor_method_final
+static void
+ccname_iface_method(ccstructs_dtor_I, alpha_t, release) (ccstructs_dtor_I I)
+@{
+  CCSTRUCTS_PC(alpha_t, S, ccstructs_dtor_self(I));
+
+  free(S);
+@}
+
+static ccname_iface_table_type(ccstructs_dtor_I) const \
+    ccname_iface_table(ccstructs_dtor_I, alpha_t) = @{
+  .final   = ccname_iface_method(ccstructs_dtor_I, alpha_t, final),
+  .release = ccname_iface_method(ccstructs_dtor_I, alpha_t, release)
 @};
 
 ccstructs_dtor_I
-two_new_I_dtor (two_t * S)
+ccname_iface_new(ccstructs_dtor_I, alpha_t) (alpha_t const * S)
 @{
-  return ccstructs_new_dtor(ccstructs_core(S), &two_dtor_I_methods);
+  return ccname_new(ccstructs_dtor_I)(ccstructs_core(S),
+    &ccname_iface_table(ccstructs_dtor_I, alpha_t));
 @}
-@end example
+@end smallexample
 
 @noindent
 and we can use it with the exception handlers as follows:
 
-@example
-cce_location_t                L[1];
-ccstructs_clean_handler_t     I_H[1];
+@smallexample
+cce_location_t             L[1];
+alpha_t *                  S;
+ccstructs_clean_handler_t  I_H[1];
 
 if (cce_location(L)) @{
   cce_run_catch_handlers_raise(L, upper_L);
 @} else @{
-  two_t * S = two_new(L, 123);
-  ccstructs_handler_init(L, I_H, two_new_I_dtor(S));
+  S = ccname_new(alpha_t)(L, 123);
+  ccstructs_handler_init(L, I_H,
+    ccname_iface_new(ccstructs_dtor_I, alpha_t)(S));
 
+  ...
   cce_run_body_handlers(L);
 @}
-@end example
+@end smallexample
 
 Now we can easily define a guarded constructor:
 
-@example
-two_t *
+@smallexample
+alpha_t *
 two_new_guarded_clean (cce_destination_t L,
                        ccstructs_clean_handler_t * I_H, int init)
 @{
-  two_t * S = two_new(L, init);
-  ccstructs_handler_init(L, I_H, two_new_I_dtor(S));
+  alpha_t * S = ccname_new(alpha_t)(L, init);
+  ccstructs_handler_init(L, I_H,
+    ccname_iface_new(ccstructs_dtor_I, alpha_t)(S));
   return S;
 @}
 
-two_t *
+alpha_t *
 two_new_guarded_error (cce_destination_t L,
                        ccstructs_error_handler_t * I_H, int init)
 @{
-  two_t * S = two_new(L, init);
-  ccstructs_handler_init(L, I_H, two_new_I_dtor(S));
+  alpha_t * S = ccname_new(alpha_t)(L, init);
+  ccstructs_handler_init(L, I_H,
+    ccname_iface_new(ccstructs_dtor_I, alpha_t)(S));
   return S;
 @}
 
@@ -546,139 +542,7 @@ two_new_guarded_error (cce_destination_t L,
   _Generic((I_H),                                          \
     ccstructs_clean_handler_t *: two_new_guarded_clean,    \
     ccstructs_error_handler_t *: two_new_guarded_error)(L,I_H,S)
-@end example
-
-@c page
-@node dtor sample empty
-@section Example of @iface{dtor} interface with empty @method{delete} method
-
-
-Let's consider a @struct{} with the following definition:
-
-@example
-typedef struct one_t    one_t;
-
-struct one_t @{
-  void *  pointer;
-@};
-@end example
-
-@noindent
-we assume instances of this type are always allocated on the stack or embedded in an enclosing
-@struct{}.  We can implement the @emph{destructor} interface as follows:
-
-@example
-static void
-one_dtor_method_delete (ccstructs_dtor_I I)
-@{
-@}
-
-static void
-one_dtor_method_final (ccstructs_dtor_I I)
-@{
-  CCSTRUCTS_PC(one_t, S, ccstructs_dtor_self(I));
-
-  ccmem_free(ccmem_standard_allocator, S->pointer);
-@}
-
-static ccstructs_dtor_I_methods_t const one_dtor_I_methods = @{
-  .delete       = one_dtor_method_delete,
-  .final        = one_dtor_method_final
-@};
-
-ccstructs_dtor_I
-one_new_I_dtor (one_t * S)
-@{
-  return ccstructs_new_dtor(ccstructs_core(S), &one_dtor_I_methods);
-@}
-@end example
-
-@noindent
-and we can use the interface as follows:
-
-@example
-cce_location_t        L[1];
-
-if (cce_location(L)) @{
-  cce_run_catch_handlers_final(L);
-@} else @{
-  one_t       S = @{
-    .pointer  = ccmem_malloc(L, ccmem_standard_allocator, 256)
-  @};
-  ccstructs_dtor_I   I = one_new_I_dtor(&S);
-
-  ...
-  ccstructs_dtor_delete(I);
-  cce_run_body_handlers(L);
-@}
-@end example
-
-@c page
-@node dtor sample non-empty
-@section Example of @iface{dtor} interface with non--empty @method{delete} method
-
-
-Let's consider a @struct{} with the following definition:
-
-@example
-typedef struct two_t    two_t;
-
-struct two_t @{
-  void *  pointer;
-@};
-@end example
-
-@noindent
-we assume instances of this type are always allocated on the heap.  We can implement the
-@emph{destructor} interface as follows:
-
-@example
-static void
-two_dtor_method_delete (ccstructs_dtor_I I)
-@{
-  CCSTRUCTS_PC(two_t, S, ccstructs_dtor_self(I));
-
-  ccmem_free(ccmem_standard_allocator, S);
-@}
-
-static void
-two_dtor_method_final (ccstructs_dtor_I I)
-@{
-  CCSTRUCTS_PC(two_t, S, ccstructs_dtor_self(I));
-
-  ccmem_free(ccmem_standard_allocator, S->pointer);
-@}
-
-static ccstructs_dtor_I_methods_t const two_dtor_I_methods = @{
-  .delete       = two_dtor_method_delete,
-  .final        = two_dtor_method_final
-@};
-
-ccstructs_dtor_I
-two_new_I_dtor (two_t * S)
-@{
-  return ccstructs_new_dtor(ccstructs_core(S), &two_dtor_I_methods);
-@}
-@end example
-
-@noindent
-and we can use the interface as follows:
-
-@example
-cce_location_t        L[1];
-
-if (cce_location(L)) @{
-  cce_run_catch_handlers_final(L);
-@} else @{
-  two_t * S = ccmem_malloc(L, ccmem_standard_allocator, sizeof(two_t));
-  S->pointer = ccmem_malloc(L, ccmem_standard_allocator, 256)
-  ccstructs_dtor_I   I = two_new_I_dtor(&S);
-
-  ...
-  ccstructs_dtor_delete(I);
-  cce_run_body_handlers(L);
-@}
-@end example
+@end smallexample
 
 @c page
 @node writable
@@ -1499,6 +1363,16 @@ ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
 @c page
 @node ccnames iface
 @appendixsec Well known names for interface types.
+
+
+@defmac ccname_iface_new_type (@var{IFACE_TYPE})
+@defmacx ccname_iface_new_type (@var{IFACE_TYPE}, @var{STRUCT_TYPE})
+@defmacx ccname_iface_new_type (@var{IFACE_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
+Given an interface type name, an optional struct name and an optional variant specification: expand
+into the function type of interface implementation constructors.  Constructors of such type must
+build instances of @var{IFACE_TYPE} as implemented by @var{STRUCT_TYPE}, as specified for the
+variant @var{VARIANT}.
+@end defmac
 
 
 @defmac ccname_iface_new (@var{IFACE_TYPE}, @var{STRUCT_TYPE})
