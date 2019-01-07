@@ -549,19 +549,19 @@ two_new_guarded_error (cce_destination_t L,
 @chapter The @emph{writable} interface
 
 
-The @emph{writable} interface, represented by the type @objtype{ccstructs_writable_I}, is meant to
+The @iface{writable} interface, represented by the type @objtype{ccstructs_writable_I}, is meant to
 write an object to some output channel, mostly for inspection and debugging purposes; this interface
 is neither for presentation to the end user of a program, nor for memorisation on a storage device.
 
 
 @deftp {Struct Typedef} ccstructs_writable_I
-Type of the @emph{writable} interface.  Instances of this type are meant to be handed by value to
+Type of the @iface{writable} interface.  Instances of this type are meant to be handed by value to
 function calls.
 @end deftp
 
 
 @deftp {Struct Typedef} ccstructs_writable_I_methods_t
-Type of methods table for the @emph{writable} interface.  It has the following fields:
+Type of methods table for the @iface{writable} interface.  It has the following fields:
 
 @table @code
 @item ccstructs_writable_I_write_fun_t * write
@@ -607,7 +607,7 @@ struct spiffy_t @{
 @end example
 
 @noindent
-we can implement a @emph{writable} interface as follows:
+we can implement a @iface{writable} interface as follows:
 
 @smallexample
 void
@@ -657,10 +657,10 @@ if (cce_location(L)) @{
 
 @c page
 @node serialisable
-@chapter The @emph{serialisable} interface
+@chapter The @iface{serialisable} interface
 
 
-The @emph{serialisable} interface, represented by the type @objtype{ccstructs_serialisable_I},
+The @iface{serialisable} interface, represented by the type @objtype{ccstructs_serialisable_I},
 allows us to serialise a @struct{} into a destination and deserialise it back into a @struct{}.
 
 @c ------------------------------------------------------------------------
@@ -669,13 +669,13 @@ allows us to serialise a @struct{} into a destination and deserialise it back in
 
 
 @deftp {Struct Typedef} ccstructs_serialisable_I
-Type of the @emph{serialisable} interface.  Instances of this type are meant to be handed by value
+Type of the @iface{serialisable} interface.  Instances of this type are meant to be handed by value
 to function calls.
 @end deftp
 
 
 @deftp {Struct Typedef} ccstructs_serialisable_I_methods_t
-Type of methods table for the @emph{serialisable} interface.  It has the following fields:
+Type of methods table for the @iface{serialisable} interface.  It has the following fields:
 
 @table @code
 @item ccstructs_serialisable_I_minimum_size_fun_t * minimum_size
@@ -762,7 +762,7 @@ struct spiffy_t @{
 @end example
 
 @noindent
-we can implement a @emph{serialisable} interface as follows:
+we can implement a @iface{serialisable} interface as follows:
 
 @smallexample
 typedef struct serialised_spiffy_t  serialised_spiffy_t;
@@ -863,10 +863,10 @@ if (cce_location(L)) @{
 
 @c page
 @node pathname
-@chapter The @emph{pathname} interface
+@chapter The @iface{pathname} interface
 
 
-The @emph{pathname} interface, represented by the type @objtype{ccstructs_pathname_I}, is meant to
+The @iface{pathname} interface, represented by the type @objtype{ccstructs_pathname_I}, is meant to
 be used as argument to functions that need to operate on @posix{} pathname specifications without
 being tied to a specific pathname internal representation; the only requirement is that the pathname
 has an external representation as @asciiz{} string.
@@ -880,17 +880,17 @@ has an external representation as @asciiz{} string.
 
 @c page
 @node pathname typedefs
-@section Type definitions for the @emph{pathname} interface
+@section Type definitions for the @iface{pathname} interface
 
 
 @deftp {Struct Typedef} ccstructs_pathname_I
-Type of the @emph{pathname} interface.  Instances of this type are meant to be handed by value to
+Type of the @iface{pathname} interface.  Instances of this type are meant to be handed by value to
 function calls.
 @end deftp
 
 
 @deftp {Struct Typedef} ccstructs_pathname_I_methods_t
-Type of methods table for the @emph{pathname} interface.  It has the following fields:
+Type of methods table for the @iface{pathname} interface.  It has the following fields:
 
 @table @code
 @item ccstructs_pathname_I_length_fun_t * length
@@ -930,7 +930,7 @@ existence of the representation for the time it needs it.
 
 @c page
 @node pathname api
-@section Programming interface for the @emph{pathname} interface
+@section Programming interface for the @iface{pathname} interface
 
 
 @deftypefun ccstructs_pathname_I ccstructs_new_pathname (ccstructs_core_t const * @var{S}, ccstructs_pathname_I_methods_t const * @var{M})
@@ -962,7 +962,7 @@ Apply the method @method{is_static} to the given argument.
 
 @c page
 @node pathname simple
-@section Simple implementations of a @emph{pathname} interface
+@section Simple implementations of a @iface{pathname} interface
 
 
 @deftypefun ccstructs_pathname_I ccstructs_new_pathname_from_static_string (const char * @var{ptn})
@@ -990,7 +990,7 @@ ty @var{ptn}.
 
 @c page
 @node pathname examples
-@section Implementation example for the @emph{pathname} interface.
+@section Implementation example for the @iface{pathname} interface.
 
 
 Here is how we can implement the interface for @objtype{ccmem_asciiz_t} representations:
