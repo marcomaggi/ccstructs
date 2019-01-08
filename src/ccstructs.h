@@ -210,27 +210,27 @@ ccstructs_decl void ccstructs_error_handler_init (cce_destination_t L, ccstructs
  ** Generic struct handling: input/output writability.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccstructs_writable_I		ccstructs_writable_I;
-typedef struct ccstructs_writable_I_methods_t	ccstructs_writable_I_methods_t;
+typedef struct ccstructs_writable_I			ccstructs_writable_I;
+typedef struct ccname_iface_table_type(ccstructs_writable_I)	ccname_iface_table_type(ccstructs_writable_I);
 
 struct ccstructs_writable_I {
-  ccstructs_writable_I_methods_t	const * methods;
-  ccstructs_core_t			const * self;
+  ccname_iface_table_type(ccstructs_writable_I)	const * methods;
+  ccstructs_core_t				const * self;
 };
 
 /* Write the  struct to some output  channel.  Raise an exception  if an
    error occurs. */
-typedef void ccstructs_writable_I_write_fun_t (cce_destination_t, ccstructs_writable_I const);
+typedef void ccname_iface_method_type(ccstructs_writable_I, write) (cce_destination_t, ccstructs_writable_I const);
 
-struct ccstructs_writable_I_methods_t {
-  ccstructs_writable_I_write_fun_t		* write;
+struct ccname_iface_table_type(ccstructs_writable_I) {
+  ccname_iface_method_type(ccstructs_writable_I, write)	* write;
 };
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
 static inline ccstructs_writable_I
-ccstructs_new_writable (ccstructs_core_t const * S, ccstructs_writable_I_methods_t const * const M)
+ccname_new(ccstructs_writable_I) (ccstructs_core_t const * S, ccname_iface_table_type(ccstructs_writable_I) const * M)
 {
   ccstructs_writable_I	I = {
     .methods	= M,

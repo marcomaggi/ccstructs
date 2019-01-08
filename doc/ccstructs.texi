@@ -546,12 +546,23 @@ two_new_guarded_error (cce_destination_t L,
 
 @c page
 @node writable
-@chapter The @emph{writable} interface
+@chapter The @iface{writable} interface
 
 
 The @iface{writable} interface, represented by the type @objtype{ccstructs_writable_I}, is meant to
 write an object to some output channel, mostly for inspection and debugging purposes; this interface
 is neither for presentation to the end user of a program, nor for memorisation on a storage device.
+
+@menu
+* writable typedefs::           @iface{writable} interface: type definitions.
+* writable operations::         @iface{writable} interface: operations.
+* writable sample::             Example of @iface{writable} interface
+                                implementation
+@end menu
+
+@c page
+@node writable typedefs
+@section @iface{writable} interface: type definitions
 
 
 @deftp {Struct Typedef} ccstructs_writable_I
@@ -560,17 +571,17 @@ function calls.
 @end deftp
 
 
-@deftp {Struct Typedef} ccstructs_writable_I_methods_t
+@deftp {Struct Typedef} {ccname_iface_table_type(ccstructs_writable_I)}
 Type of methods table for the @iface{writable} interface.  It has the following fields:
 
 @table @code
-@item ccstructs_writable_I_write_fun_t * write
+@item ccname_iface_method_type(ccstructs_writable_I, write) * write
 Pointer to function implementing the @method{write} method.
 @end table
 @end deftp
 
 
-@deftypefn {Function Prototype} void ccstructs_writable_I_write_fun_t (cce_destination_t @var{L}, ccstructs_writable_I @var{I})
+@deftypefn {Function Prototype} void {ccname_iface_method_type(ccstructs_writable_I, write)} (cce_destination_t @var{L}, ccstructs_writable_I @var{I})
 Type of functions implementing the @method{write} method.  Functions of this type write a
 representation of the object to an output channel; it is responsibility of this method to select
 which output channel to use.  If an error occurs: raise an exception by performing a non--local exit
@@ -578,7 +589,12 @@ to @var{L}.
 @end deftypefn
 
 
-@deftypefun ccstructs_writable_I ccstructs_new_writable (ccstructs_core_t * @var{S}, ccstructs_writable_I_methods_t const * @var{M})
+@c page
+@node writable operations
+@section @iface{writable} interface: operations
+
+
+@deftypefun ccstructs_writable_I {ccname_new(ccstructs_writable_I)} (ccstructs_core_t const * @var{S}, ccname_iface_table_type(ccstructs_writable_I) const * @var{M})
 Interface constructor.  Return a new interface @struct{} given a pointer to the source @struct{} and
 a pointer to the interface methods.
 @end deftypefun
@@ -593,6 +609,10 @@ Return a pointer to the @struct{} to which the interface belongs.
 Apply the method @method{write} to the @struct{}.  If an error occurs: raise an exception by
 performing a non--local exit to @var{L}.
 @end deftypefun
+
+@c page
+@node writable sample
+@section Example of @iface{writable} interface implementation
 
 
 Let's say we have this @struct{} definition:
@@ -610,8 +630,9 @@ struct spiffy_t @{
 we can implement a @iface{writable} interface as follows:
 
 @smallexample
-void
-spiffy_write_method (cce_destination_t L, ccstructs_writable_I I)
+static void
+ccname_iface_method(ccstructs_writable_I, spiffy_t, write)
+  (cce_destination_t L, ccstructs_writable_I I)
 @{
   CCSTRUCTS_PC(spiffy_t, S, I.self);
   int   rv;
@@ -623,22 +644,23 @@ spiffy_write_method (cce_destination_t L, ccstructs_writable_I I)
   @}
 @}
 
-ccstructs_writable_I_methods_t const spiffy_writable_I_methods = @{
-  .write = spiffy_write_method
+static ccname_iface_table_type(ccstructs_writable_I) const
+    ccname_iface_table(ccstructs_writable_I, spiffy_t) = @{
+  .write = ccname_iface_method(ccstructs_writable_I, spiffy_t, write)
 @};
 
 ccstructs_writable_I
-spiffy_new_I_writable (spiffy_t * S)
+ccname_iface_new(ccstructs_writable_I, spiffy_t) (spiffy_t * S)
 @{
   return ccstructs_new_writable(ccstructs_core(S),
-            &spiffy_writable_I_methods);
+    &ccname_iface_table(ccstructs_writable_I, spiffy_t));
 @}
 @end smallexample
 
 @noindent
 then we can use the interface as follows:
 
-@example
+@smallexample
 cce_location_t        L[1];
 
 if (cce_location(L)) @{
@@ -648,12 +670,12 @@ if (cce_location(L)) @{
     .alpha    = 1,
     .beta     = 2
   @};
-  ccstructs_writable_I  I = spiffy_new_I_writable(&S);
+  ccstructs_writable_I  I = ccname_iface_new(ccstructs_writable_I, spiffy_t)(&S);
 
   ccstructs_writable_write(L, I);
   cce_run_body_handlers(L);
 @}
-@end example
+@end smallexample
 
 @c page
 @node serialisable

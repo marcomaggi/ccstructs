@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you  can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -48,7 +48,7 @@ struct one_one_t {
 };
 
 static void
-one_one_write_method (cce_destination_t L, ccstructs_writable_I I)
+ccname_iface_method(ccstructs_writable_I, one_one_t, write) (cce_destination_t L, ccstructs_writable_I I)
 {
   CCSTRUCTS_PC(one_one_t const, S, ccstructs_writable_self(I));
   int	rv;
@@ -60,15 +60,15 @@ one_one_write_method (cce_destination_t L, ccstructs_writable_I I)
   }
 }
 
-static ccstructs_writable_I_methods_t const one_one_writable_I_methods = {
-  .write = one_one_write_method
+static ccname_iface_table_type(ccstructs_writable_I) const ccname_iface_table(ccstructs_writable_I, one_one_t) = {
+  .write = ccname_iface_method(ccstructs_writable_I, one_one_t, write)
 };
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_writable_I
-one_one_new_I_writable (one_one_t * S)
+ccname_iface_new(ccstructs_writable_I, one_one_t) (one_one_t const * S)
 {
-  return ccstructs_new_writable(ccstructs_core(S), &one_one_writable_I_methods);
+  return ccname_new(ccstructs_writable_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_writable_I, one_one_t));
 }
 
 void
@@ -83,7 +83,7 @@ test_1_1 (cce_destination_t upper_L)
       .alpha	= 1,
       .beta	= 2
     };
-    ccstructs_writable_I	I = one_one_new_I_writable(&S);
+    ccstructs_writable_I	I = ccname_iface_new(ccstructs_writable_I, one_one_t)(&S);
 
     ccstructs_writable_write(L, I);
 
