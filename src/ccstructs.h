@@ -210,7 +210,7 @@ ccstructs_decl void ccstructs_error_handler_init (cce_destination_t L, ccstructs
  ** Generic struct handling: input/output writability.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccstructs_writable_I			ccstructs_writable_I;
+typedef struct ccstructs_writable_I				ccstructs_writable_I;
 typedef struct ccname_iface_table_type(ccstructs_writable_I)	ccname_iface_table_type(ccstructs_writable_I);
 
 struct ccstructs_writable_I {
