@@ -206,6 +206,11 @@ $(examples_test_dtor_with_methods_OBJECTS): libccstructs.la
 
 #### Valgrind analysis
 #
+# First do this:
+#
+#   make clean
+#   make CFLAGS='-O0 -g' all check
+#
 # To use this rule on the file "tests/standard-allocator" we do:
 #
 #   make valgrind file=standard-allocator
@@ -240,12 +245,7 @@ valgrind-full:
 #    $ make clang-static-analysis
 #
 # The  program  "scan-build"  works  by  overriding  the  CC  and  CXX
-# environment variables.  Automake defines CXX as:
-#
-#    CXX = g++ -std=c++11
-#
-# so we override CXXFLAGS to include the language specification.
-#
+# environment variables.
 
 .PHONY: clang-static-analysis
 
