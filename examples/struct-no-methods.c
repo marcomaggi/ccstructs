@@ -262,58 +262,32 @@ ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, final) (ccstructs
 
 
 /** --------------------------------------------------------------------
- ** Interface "my_printable_I": implementation for "my_coords_t".
+ ** Interface "ccstructs_writable_I": implementation for "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-static void my_printable_fprintf (cce_destination_t L, FILE * stream, char const * format, ...);
+static ccname_iface_method_type(ccstructs_writable_I, write)  ccname_iface_method(ccstructs_writable_I, my_coords_t, write);
 
-static ccname_iface_method_type(my_printable_I, print)  ccname_iface_method(my_printable_I, my_coords_t, print_rec);
-static ccname_iface_method_type(my_printable_I, print)  ccname_iface_method(my_printable_I, my_coords_t, print_pol);
-
-static ccname_iface_table_type(my_printable_I) const ccname_iface_table(my_printable_I, my_coords_t) = {
-  .print_rec	= ccname_iface_method(my_printable_I, my_coords_t, print_rec),
-  .print_pol	= ccname_iface_method(my_printable_I, my_coords_t, print_pol)
+static ccname_iface_table_type(ccstructs_writable_I) const ccname_iface_table(ccstructs_writable_I, my_coords_t) = {
+  .write	= ccname_iface_method(ccstructs_writable_I, my_coords_t, write)
 };
 
-my_printable_I
-ccname_iface_new(my_printable_I, my_coords_t) (my_coords_t const * S)
+ccstructs_writable_I
+ccname_iface_new(ccstructs_writable_I, my_coords_t) (my_coords_t const * S)
 {
-  return my_printable_new(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t));
+  return ccname_new(ccstructs_writable_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_writable_I, my_coords_t));
 }
 
 void
-my_printable_fprintf (cce_destination_t L, FILE * stream, char const * format, ...)
+ccname_iface_method(ccstructs_writable_I, my_coords_t, write) (cce_destination_t L, ccstructs_writable_I I)
 {
-  va_list	ap;
-  int		rv;
+  CCSTRUCTS_PC(my_coords_t, S, ccstructs_writable_self(I));
+  int	rv;
 
-  va_start(ap, format);
-  {
-    errno = 0;
-    rv = vfprintf(stream, format, ap);
-  }
-  va_end(ap);
+  errno = 0;
+  rv = fprintf(stderr, "X=%f, Y=%f\n", S->X, S->Y);
   if (rv < 0) {
     cce_raise(L, cce_condition_new_errno_clear());
   }
-}
-
-void
-ccname_iface_method(my_printable_I, my_coords_t, print_rec) (cce_destination_t L, my_printable_I I, FILE * stream)
-{
-  CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
-
-  my_printable_fprintf(L, stream, "X=%f, Y=%f\n", S->X, S->Y);
-}
-
-void
-ccname_iface_method(my_printable_I, my_coords_t, print_pol) (cce_destination_t L, my_printable_I I, FILE * stream)
-{
-  CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
-  double	RHO   = hypot(S->X, S->Y);
-  double	THETA = atan2(S->Y, S->X);
-
-  my_printable_fprintf(L, stream, "RHO=%f, THETA=%f\n", RHO, THETA);
 }
 
 
@@ -414,6 +388,62 @@ ccname_iface_method(ccstructs_deserialise_I, my_coords_t,
   S->X	= W->X;
   S->Y	= W->Y;
   return N;
+}
+
+
+/** --------------------------------------------------------------------
+ ** Interface "my_printable_I": implementation for "my_coords_t".
+ ** ----------------------------------------------------------------- */
+
+static void my_printable_fprintf (cce_destination_t L, FILE * stream, char const * format, ...);
+
+static ccname_iface_method_type(my_printable_I, print)  ccname_iface_method(my_printable_I, my_coords_t, print_rec);
+static ccname_iface_method_type(my_printable_I, print)  ccname_iface_method(my_printable_I, my_coords_t, print_pol);
+
+static ccname_iface_table_type(my_printable_I) const ccname_iface_table(my_printable_I, my_coords_t) = {
+  .print_rec	= ccname_iface_method(my_printable_I, my_coords_t, print_rec),
+  .print_pol	= ccname_iface_method(my_printable_I, my_coords_t, print_pol)
+};
+
+my_printable_I
+ccname_iface_new(my_printable_I, my_coords_t) (my_coords_t const * S)
+{
+  return my_printable_new(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t));
+}
+
+void
+my_printable_fprintf (cce_destination_t L, FILE * stream, char const * format, ...)
+{
+  va_list	ap;
+  int		rv;
+
+  va_start(ap, format);
+  {
+    errno = 0;
+    rv = vfprintf(stream, format, ap);
+  }
+  va_end(ap);
+  if (rv < 0) {
+    cce_raise(L, cce_condition_new_errno_clear());
+  }
+}
+
+void
+ccname_iface_method(my_printable_I, my_coords_t, print_rec) (cce_destination_t L, my_printable_I I, FILE * stream)
+{
+  CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
+
+  my_printable_fprintf(L, stream, "X=%f, Y=%f\n", S->X, S->Y);
+}
+
+void
+ccname_iface_method(my_printable_I, my_coords_t, print_pol) (cce_destination_t L, my_printable_I I, FILE * stream)
+{
+  CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
+  double	RHO   = hypot(S->X, S->Y);
+  double	THETA = atan2(S->Y, S->X);
+
+  my_printable_fprintf(L, stream, "RHO=%f, THETA=%f\n", RHO, THETA);
 }
 
 /* end of file */

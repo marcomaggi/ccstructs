@@ -109,10 +109,14 @@ ccstructs_decl my_coords_t const * ccname_new(my_coords_t, pol) (cce_destination
 ccstructs_decl ccstructs_dtor_I ccname_iface_new(ccstructs_dtor_I, my_coords_t) (my_coords_t const * self)
   __attribute__((__nonnull__(1)));
 
-/* Constructor for a  "my_printable_I" interface that prints  a struct representation
-   on some output channel. */
-ccstructs_decl my_printable_I ccname_iface_new(my_printable_I, my_coords_t) (my_coords_t const * S)
+/* ------------------------------------------------------------------ */
+
+/* Constructor  for   a  "ccstructs_writable_I"   interface  that  prints   a  struct
+   representation on some output channel. */
+ccstructs_decl ccstructs_writable_I ccname_iface_new(ccstructs_writable_I, my_coords_t) (my_coords_t const * S)
   __attribute__((__nonnull__(1)));
+
+/* ------------------------------------------------------------------ */
 
 /* Constructor for a "ccstructs_serialise_I" interface that serialises an instance of
    "my_coords_t" into a memory block. */
@@ -122,6 +126,13 @@ ccstructs_decl ccstructs_serialise_I ccname_iface_new(ccstructs_serialise_I, my_
 /* Constructor  for  a  "ccstructs_deserialise_I"   interface  that  deserialises  an
    instance of "my_coords_t" from a memory block. */
 ccstructs_decl ccstructs_deserialise_I ccname_iface_new(ccstructs_deserialise_I, my_coords_t) (my_coords_t * S)
+  __attribute__((__nonnull__(1)));
+
+/* ------------------------------------------------------------------ */
+
+/* Constructor for a  "my_printable_I" interface that prints  a struct representation
+   on some output channel. */
+ccstructs_decl my_printable_I ccname_iface_new(my_printable_I, my_coords_t) (my_coords_t const * S)
   __attribute__((__nonnull__(1)));
 
 

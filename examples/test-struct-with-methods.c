@@ -210,7 +210,7 @@ test_2_2 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Printable interface.
+ ** Interface "my_printable_I".
  ** ----------------------------------------------------------------- */
 
 void
@@ -231,6 +231,32 @@ test_3_1 (cce_destination_t upper_L)
 
     my_printable_print_rec(L, PA, stdout);
     my_printable_print_pol(L, PA, stdout);
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Interface "ccstructs_writable_I".
+ ** ----------------------------------------------------------------- */
+
+void
+test_4_1 (cce_destination_t upper_L)
+{
+  cce_location_t		L[1];
+  my_coords_t const *		A;
+  ccstructs_clean_handler_t	A_H[1];
+  ccstructs_writable_I		WA;
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
+
+    WA = ccname_iface_new(ccstructs_writable_I, my_coords_t)(A);
+
+    ccstructs_writable_write(L, WA);
     cce_run_body_handlers(L);
   }
 }
@@ -258,6 +284,12 @@ main (void)
     cctests_begin_group("printable interface");
     {
       cctests_run(test_3_1);
+    }
+    cctests_end_group();
+
+    cctests_begin_group("writable interface");
+    {
+      cctests_run(test_4_1);
     }
     cctests_end_group();
   }
