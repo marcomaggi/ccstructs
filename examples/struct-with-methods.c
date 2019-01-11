@@ -112,26 +112,12 @@ ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
   S->Y		= RHO * sin(THETA);
 }
 
-/* ------------------------------------------------------------------ */
-
-my_coords_t const *
-ccname_new(my_coords_t, rec) (cce_destination_t L, double X, double Y)
+void
+ccname_init(my_coords_t, deserialisable) (my_coords_t * S)
 {
-  my_coords_t *	S = ccmem_std_malloc(L, sizeof(my_coords_t));
-
-  ccname_init(my_coords_t, rec)(S, X, Y);
-  S->methods	= &ccname_table(my_coords_t, standalone);
-  return (my_coords_t const *) S;
-}
-
-my_coords_t const *
-ccname_new(my_coords_t, pol) (cce_destination_t L, double RHO, double THETA)
-{
-  my_coords_t *	S = ccmem_std_malloc(L, sizeof(my_coords_t));
-
-  ccname_init(my_coords_t, pol)(S, RHO, THETA);
-  S->methods	= &ccname_table(my_coords_t, standalone);
-  return (my_coords_t const *) S;
+  S->methods	= &ccname_table(my_coords_t, embedded);
+  S->X = 0.0;
+  S->Y = 0.0;
 }
 
 /* ------------------------------------------------------------------ */
@@ -142,12 +128,56 @@ ccname_final(my_coords_t) (my_coords_t const * S CCSTRUCTS_UNUSED)
   if (1) { fprintf(stderr, "%-35s: finalised\n", __func__); }
 }
 
+/* ------------------------------------------------------------------ */
+
+static my_coords_t *
+ccname_alloc(my_coords_t) (cce_destination_t L)
+{
+  return (my_coords_t *)ccmem_std_malloc(L, sizeof(my_coords_t));
+}
+
+/* ------------------------------------------------------------------ */
+
 static void
 ccname_release(my_coords_t) (my_coords_t const * S)
 {
   ccmem_std_free((void *)S);
   if (1) { fprintf(stderr, "%-35s: released\n", __func__); }
 }
+
+/* ------------------------------------------------------------------ */
+
+my_coords_t const *
+ccname_new(my_coords_t, rec) (cce_destination_t L, double X, double Y)
+{
+  my_coords_t *	S = ccname_alloc(my_coords_t)(L);
+
+  ccname_init(my_coords_t, rec)(S, X, Y);
+  S->methods	= &ccname_table(my_coords_t, standalone);
+  return (my_coords_t const *) S;
+}
+
+my_coords_t const *
+ccname_new(my_coords_t, pol) (cce_destination_t L, double RHO, double THETA)
+{
+  my_coords_t *	S = ccname_alloc(my_coords_t)(L);
+
+  ccname_init(my_coords_t, pol)(S, RHO, THETA);
+  S->methods	= &ccname_table(my_coords_t, standalone);
+  return (my_coords_t const *) S;
+}
+
+my_coords_t *
+ccname_new(my_coords_t, deserialisable) (cce_destination_t L)
+{
+  my_coords_t *	S = ccname_alloc(my_coords_t)(L);
+
+  ccname_init(my_coords_t, deserialisable)(S);
+  S->methods	= &ccname_table(my_coords_t, standalone);
+  return (my_coords_t const *) S;
+}
+
+/* ------------------------------------------------------------------ */
 
 void
 ccname_delete(my_coords_t) (my_coords_t const * S)

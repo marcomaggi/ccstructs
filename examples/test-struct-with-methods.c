@@ -262,6 +262,58 @@ test_4_1 (cce_destination_t upper_L)
 }
 
 
+/** --------------------------------------------------------------------
+ ** Interfaces "ccstructs_serialised_I" and "ccstructs_deserialise_I".
+ ** ----------------------------------------------------------------- */
+
+void
+test_5_1 (cce_destination_t upper_L)
+{
+  cce_location_t		L[1];
+  my_coords_t const		*A;
+  my_coords_t			*B;
+  ccstructs_clean_handler_t	A_H[1], B_H[1];
+  ccmem_block_t			M, M_leftover;
+  ccmem_clean_handler_t		M_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    /* Build the struct to be serialised. */
+    A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
+
+    {
+      /* Build the "serialise" interface. */
+      ccstructs_serialise_I IS = ccname_iface_new(ccstructs_serialise_I, my_coords_t)(A);
+
+      /* Allocate memory for the serialisation. */
+      M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialise_required_size(IS));
+
+      /* Serialise the struct. */
+      M_leftover = ccstructs_serialise_write(L, IS, M);
+    }
+
+    {
+      /* Build a struct to be target of deserialisation. */
+      B = ccname_new(my_coords_t, deserialisable)(L);
+      ccstructs_handler_init(L, B_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(B));
+
+      /* Build the "deserialise" interface. */
+      ccstructs_deserialise_I ID = ccname_iface_new(ccstructs_deserialise_I, my_coords_t)(B);
+
+      /* Deserialise the struct. */
+      M_leftover = ccstructs_deserialise_read(L, ID, M);
+
+      /* Check the deserialisation results. */
+      cctests_assert_equal_double(L, A->X, B->X);
+      cctests_assert_equal_double(L, A->Y, B->Y);
+    }
+    cce_run_body_handlers(L);
+  }
+}
+
+
 int
 main (void)
 {
@@ -290,6 +342,12 @@ main (void)
     cctests_begin_group("writable interface");
     {
       cctests_run(test_4_1);
+    }
+    cctests_end_group();
+
+    cctests_begin_group("serialise/deserialise interface");
+    {
+      cctests_run(test_5_1);
     }
     cctests_end_group();
   }

@@ -79,9 +79,20 @@ ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
 }
 
 void
+ccname_init(my_coords_t, deserialisable) (my_coords_t * S)
+{
+  S->X = 0.0;
+  S->Y = 0.0;
+}
+
+/* ------------------------------------------------------------------ */
+
+void
 ccname_final(my_coords_t) (my_coords_t const * S CCNAMES_UNUSED)
 {
 }
+
+/* ------------------------------------------------------------------ */
 
 static my_coords_t *
 ccname_alloc(my_coords_t) (cce_destination_t L)
@@ -89,11 +100,15 @@ ccname_alloc(my_coords_t) (cce_destination_t L)
   return (my_coords_t *)ccmem_std_malloc(L, sizeof(my_coords_t));
 }
 
+/* ------------------------------------------------------------------ */
+
 static void
 ccname_release(my_coords_t) (my_coords_t const * S)
 {
   ccmem_std_free((void *)S);
 }
+
+/* ------------------------------------------------------------------ */
 
 my_coords_t const *
 ccname_new(my_coords_t, rec) (cce_destination_t L, double X, double Y)
@@ -112,6 +127,17 @@ ccname_new(my_coords_t, pol) (cce_destination_t L, double RHO, double THETA)
   ccname_init(my_coords_t, pol)(S, RHO, THETA);
   return S;
 }
+
+my_coords_t *
+ccname_new(my_coords_t, deserialisable) (cce_destination_t L)
+{
+  my_coords_t * S = ccname_alloc(my_coords_t)(L);
+
+  ccname_init(my_coords_t, deserialisable)(S);
+  return S;
+}
+
+/* ------------------------------------------------------------------ */
 
 void
 ccname_delete(my_coords_t) (my_coords_t const * S)

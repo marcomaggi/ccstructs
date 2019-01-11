@@ -88,10 +88,20 @@ ccstructs_decl void ccname_init(my_coords_t, rec) (my_coords_t * S, double X, do
 ccstructs_decl void ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
   __attribute__((__nonnull__(1)));
 
+/* Initialisation  function  that  initialises  an already  allocated  struct.   This
+   initialises in such a  way that it allows for both  finalisation and mutation from
+   deserialisation.. */
+ccstructs_decl void ccname_init(my_coords_t, deserialisable) (my_coords_t * S)
+  __attribute__((__nonnull__(1)));
+
+/* ------------------------------------------------------------------ */
+
 /* Finalisation  function.  Releases  all  the asynchronous  resources  owned by  the
    struct, if any.  The struct's memory block is left untouched. */
 ccstructs_decl void ccname_final(my_coords_t) (my_coords_t const * S CCNAMES_UNUSED)
   __attribute__((__nonnull__(1)));
+
+/* ------------------------------------------------------------------ */
 
 /* Constructor function  that allocates  the struct  on the  heap using  the standard
    memory  allocator  implemented by  CCMemory.   This  initialises from  rectangular
@@ -104,6 +114,14 @@ ccstructs_decl my_coords_t const * ccname_new(my_coords_t, rec) (cce_destination
    coordinates. */
 ccstructs_decl my_coords_t const * ccname_new(my_coords_t, pol) (cce_destination_t L, double RHO, double THETA)
   __attribute__((__nonnull__(1),__returns_nonnull__));
+
+/* Constructor function  that allocates  the struct  on the  heap using  the standard
+   memory allocator implemented by CCMemory.  This  initialises in such a way that it
+   allows for both finalisation and mutation from deserialisation. */
+ccstructs_decl my_coords_t * ccname_new(my_coords_t, deserialisable) (cce_destination_t L)
+  __attribute__((__nonnull__(1),__returns_nonnull__));
+
+/* ------------------------------------------------------------------ */
 
 /* Destructor function.  Releases all the asynchronous resources owned by the struct,
    if any.  The struct's memory block is released using the standard memory allocator
