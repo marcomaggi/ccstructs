@@ -125,7 +125,7 @@ ccstructs_core (void const * S)
 
 
 /** --------------------------------------------------------------------
- ** Generic struct handling: destructors interface.
+ ** Interface: destructors.
  ** ----------------------------------------------------------------- */
 
 typedef struct ccstructs_dtor_I					ccstructs_dtor_I;
@@ -207,7 +207,7 @@ ccstructs_decl void ccstructs_error_handler_init (cce_destination_t L, ccstructs
 
 
 /** --------------------------------------------------------------------
- ** Generic struct handling: input/output writability.
+ ** Interface: writable.
  ** ----------------------------------------------------------------- */
 
 typedef struct ccstructs_writable_I				ccstructs_writable_I;
@@ -255,34 +255,34 @@ ccstructs_writable_write (cce_destination_t L, ccstructs_writable_I const I)
 
 
 /** --------------------------------------------------------------------
- ** Interface: serialisable.
+ ** Interface: serialise.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccstructs_serialisable_I			ccstructs_serialisable_I;
-typedef struct ccstructs_serialisable_I_methods_t	ccstructs_serialisable_I_methods_t;
+typedef struct ccstructs_serialise_I				ccstructs_serialise_I;
+typedef struct ccname_iface_table_type(ccstructs_serialise_I)	ccname_iface_table_type(ccstructs_serialise_I);
 
-struct ccstructs_serialisable_I {
-  ccstructs_serialisable_I_methods_t	const *	methods;
-  ccstructs_core_t			const * self;
+struct ccstructs_serialise_I {
+  ccname_iface_table_type(ccstructs_serialise_I)	const *	methods;
+  ccstructs_core_t					const * self;
 };
 
-typedef size_t ccstructs_serialisable_I_minimum_size_fun_t (ccstructs_serialisable_I const I);
-typedef ccmem_block_t ccstructs_serialisable_I_to_block_fun_t   (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B);
-typedef ccmem_block_t ccstructs_serialisable_I_from_block_fun_t (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B);
+typedef size_t        ccname_iface_method_type(ccstructs_serialise_I, required_size)
+  (ccstructs_serialise_I const I);
+typedef ccmem_block_t ccname_iface_method_type(ccstructs_serialise_I, write)
+  (cce_destination_t L, ccstructs_serialise_I const I, ccmem_block_t B);
 
-struct ccstructs_serialisable_I_methods_t {
-  ccstructs_serialisable_I_minimum_size_fun_t *	minimum_size;
-  ccstructs_serialisable_I_to_block_fun_t *	to_block;
-  ccstructs_serialisable_I_from_block_fun_t *	from_block;
+struct ccname_iface_table_type(ccstructs_serialise_I) {
+  ccname_iface_method_type(ccstructs_serialise_I, required_size)	* required_size;
+  ccname_iface_method_type(ccstructs_serialise_I, write)		* write;
 };
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
-static inline ccstructs_serialisable_I
-ccstructs_new_serialisable (ccstructs_core_t const * S, ccstructs_serialisable_I_methods_t const * const M)
+static inline ccstructs_serialise_I
+ccname_new(ccstructs_serialise_I) (ccstructs_core_t const * const S, ccname_iface_table_type(ccstructs_serialise_I) const * const M)
 {
-  ccstructs_serialisable_I	I = {
+  ccstructs_serialise_I	I = {
     .methods	= M,
     .self	= S
   };
@@ -291,30 +291,80 @@ ccstructs_new_serialisable (ccstructs_core_t const * S, ccstructs_serialisable_I
 
 __attribute__((__always_inline__,__pure__))
 static inline ccstructs_core_t const *
-ccstructs_serialisable_self (ccstructs_serialisable_I const I)
+ccstructs_serialise_self (ccstructs_serialise_I const I)
 {
   return I.self;
 }
 
 __attribute__((__always_inline__))
 static inline size_t
-ccstructs_serialisable_minimum_size (ccstructs_serialisable_I const I)
+ccstructs_serialise_required_size (ccstructs_serialise_I const I)
 {
-  return I.methods->minimum_size(I);
+  return I.methods->required_size(I);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccmem_block_t
-ccstructs_serialisable_to_block (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B)
+ccstructs_serialise_write (cce_destination_t L, ccstructs_serialise_I const I, ccmem_block_t B)
 {
-  return I.methods->to_block(L, I, B);
+  return I.methods->write(L, I, B);
+}
+
+
+/** --------------------------------------------------------------------
+ ** Interface: deserialise.
+ ** ----------------------------------------------------------------- */
+
+typedef struct ccstructs_deserialise_I				ccstructs_deserialise_I;
+typedef struct ccname_iface_table_type(ccstructs_deserialise_I)	ccname_iface_table_type(ccstructs_deserialise_I);
+
+struct ccstructs_deserialise_I {
+  ccname_iface_table_type(ccstructs_deserialise_I)	const *	methods;
+  ccstructs_core_t					const * self;
+};
+
+typedef size_t        ccname_iface_method_type(ccstructs_deserialise_I, required_size)
+  (ccstructs_deserialise_I const I);
+typedef ccmem_block_t ccname_iface_method_type(ccstructs_deserialise_I, read)
+  (cce_destination_t L, ccstructs_deserialise_I const I, ccmem_block_t B);
+
+struct ccname_iface_table_type(ccstructs_deserialise_I) {
+  ccname_iface_method_type(ccstructs_deserialise_I, required_size)	* required_size;
+  ccname_iface_method_type(ccstructs_deserialise_I, read)		* read;
+};
+
+/* ------------------------------------------------------------------ */
+
+__attribute__((__always_inline__,__nonnull__(1,2)))
+static inline ccstructs_deserialise_I
+ccname_new(ccstructs_deserialise_I) (ccstructs_core_t const * const S, ccname_iface_table_type(ccstructs_deserialise_I) const * const M)
+{
+  ccstructs_deserialise_I	I = {
+    .methods	= M,
+    .self	= S
+  };
+  return I;
+}
+
+__attribute__((__always_inline__,__pure__))
+static inline ccstructs_core_t const *
+ccstructs_deserialise_self (ccstructs_deserialise_I const I)
+{
+  return I.self;
+}
+
+__attribute__((__always_inline__))
+static inline size_t
+ccstructs_deserialise_required_size (ccstructs_deserialise_I const I)
+{
+  return I.methods->required_size(I);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccmem_block_t
-ccstructs_serialisable_from_block (cce_destination_t L, ccstructs_serialisable_I const I, ccmem_block_t B)
+ccstructs_deserialise_read (cce_destination_t L, ccstructs_deserialise_I const I, ccmem_block_t B)
 {
-  return I.methods->from_block(L, I, B);
+  return I.methods->read(L, I, B);
 }
 
 

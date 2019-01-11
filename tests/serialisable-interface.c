@@ -1,13 +1,13 @@
 /*
   Part of: CCStructs
-  Contents: tests for the serialisable interface
+  Contents: tests for the serialise interface
   Date: Sep 30, 2018
 
   Abstract
 
 
 
-  Copyright (C) 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you  can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -36,32 +36,50 @@
 
 
 /** --------------------------------------------------------------------
- ** Serialisable interface: fwrite method.
+ ** Serialise interface.
  ** ----------------------------------------------------------------- */
 
 typedef struct one_one_t		one_one_t;
 typedef struct serialised_one_one_t	serialised_one_one_t;
 
+/* The struct type to be serialised. */
 struct one_one_t {
-  bool	alpha;
-  bool	beta;
+  int	alpha;
+  int	beta;
 };
 
+/* The layout of a serialised "one_one_t". */
 struct serialised_one_one_t {
-  bool	alpha;
-  bool	beta;
+  int	alpha;
+  int	beta;
 };
 
-static size_t
-one_one_serialisable_I_minimum_size_method (ccstructs_serialisable_I I CCSTRUCTS_UNUSED)
+/* ------------------------------------------------------------------ */
+
+static ccname_iface_method_type(ccstructs_serialise_I, required_size) ccname_iface_method(ccstructs_serialise_I, one_one_t, required_size);
+static ccname_iface_method_type(ccstructs_serialise_I, write)         ccname_iface_method(ccstructs_serialise_I, one_one_t, write);
+
+/* Interface  table  of  methods.    Implementation  of  "ccstructs_serialise_I"  for
+   "one_one_t". */
+static ccname_iface_table_type(ccstructs_serialise_I) const ccname_iface_table(ccstructs_serialise_I, one_one_t) = {
+  .required_size	= ccname_iface_method(ccstructs_serialise_I, one_one_t, required_size),
+  .write	= ccname_iface_method(ccstructs_serialise_I, one_one_t, write),
+};
+
+size_t
+ccname_iface_method(ccstructs_serialise_I, one_one_t, required_size) (ccstructs_serialise_I I CCSTRUCTS_UNUSED)
+/* Return the minimum number of */
 {
   return sizeof(serialised_one_one_t);
 }
 
-static ccmem_block_t
-one_one_serialisable_I_to_block_method (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialisable_I I, ccmem_block_t B)
+ccmem_block_t
+ccname_iface_method(ccstructs_serialise_I, one_one_t,
+		    write) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialise_I I, ccmem_block_t B)
+/* Interface  method implementation.   Serialise an  instance of  "one_one_t" in  the
+   memory block "B". */
 {
-  CCSTRUCTS_PC(one_one_t const, S, ccstructs_serialisable_self(I));
+  CCSTRUCTS_PC(one_one_t const, S, ccstructs_serialise_self(I));
   CCSTRUCTS_PC(serialised_one_one_t, W, B.ptr);
   ccmem_block_t	N = {
     .ptr	= B.ptr + sizeof(serialised_one_one_t),
@@ -73,10 +91,41 @@ one_one_serialisable_I_to_block_method (cce_destination_t L CCSTRUCTS_UNUSED, cc
   return N;
 }
 
-static ccmem_block_t
-one_one_serialisable_I_from_block_method (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialisable_I I, ccmem_block_t B)
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccstructs_serialise_I
+ccname_iface_new(ccstructs_serialise_I, one_one_t) (one_one_t * S)
+/* Interface  constructor.   Build  an   instance  of  "ccstructs_serialise_t"  as
+   implemented by "one_one_t". */
 {
-  CCSTRUCTS_PC(one_one_t, S, ccstructs_serialisable_self(I));
+  return ccname_new(ccstructs_serialise_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_serialise_I, one_one_t));
+}
+
+/* ------------------------------------------------------------------ */
+
+static ccname_iface_method_type(ccstructs_deserialise_I, required_size) ccname_iface_method(ccstructs_deserialise_I, one_one_t, required_size);
+static ccname_iface_method_type(ccstructs_deserialise_I, read)          ccname_iface_method(ccstructs_deserialise_I, one_one_t, read);
+
+/* Interface  table  of  methods.    Implementation  of  "ccstructs_deserialise_I"  for
+   "one_one_t". */
+static ccname_iface_table_type(ccstructs_deserialise_I) const ccname_iface_table(ccstructs_deserialise_I, one_one_t) = {
+  .required_size	= ccname_iface_method(ccstructs_deserialise_I, one_one_t, required_size),
+  .read		= ccname_iface_method(ccstructs_deserialise_I, one_one_t, read)
+};
+
+size_t
+ccname_iface_method(ccstructs_deserialise_I, one_one_t, required_size) (ccstructs_deserialise_I I CCSTRUCTS_UNUSED)
+/* Return the minimum number of */
+{
+  return sizeof(serialised_one_one_t);
+}
+
+ccmem_block_t
+ccname_iface_method(ccstructs_deserialise_I, one_one_t,
+		    read) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_deserialise_I I, ccmem_block_t B)
+/* Interface method  implementation.  Dedeserialise  an instance of  "one_one_t" from
+   the memory block "B". */
+{
+  CCSTRUCTS_PC(one_one_t, S, ccstructs_deserialise_self(I));
   CCSTRUCTS_PC(serialised_one_one_t const, W, B.ptr);
   ccmem_block_t	N = {
     .ptr	= B.ptr + sizeof(serialised_one_one_t),
@@ -88,18 +137,16 @@ one_one_serialisable_I_from_block_method (cce_destination_t L CCSTRUCTS_UNUSED, 
   return N;
 }
 
-static ccstructs_serialisable_I_methods_t const one_one_serialisable_I_methods = {
-  .minimum_size	= one_one_serialisable_I_minimum_size_method,
-  .to_block	= one_one_serialisable_I_to_block_method,
-  .from_block	= one_one_serialisable_I_from_block_method
-};
-
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccstructs_serialisable_I
-one_one_new_I_serialisable (one_one_t * S)
+static inline ccstructs_deserialise_I
+ccname_iface_new(ccstructs_deserialise_I, one_one_t) (one_one_t * S)
+/* Interface  constructor.   Build  an   instance  of  "ccstructs_deserialise_t"  as
+   implemented by "one_one_t". */
 {
-  return ccstructs_new_serialisable(ccstructs_core(S), &one_one_serialisable_I_methods);
+  return ccname_new(ccstructs_deserialise_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_deserialise_I, one_one_t));
 }
+
+/* ------------------------------------------------------------------ */
 
 void
 test_1_1 (cce_destination_t upper_L)
@@ -109,26 +156,23 @@ test_1_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    one_one_t	S = {
+    one_one_t			S = {
       .alpha	= 1,
       .beta	= 2
     };
-    one_one_t	R;
+    one_one_t			R;
 
-    uint8_t	buf[256];
-    ccmem_block_t	B = {
-      .ptr	= buf,
-      .len	= 256
-    };
-    ccmem_block_t	N;
-    ccstructs_serialisable_I	IS = one_one_new_I_serialisable(&S);
-    ccstructs_serialisable_I	IR = one_one_new_I_serialisable(&R);
+    uint8_t			buf[256];
+    ccmem_block_t		B = { .ptr = buf, .len = 256 };
+    ccmem_block_t		N;
+    ccstructs_serialise_I	IS = ccname_iface_new(ccstructs_serialise_I,   one_one_t)(&S);
+    ccstructs_deserialise_I	ID = ccname_iface_new(ccstructs_deserialise_I, one_one_t)(&R);
 
-    N = ccstructs_serialisable_to_block(L, IS, B);
+    N = ccstructs_serialise_write(L, IS, B);
     cctests_assert_equal_size    (L, N.len, B.len - sizeof(serialised_one_one_t));
     cctests_assert_equal_pointer (L, N.ptr, B.ptr + sizeof(serialised_one_one_t));
 
-    N = ccstructs_serialisable_from_block(L, IR, B);
+    N = ccstructs_deserialise_read(L, ID, B);
     cctests_assert_equal_size    (L, N.len, B.len - sizeof(serialised_one_one_t));
     cctests_assert_equal_pointer (L, N.ptr, B.ptr + sizeof(serialised_one_one_t));
     cctests_assert_equal_int(L, S.alpha, R.alpha);
@@ -142,7 +186,7 @@ test_1_1 (cce_destination_t upper_L)
 int
 main (void)
 {
-  cctests_init("tests serialisable interface");
+  cctests_init("tests serialise interface");
   {
     cctests_begin_group("serialise to buffer method");
     {

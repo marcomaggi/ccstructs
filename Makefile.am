@@ -119,9 +119,7 @@ gdb-test: $(builddir)/.gdbinit
 
 if MMUX_TESTING_ENABLED
 noinst_PROGRAMS	=					\
-	examples/ccnames-struct-common-no-methods	\
-	examples/ccnames-struct-common-with-methods	\
-	examples/ccnames-iface-struct-no-methods	\
+	examples/test-struct-no-methods			\
 	examples/ccnames-iface-struct-with-methods	\
 	examples/test-dtor-no-methods			\
 	examples/test-dtor-with-methods
@@ -141,33 +139,15 @@ examples: $(noinst_PROGRAMS)
 
 ## --------------------------------------------------------------------
 
-examples_ccnames_struct_common_no_methods_SOURCES =	\
-	examples/ccnames-struct-common-no-methods.c
+examples_test_struct_no_methods_SOURCES =	\
+	examples/struct-no-methods.h		\
+	examples/struct-no-methods.c		\
+	examples/test-struct-no-methods.c
 
-examples_ccnames_struct_common_no_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
-examples_ccnames_struct_common_no_methods_LDADD		= $(ccstructs_examples_ldadd) -lm
+examples_test_struct_no_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
+examples_test_struct_no_methods_LDADD		= $(ccstructs_examples_ldadd) -lm
 
-$(examples_ccnames_struct_common_no_methods_OBJECTS): libccstructs.la
-
-## --------------------------------------------------------------------
-
-examples_ccnames_struct_common_with_methods_SOURCES =	\
-	examples/ccnames-struct-common-with-methods.c
-
-examples_ccnames_struct_common_with_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
-examples_ccnames_struct_common_with_methods_LDADD	= $(ccstructs_examples_ldadd) -lm
-
-$(examples_ccnames_struct_common_with_methods_OBJECTS): libccstructs.la
-
-## --------------------------------------------------------------------
-
-examples_ccnames_iface_struct_no_methods_SOURCES =	\
-	examples/ccnames-iface-struct-no-methods.c
-
-examples_ccnames_iface_struct_no_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
-examples_ccnames_iface_struct_no_methods_LDADD		= $(ccstructs_examples_ldadd) -lm
-
-$(examples_ccnames_iface_struct_no_methods_OBJECTS): libccstructs.la
+$(examples_struct_no_methods_OBJECTS): libccstructs.la
 
 ## --------------------------------------------------------------------
 
