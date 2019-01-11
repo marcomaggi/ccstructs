@@ -174,7 +174,7 @@ ccname_new(my_coords_t, deserialisable) (cce_destination_t L)
 
   ccname_init(my_coords_t, deserialisable)(S);
   S->methods	= &ccname_table(my_coords_t, standalone);
-  return (my_coords_t const *) S;
+  return S;
 }
 
 /* ------------------------------------------------------------------ */
@@ -422,7 +422,7 @@ static ccname_iface_table_type(my_printable_I) const ccname_iface_table(my_print
 my_printable_I
 ccname_iface_new(my_printable_I, my_coords_t) (my_coords_t const * S)
 {
-  return my_printable_new(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t));
+  return ccname_new(my_printable_I)(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t));
 }
 
 void

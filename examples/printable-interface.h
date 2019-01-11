@@ -71,7 +71,7 @@ struct ccname_iface_table_type(my_printable_I) {
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
 static inline my_printable_I
-my_printable_new (ccstructs_core_t const * S, ccname_iface_table_type(my_printable_I) const * M)
+ccname_new(my_printable_I) (ccstructs_core_t const * S, ccname_iface_table_type(my_printable_I) const * M)
 {
   my_printable_I	I = {
     .methods	= M,

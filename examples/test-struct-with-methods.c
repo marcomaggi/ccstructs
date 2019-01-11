@@ -308,6 +308,8 @@ test_5_1 (cce_destination_t upper_L)
       /* Check the deserialisation results. */
       cctests_assert_equal_double(L, A->X, B->X);
       cctests_assert_equal_double(L, A->Y, B->Y);
+      cctests_assert(L, M_leftover.ptr > M.ptr);
+      cctests_assert(L, M_leftover.len < M.len);
     }
     cce_run_body_handlers(L);
   }

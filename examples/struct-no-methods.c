@@ -90,6 +90,7 @@ ccname_init(my_coords_t, deserialisable) (my_coords_t * S)
 void
 ccname_final(my_coords_t) (my_coords_t const * S CCNAMES_UNUSED)
 {
+  if (1) { fprintf(stderr, "%-35s: finalised\n", __func__); }
 }
 
 /* ------------------------------------------------------------------ */
@@ -106,6 +107,7 @@ static void
 ccname_release(my_coords_t) (my_coords_t const * S)
 {
   ccmem_std_free((void *)S);
+  if (1) { fprintf(stderr, "%-35s: released\n", __func__); }
 }
 
 /* ------------------------------------------------------------------ */
@@ -144,6 +146,7 @@ ccname_delete(my_coords_t) (my_coords_t const * S)
 {
   ccname_final(my_coords_t)(S);
   ccname_release(my_coords_t)(S);
+  if (1) { fprintf(stderr, "%-35s: delete\n", __func__); }
 }
 
 
@@ -434,7 +437,7 @@ static ccname_iface_table_type(my_printable_I) const ccname_iface_table(my_print
 my_printable_I
 ccname_iface_new(my_printable_I, my_coords_t) (my_coords_t const * S)
 {
-  return my_printable_new(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t));
+  return ccname_new(my_printable_I)(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t));
 }
 
 void
