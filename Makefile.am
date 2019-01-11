@@ -119,10 +119,8 @@ gdb-test: $(builddir)/.gdbinit
 
 if MMUX_TESTING_ENABLED
 noinst_PROGRAMS	=					\
-	examples/test-struct-no-methods			\
-	examples/ccnames-iface-struct-with-methods	\
-	examples/test-dtor-no-methods			\
-	examples/test-dtor-with-methods
+	examples/test-struct-no-methods	\
+	examples/test-struct-with-methods
 endif
 
 ccstructs_examples_cppflags	= -I$(srcdir)/src -I$(srcdir)/examples $(CCTESTS_CFLAGS)
@@ -131,15 +129,13 @@ ccstructs_examples_ldadd	= libccstructs.la $(CCTESTS_LIBS)
 .PHONY: examples
 
 examples: $(noinst_PROGRAMS)
-	-examples/ccnames-struct-common-no-methods
-	-examples/ccnames-struct-common-with-methods
-	-examples/ccnames-iface-no-methods
-	-examples/test-dtor-no-methods
-	-examples/test-dtor-with-methods
+	-examples/test-struct-no-methods
+	-examples/test-struct-with-methods
 
 ## --------------------------------------------------------------------
 
 examples_test_struct_no_methods_SOURCES =	\
+	examples/printable-interface.h		\
 	examples/struct-no-methods.h		\
 	examples/struct-no-methods.c		\
 	examples/test-struct-no-methods.c
@@ -147,41 +143,20 @@ examples_test_struct_no_methods_SOURCES =	\
 examples_test_struct_no_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
 examples_test_struct_no_methods_LDADD		= $(ccstructs_examples_ldadd) -lm
 
-$(examples_struct_no_methods_OBJECTS): libccstructs.la
+$(examples_test_struct_no_methods_OBJECTS): libccstructs.la
 
 ## --------------------------------------------------------------------
 
-examples_ccnames_iface_struct_with_methods_SOURCES =	\
-	examples/ccnames-iface-struct-with-methods.c
+examples_test_struct_with_methods_SOURCES =	\
+	examples/printable-interface.h		\
+	examples/struct-with-methods.h		\
+	examples/struct-with-methods.c		\
+	examples/test-struct-with-methods.c
 
-examples_ccnames_iface_struct_with_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
-examples_ccnames_iface_struct_with_methods_LDADD	= $(ccstructs_examples_ldadd) -lm
+examples_test_struct_with_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
+examples_test_struct_with_methods_LDADD		= $(ccstructs_examples_ldadd) -lm
 
-$(examples_ccnames_iface_struct_with_methods_OBJECTS): libccstructs.la
-
-## --------------------------------------------------------------------
-
-examples_test_dtor_no_methods_SOURCES =	\
-	examples/dtor-no-methods.h		\
-	examples/dtor-no-methods.c		\
-	examples/test-dtor-no-methods.c
-
-examples_test_dtor_no_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
-examples_test_dtor_no_methods_LDADD	= $(ccstructs_examples_ldadd)
-
-$(examples_test_dtor_no_methods_OBJECTS): libccstructs.la
-
-## --------------------------------------------------------------------
-
-examples_test_dtor_with_methods_SOURCES =	\
-	examples/dtor-with-methods.h		\
-	examples/dtor-with-methods.c		\
-	examples/test-dtor-with-methods.c
-
-examples_test_dtor_with_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
-examples_test_dtor_with_methods_LDADD		= $(ccstructs_examples_ldadd)
-
-$(examples_test_dtor_with_methods_OBJECTS): libccstructs.la
+$(examples_test_struct_with_methods_OBJECTS): libccstructs.la
 
 
 #### Valgrind analysis

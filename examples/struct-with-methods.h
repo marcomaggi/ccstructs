@@ -1,18 +1,19 @@
 /*
   Part of: CCStructs
-  Contents: demo program for structs with no methods, header file
-  Date: Jan 11, 2019
+  Contents: header file for sample struct with methods table
+  Date: Thu Dec 27, 2018
 
   Abstract
 
 	This header file defines the struct  "my_coords_t" and shows how to implement
-	the  interfaces for  it.   "my_coords_t"  is a  simple  struct with  embedded
+	the main interfaces  for it.  "my_coords_t" is a simple  struct with embedded
 	fields, no pointers to external memory blocks.
 
-	The  "struct-no-methods" example  shows how  to implement  a struct  using no
-	methods table for the struct-specific interface constructors.
+	The "struct-with-methods"  example shows  how to implement  a struct  using a
+	methods table for the  struct-specific interface constructors: every instance
+	of the struct type holds a pointer to a struct implementing a methods table.
 
-  Copyright (C) 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   The author  hereby grant permission to  use, copy, modify, distribute,  and license
   this  software  and its  documentation  for  any  purpose, provided  that  existing
@@ -36,8 +37,8 @@
 
 */
 
-#ifndef STRUCT_NO_METHODS_H
-#define STRUCT_NO_METHODS_H
+#ifndef STRUCT_WITH_METHODS_H
+#define STRUCT_WITH_METHODS_H 1
 
 
 /** --------------------------------------------------------------------
@@ -47,9 +48,9 @@
 #include <ccexceptions.h>
 #include <ccmemory.h>
 #include <ccstructs.h>
-#include <ccnames.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "printable-interface.h"
 
 
@@ -66,9 +67,11 @@ extern "C" {
  ** Type definitions: data struct "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-typedef struct my_coords_t	my_coords_t;
+typedef struct my_coords_t			my_coords_t;
+typedef struct ccname_table_type(my_coords_t)	ccname_table_type(my_coords_t);
 
 struct my_coords_t {
+  ccname_table_type(my_coords_t) const *	methods;
   double	X;
   double	Y;
 };
@@ -88,14 +91,6 @@ ccstructs_decl void ccname_init(my_coords_t, rec) (my_coords_t * S, double X, do
 ccstructs_decl void ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
   __attribute__((__nonnull__(1)));
 
-/* Finalisation  function.  Releases  all  the asynchronous  resources  owned by  the
-   struct, if any.  The struct's memory block is left untouched. */
-ccstructs_decl void ccname_final(my_coords_t) (my_coords_t const * S CCNAMES_UNUSED)
-  __attribute__((__nonnull__(1)));
-
-/* Constructor function  that allocates  the struct  on the  heap using  the standard
-   memory  allocator  implemented by  CCMemory.   This  initialises from  rectangular
-   coordinates. */
 ccstructs_decl my_coords_t const * ccname_new(my_coords_t, rec) (cce_destination_t L, double X, double Y)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
@@ -105,50 +100,13 @@ ccstructs_decl my_coords_t const * ccname_new(my_coords_t, rec) (cce_destination
 ccstructs_decl my_coords_t const * ccname_new(my_coords_t, pol) (cce_destination_t L, double RHO, double THETA)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
-/* Destructor function.  Releases all the asynchronous resources owned by the struct,
-   if any.  The struct's memory block is released using the standard memory allocator
-   implemented by CCMemory.  */
-ccstructs_decl void ccname_delete(my_coords_t) (my_coords_t const * S)
-  __attribute__((__nonnull__(1)));
-
 
 /** --------------------------------------------------------------------
- ** Function prototypes: plain exception handlers.
+ ** Data struct "my_coords_t": constructors for implemented interfaces.
  ** ----------------------------------------------------------------- */
 
-/* Initialises a  "clean" exception handler that  calls "ccname_final(my_coords_t)()"
-   as destructor function. */
-ccstructs_decl void my_coords_register_clean_handler_final (cce_destination_t L, cce_clean_handler_t * H, my_coords_t const * self)
-  __attribute__((__nonnull__(1,2,3)));
-
-/* Initialises an "error" exception  handler that calls "ccname_final(my_coords_t)()"
-   as destructor function. */
-ccstructs_decl void my_coords_register_error_handler_final (cce_destination_t L, cce_error_handler_t * H, my_coords_t const * self)
-  __attribute__((__nonnull__(1,2,3)));
-
-/* Initialises a "clean" exception  handler that calls "ccname_delete(my_coords_t)()"
-   as destructor function. */
-ccstructs_decl void my_coords_register_clean_handler_delete (cce_destination_t L, cce_clean_handler_t * H, my_coords_t const * self)
-  __attribute__((__nonnull__(1,2,3)));
-
-/* Initialises an "error" exception handler that calls "ccname_delete(my_coords_t)()"
-   as destructor function. */
-ccstructs_decl void my_coords_register_error_handler_delete (cce_destination_t L, cce_error_handler_t * H, my_coords_t const * self)
-  __attribute__((__nonnull__(1,2,3)));
-
-
-/** --------------------------------------------------------------------
- ** Data struct "my_coords_t": implemented interfaces constructors.
- ** ----------------------------------------------------------------- */
-
-/* Constructor for  a "ccstructs_dtor_I" interface that  destroys instances allocated
-   on the stack or embedded into enclosing structs. */
-ccstructs_decl ccstructs_dtor_I ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded) (my_coords_t const * self)
-  __attribute__((__nonnull__(1)));
-
-/* Constructor for a "ccstructs_dtor_I"  interface that destroys standalone instances
-   dynamically allocated on the heap. */
-ccstructs_decl ccstructs_dtor_I ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone) (my_coords_t const * self)
+/* Constructor for a "ccstructs_dtor_I" interface. */
+ccstructs_decl ccstructs_dtor_I ccname_iface_new(ccstructs_dtor_I, my_coords_t) (my_coords_t const * self)
   __attribute__((__nonnull__(1)));
 
 /* Constructor for a  "my_printable_I" interface that prints  a struct representation
@@ -175,6 +133,6 @@ ccstructs_decl ccstructs_deserialise_I ccname_iface_new(ccstructs_deserialise_I,
 } // extern "C"
 #endif
 
-#endif /* define STRUCT_NO_METHODS_H */
+#endif /* defined STRUCT_WITH_METHODS_H */
 
 /* end of file */

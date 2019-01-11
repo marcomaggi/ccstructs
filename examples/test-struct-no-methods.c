@@ -5,8 +5,11 @@
 
   Abstract
 
-        This demo program shows how to implement  an interface for a struct type.  In
-	this demo the data struct has no methods table.
+	This test program checks the behaviour of the API of the struct "my_coords_t"
+	and shows how to use the implemented interfaces.
+
+	The  "struct-no-methods" example  shows how  to implement  a struct  using no
+	methods table for the struct-specific interface constructors.
 
   Copyright (C) 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -41,27 +44,423 @@
 
 
 /** --------------------------------------------------------------------
- ** Let's go.
+ ** Flagging handlers.
  ** ----------------------------------------------------------------- */
 
-int
-main (void)
+/* This handler is used to signal that the "clean" handlers have been executed. */
+static void
+flag_clean_handler (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H CCSTRUCTS_UNUSED)
+{
+  fprintf(stderr, "%-35s: clean handler fired\n", __func__);
+}
+
+void
+flag_register_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
+{
+  H->handler.function	= flag_clean_handler;
+  cce_register_clean_handler(L, H);
+}
+
+/* ------------------------------------------------------------------ */
+
+/* This handler is used to signal that the "error" handlers have been executed. */
+static void
+flag_error_handler (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H CCSTRUCTS_UNUSED)
+{
+  fprintf(stderr, "%-35s: error handler fired\n", __func__);
+}
+
+void
+flag_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
+{
+  H->handler.function	= flag_error_handler;
+  cce_register_error_handler(L, H);
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation on the stack, no handlers.
+ ** ----------------------------------------------------------------- */
+
+void
+test_1_1 (cce_destination_t upper_L)
+/* Allocate the struct on the stack, then destroy it with the "final" function. */
+{
+  cce_location_t	L[1];
+  my_coords_t		A[1];
+  my_printable_I	PA;
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    ccname_init(my_coords_t, rec)(A, 1.0, 2.0);
+    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    /* If this call raises an exception: we may have a resource leakage. */
+    my_printable_print_rec(L, PA, stderr);
+    ccname_final(my_coords_t)(A);
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation on the heap, no handlers.
+ ** ----------------------------------------------------------------- */
+
+void
+test_2_1 (cce_destination_t upper_L)
+/* Allocate the struct on the heap, then destroy it with the "delete" function. */
+{
+  cce_location_t	L[1];
+  my_coords_t const *	A;
+  my_printable_I	PA;
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    A  = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
+    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    /* If this call raises an exception: we may have a resource leakage. */
+    my_printable_print_rec(L, PA, stderr);
+    ccname_delete(my_coords_t)(A);
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation on the stack, plain handler destructors.
+ ** ----------------------------------------------------------------- */
+
+void
+test_3_1 (cce_destination_t upper_L)
+/* Allocate the struct  on the stack, then  destroy with a "clean"  handler using the
+   "final" function. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  my_coords_t		A[1];
+  cce_clean_handler_t	A_H[1];
+  my_printable_I	PA;
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    ccname_init(my_coords_t, rec)(A, 1.0, 2.0);
+    my_coords_register_clean_handler_final(L, A_H, A);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    my_printable_print_rec(L, PA, stderr);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_3_2 (cce_destination_t upper_L)
+/* Allocate the  struct on the  stack, then  destroy it with  an "error"
+   handler using the "final" function. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  my_coords_t		A[1];
+  cce_error_handler_t	A_H[1];
+  my_printable_I	PA;
+
+  if (cce_location(L)) {
+    if (cctests_condition_is_signal_1(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+    ccname_init(my_coords_t, rec)(A, 1.0, 2.0);
+    my_coords_register_error_handler_final(L, A_H, A);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    my_printable_print_rec(L, PA, stderr);
+    cce_raise(L, cctests_condition_new_signal_1());
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation on the heap, plain handler destructors.
+ ** ----------------------------------------------------------------- */
+
+void
+test_4_1 (cce_destination_t upper_L)
+/* Allocate  the struct  on the  heap, then  destroy it  with a  "clean"
+   handler usin the "delete" function. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  my_coords_t const *	A;
+  cce_clean_handler_t	A_H[1];
+  my_printable_I	PA;
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_register_clean_handler_delete(L, A_H, A);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    my_printable_print_rec(L, PA, stderr);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_4_2 (cce_destination_t upper_L)
+/* Allocate the  struct on  the heap,  then destroy  it with  an "error"
+   handler using the "delete" function. */
+{
+  cce_location_t	L[1];
+  cce_clean_handler_t	FC_H[1];
+  cce_error_handler_t	FE_H[1];
+  my_coords_t const *	A;
+  cce_error_handler_t	A_H[1];
+  my_printable_I	PA;
+
+  if (cce_location(L)) {
+    if (cctests_condition_is_signal_1(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+    A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
+    my_coords_register_error_handler_delete(L, A_H, A);
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    my_printable_print_rec(L, PA, stderr);
+    cce_raise(L, cctests_condition_new_signal_1());
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation on the stack, "ccstructs_dtor_I" handlers.
+ ** ----------------------------------------------------------------- */
+
+void
+test_5_1 (cce_destination_t upper_L)
+/* Allocate the  struct on  the stack,  then destroy  it with  a "clean"
+   handler using the "embedded" "ccstructs_dtor_I" interface. */
+{
+  cce_location_t		L[1];
+  cce_clean_handler_t		FC_H[1];
+  cce_error_handler_t		FE_H[1];
+  my_coords_t			A[1];
+  ccstructs_clean_handler_t	A_H[1];
+  my_printable_I		PA;
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    ccname_init(my_coords_t, rec)(A, 1.0, 2.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded)(A));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    my_printable_print_rec(L, PA, stderr);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_5_2 (cce_destination_t upper_L)
+/* Allocate the  struct on the  stack, then  destroy it with  an "error"
+   handler using the "embedded" "ccstructs_dtor_I" interface. */
+{
+  cce_location_t		L[1];
+  cce_clean_handler_t		FC_H[1];
+  cce_error_handler_t		FE_H[1];
+  my_coords_t			A[1];
+  ccstructs_error_handler_t	A_H[1];
+  my_printable_I		PA;
+
+  if (cce_location(L)) {
+    if (cctests_condition_is_signal_1(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+    ccname_init(my_coords_t, rec)(A, 1.0, 2.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded)(A));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    my_printable_print_rec(L, PA, stderr);
+    cce_raise(L, cctests_condition_new_signal_1());
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Allocation on the heap, "ccstructs_dtor_I" handlers.
+ ** ----------------------------------------------------------------- */
+
+void
+test_6_1 (cce_destination_t upper_L)
+/* Allocate  the struct  on the  heap, then  destroy it  with a  "clean"
+   handler using the "standalone" "ccstructs_dtor_I" interface. */
+{
+  cce_location_t		L[1];
+  cce_clean_handler_t		FC_H[1];
+  cce_error_handler_t		FE_H[1];
+  my_coords_t const *		A;
+  ccstructs_clean_handler_t	A_H[1];
+  my_printable_I		PA;
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone)(A));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    my_printable_print_rec(L, PA, stderr);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_6_2 (cce_destination_t upper_L)
+/* Allocate the  struct on  the heap,  then destroy  it with  an "error"
+   handler using the "standalone" "ccstructs_dtor_I" interface. */
+{
+  cce_location_t		L[1];
+  cce_clean_handler_t		FC_H[1];
+  cce_error_handler_t		FE_H[1];
+  my_coords_t const *		A;
+  ccstructs_error_handler_t	A_H[1];
+  my_printable_I		PA;
+
+  if (cce_location(L)) {
+    if (cctests_condition_is_signal_1(cce_condition(L))) {
+      cce_run_catch_handlers_final(L);
+    } else {
+      cce_run_catch_handlers_raise(L, upper_L);
+    }
+  } else {
+    A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone)(A));
+
+    flag_register_clean_handler(L, FC_H);
+    flag_register_error_handler(L, FE_H);
+
+    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    my_printable_print_rec(L, PA, stderr);
+    cce_raise(L, cctests_condition_new_signal_1());
+    cce_run_body_handlers(L);
+  }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Printable interface.
+ ** ----------------------------------------------------------------- */
+
+void
+test_7_1 (cce_destination_t upper_L)
 {
   cce_location_t	L[1];
   my_coords_t const *	S;
-  my_printable_I	I;
+  my_printable_I	PA;
 
   if (cce_location(L)) {
-    cce_run_catch_handlers_final(L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     S = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    I = ccname_iface_new(my_printable_I, my_coords_t)(S);
+    PA = ccname_iface_new(my_printable_I, my_coords_t)(S);
 
-    my_printable_print_rec(L, I, stdout);
-    my_printable_print_pol(L, I, stdout);
+    my_printable_print_rec(L, PA, stdout);
+    my_printable_print_pol(L, PA, stdout);
     ccname_delete(my_coords_t)(S);
+    cce_run_body_handlers(L);
   }
-  exit(EXIT_SUCCESS);
+}
+
+
+int
+main (void)
+{
+  cctests_init("tests for interfaces on struct without methods table in the subject struct");
+  {
+    cctests_begin_group("allocation on the stack, no handlers");
+    {
+      cctests_run(test_1_1);
+    }
+    cctests_end_group();
+
+    cctests_begin_group("allocation on the heap, no handlers");
+    {
+      cctests_run(test_2_1);
+    }
+    cctests_end_group();
+
+    cctests_begin_group("allocation on the stack, plain handler destructors");
+    {
+      cctests_run(test_3_1);
+      cctests_run(test_3_2);
+    }
+    cctests_end_group();
+
+    cctests_begin_group("allocation on the heap, plain handler destructors");
+    {
+      cctests_run(test_4_1);
+      cctests_run(test_4_2);
+    }
+    cctests_end_group();
+
+    cctests_begin_group("allocation on the stack, dtor handlers");
+    {
+      cctests_run(test_5_1);
+      cctests_run(test_5_2);
+    }
+    cctests_end_group();
+
+    cctests_begin_group("allocation on the heap, dtor handlers");
+    {
+      cctests_run(test_6_1);
+      cctests_run(test_6_2);
+    }
+    cctests_end_group();
+
+    cctests_begin_group("printable interface");
+    {
+      cctests_run(test_7_1);
+    }
+    cctests_end_group();
+  }
+  cctests_final();
 }
 
 /* end of file */

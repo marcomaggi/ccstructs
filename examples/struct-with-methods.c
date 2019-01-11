@@ -1,18 +1,18 @@
 /*
   Part of: CCStructs
-  Contents: demo program for CCNames
-  Date: Jan  4, 2019
+  Contents: body file for sample struct
+  Date: Thu Dec 27, 2018
 
   Abstract
 
-	This  body   file  implements  functions   and  interfaces  for   the  struct
-	"my_coords_t".  "my_coords_t"  is a  simple struct  with embedded  fields, no
-	pointers to external memory blocks.
+	This body file  defines the API to handle the  struct "my_coords_t" and shows
+	how to implement the main interfaces for it.
 
-	The  "struct-no-methods" example  shows how  to implement  a struct  using no
-	methods table for the struct-specific interface constructors.
+	The "struct-with-methods"  example shows  how to implement  a struct  using a
+	methods table for the  struct-specific interface constructors: every instance
+	of the struct type holds a pointer to a struct implementing a methods table.
 
-  Copyright (C) 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   The author  hereby grant permission to  use, copy, modify, distribute,  and license
   this  software  and its  documentation  for  any  purpose, provided  that  existing
@@ -33,7 +33,6 @@
   PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE IS  PROVIDED ON AN "AS IS" BASIS, AND
   THE AUTHOR  AND DISTRIBUTORS  HAVE NO OBLIGATION  TO PROVIDE  MAINTENANCE, SUPPORT,
   UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
 */
 
 
@@ -41,10 +40,11 @@
  ** Headers.
  ** ----------------------------------------------------------------- */
 
-#include "struct-no-methods.h"
-#include <errno.h>
-#include <math.h>
+#include "struct-with-methods.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
+#include <errno.h>
 
 
 /** --------------------------------------------------------------------
@@ -61,56 +61,92 @@ struct serialised_my_coords_t {
 
 
 /** --------------------------------------------------------------------
- ** Data struct "my_coords_t": well known functions.
+ ** Data struct "my_coords_t": methods table.
+ ** ----------------------------------------------------------------- */
+
+/* Type of interface  constructor functions.  Functions of this  type build instances
+   of "ccstructs_dtor_I" as implemented by "my_coords_t". */
+typedef ccstructs_dtor_I ccname_iface_new_type(ccstructs_dtor_I, my_coords_t) (my_coords_t const * self);
+
+/* Function  prototype:   constructor  for   "ccstructs_dtor_I"  as   implemented  by
+   "my_coords_t".  This variant destroys embedded instances. */
+static ccname_iface_new_type(ccstructs_dtor_I, my_coords_t) ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded);
+
+/* Function  prototype:   constructor  for   "ccstructs_dtor_I"  as   implemented  by
+   "my_coords_t".  This variant destroys standalone instances. */
+static ccname_iface_new_type(ccstructs_dtor_I, my_coords_t) ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone);
+
+/* Table of methods for "my_coords_t". */
+struct ccname_table_type(my_coords_t) {
+  ccname_iface_new_type(ccstructs_dtor_I, my_coords_t) *	new_dtor;
+};
+
+/* Methods table for "my_coords_t": this variant is for embedded instances. */
+static ccname_table_type(my_coords_t) const ccname_table(my_coords_t, embedded) = {
+  .new_dtor	= ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded)
+};
+
+/* Methods table for "my_coords_t": this variant is for standalone instances. */
+static ccname_table_type(my_coords_t) const ccname_table(my_coords_t, standalone) = {
+  .new_dtor	= ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone)
+};
+
+
+/** --------------------------------------------------------------------
+ ** Data struct "my_coords_t": well known API functions.
  ** ----------------------------------------------------------------- */
 
 void
 ccname_init(my_coords_t, rec) (my_coords_t * S, double X, double Y)
 {
-  S->X = X;
-  S->Y = Y;
+  S->methods	= &ccname_table(my_coords_t, embedded);
+  S->X		= X;
+  S->Y		= Y;
 }
 
 void
 ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
 {
-  S->X = RHO * cos(THETA);
-  S->Y = RHO * sin(THETA);
+  S->methods	= &ccname_table(my_coords_t, embedded);
+  S->X		= RHO * cos(THETA);
+  S->Y		= RHO * sin(THETA);
 }
 
-void
-ccname_final(my_coords_t) (my_coords_t const * S CCNAMES_UNUSED)
+/* ------------------------------------------------------------------ */
+
+my_coords_t const *
+ccname_new(my_coords_t, rec) (cce_destination_t L, double X, double Y)
 {
+  my_coords_t *	S = ccmem_std_malloc(L, sizeof(my_coords_t));
+
+  ccname_init(my_coords_t, rec)(S, X, Y);
+  S->methods	= &ccname_table(my_coords_t, standalone);
+  return (my_coords_t const *) S;
 }
 
-static my_coords_t *
-ccname_alloc(my_coords_t) (cce_destination_t L)
+my_coords_t const *
+ccname_new(my_coords_t, pol) (cce_destination_t L, double RHO, double THETA)
 {
-  return (my_coords_t *)ccmem_std_malloc(L, sizeof(my_coords_t));
+  my_coords_t *	S = ccmem_std_malloc(L, sizeof(my_coords_t));
+
+  ccname_init(my_coords_t, pol)(S, RHO, THETA);
+  S->methods	= &ccname_table(my_coords_t, standalone);
+  return (my_coords_t const *) S;
+}
+
+/* ------------------------------------------------------------------ */
+
+static void
+ccname_final(my_coords_t) (my_coords_t const * S CCSTRUCTS_UNUSED)
+{
+  if (1) { fprintf(stderr, "%-35s: finalised\n", __func__); }
 }
 
 static void
 ccname_release(my_coords_t) (my_coords_t const * S)
 {
   ccmem_std_free((void *)S);
-}
-
-my_coords_t const *
-ccname_new(my_coords_t, rec) (cce_destination_t L, double X, double Y)
-{
-  my_coords_t * S = ccname_alloc(my_coords_t)(L);
-
-  ccname_init(my_coords_t, rec)(S, X, Y);
-  return S;
-}
-
-my_coords_t const *
-ccname_new(my_coords_t, pol) (cce_destination_t L, double RHO, double THETA)
-{
-  my_coords_t * S = ccname_alloc(my_coords_t)(L);
-
-  ccname_init(my_coords_t, pol)(S, RHO, THETA);
-  return S;
+  if (1) { fprintf(stderr, "%-35s: released\n", __func__); }
 }
 
 void
@@ -118,71 +154,7 @@ ccname_delete(my_coords_t) (my_coords_t const * S)
 {
   ccname_final(my_coords_t)(S);
   ccname_release(my_coords_t)(S);
-}
-
-
-/** --------------------------------------------------------------------
- ** Plain exception handlers.
- ** ----------------------------------------------------------------- */
-
-static void
-my_coords_handler_final (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H)
-/* Destructor handler for embedded instances.  Release all the asynchronous resources
-   associated to the struct instance; does not touch the struct itself. */
-{
-  CCSTRUCTS_PC(my_coords_t, self, H->pointer);
-
-  ccname_final(my_coords_t)(self);
-  if (1) { fprintf(stderr, "%-35s: finalised by plain handler\n", __func__); }
-}
-
-void
-my_coords_register_clean_handler_final (cce_destination_t L, cce_clean_handler_t * H, my_coords_t const * self)
-{
-  H->handler.function	= my_coords_handler_final;
-  H->handler.pointer	= (void *)self;
-  cce_register_clean_handler(L, H);
-}
-
-void
-my_coords_register_error_handler_final (cce_destination_t L, cce_error_handler_t * H, my_coords_t const * self)
-{
-  H->handler.function	= my_coords_handler_final;
-  H->handler.pointer	= (void *)self;
-  cce_register_error_handler(L, H);
-}
-
-/* ------------------------------------------------------------------ */
-
-static void
-my_coords_handler_delete (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H)
-/* Destructor  handler  for  standalone  instances.   Release  all  the  asynchronous
-   resources associated  to the struct  instance; release the memory  block allocated
-   for  the  struct instance  using  the  standard  memory allocator  implemented  by
-   CCMemory.
-
-   To be used to destroy instances dynamically allocated on the heap. */
-{
-  CCSTRUCTS_PC(my_coords_t, self, H->pointer);
-
-  ccname_delete(my_coords_t)(self);
-  if (1) { fprintf(stderr, "%-35s: deleted by plain handler\n", __func__); }
-}
-
-void
-my_coords_register_clean_handler_delete (cce_destination_t L, cce_clean_handler_t * H, my_coords_t const * self)
-{
-  H->handler.function	= my_coords_handler_delete;
-  H->handler.pointer	= (void *)self;
-  cce_register_clean_handler(L, H);
-}
-
-void
-my_coords_register_error_handler_delete (cce_destination_t L, cce_error_handler_t * H, my_coords_t const * self)
-{
-  H->handler.function	= my_coords_handler_delete;
-  H->handler.pointer	= (void *)self;
-  cce_register_error_handler(L, H);
+  if (1) { fprintf(stderr, "%-35s: delete\n", __func__); }
 }
 
 
@@ -198,7 +170,7 @@ static ccname_iface_table_type(ccstructs_dtor_I) const ccname_iface_table(ccstru
   .release	= ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, release)
 };
 
-ccstructs_dtor_I
+static ccstructs_dtor_I
 ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded) (my_coords_t const * const self)
 {
   return ccname_new(ccstructs_dtor_I)(ccstructs_core(self), &ccname_iface_table(ccstructs_dtor_I, my_coords_t, embedded));
@@ -415,5 +387,22 @@ ccname_iface_method(ccstructs_deserialise_I, my_coords_t,
   S->Y	= W->Y;
   return N;
 }
+
+
+/** --------------------------------------------------------------------
+ ** Data struct "my_coords_t": implemented interfaces constructors.
+ ** ----------------------------------------------------------------- */
+
+ccstructs_dtor_I
+ccname_iface_new(ccstructs_dtor_I, my_coords_t) (my_coords_t const * const self)
+/* Interface constructor for "ccstructs_dtor_I" implemented by "my_coords_t". */
+{
+  return self->methods->new_dtor(self);
+}
+
+
+/** --------------------------------------------------------------------
+ ** Done.
+ ** ----------------------------------------------------------------- */
 
 /* end of file */
