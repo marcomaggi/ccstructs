@@ -391,19 +391,21 @@ test_6_2 (cce_destination_t upper_L)
 void
 test_7_1 (cce_destination_t upper_L)
 {
-  cce_location_t	L[1];
-  my_coords_t const *	S;
-  my_printable_I	PA;
+  cce_location_t		L[1];
+  my_coords_t const *		A;
+  ccstructs_clean_handler_t	A_H[1];
+  my_printable_I		PA;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    S = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    PA = ccname_iface_new(my_printable_I, my_coords_t)(S);
+    A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone)(A));
+
+    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
 
     my_printable_print_rec(L, PA, stdout);
     my_printable_print_pol(L, PA, stdout);
-    ccname_delete(my_coords_t)(S);
     cce_run_body_handlers(L);
   }
 }
