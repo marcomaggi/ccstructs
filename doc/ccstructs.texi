@@ -687,13 +687,13 @@ to serialise a @struct{} into a destination storage.  The @iface{deserialise} in
 by the type @objtype{ccstructs_deserialise_I}, allows us to deserialise a @struct{} from a source
 storage.
 
+For implementation examples we should look in the source distribution of @value{PACKAGE}.
+
 @menu
 * serialise typedefs::          @iface{serialise} interface: type definitions.
 * serialise operations::        @iface{serialise} interface: operations.
 * deserialise typedefs::        @iface{deserialise} interface: type definitions.
 * deserialise operations::      @iface{deserialise} interface: operations.
-* serialise sample::            Example of @iface{serialise} and @iface{deserialise}
-                                interfaces implementation.
 @end menu
 
 @c page
@@ -829,122 +829,6 @@ Apply the method @method{required_size} to the given argument.
 Apply the method @method{read} to the given arguments.  If an error occurs: raise an exception
 by performing a non--local exit to @var{L}.
 @end deftypefun
-
-@c page
-@node serialise sample
-@section Example of @iface{serialise} and @iface{deserialise} interfaces implementation
-
-
-Let's say we have this @struct{} definition:
-
-@example
-typedef struct spiffy_t        spiffy_t;
-
-struct spiffy_t @{
-  bool  alpha;
-  bool  beta;
-@};
-@end example
-
-@noindent
-we can implement a @iface{serialise} interface as follows:
-
-@smallexample
-typedef struct serialised_spiffy_t  serialised_spiffy_t;
-
-struct serialised_spiffy_t @{
-  bool  alpha;
-  bool  beta;
-@};
-
-static size_t
-ccname_iface_method(ccstructs_serialise_I, serialised_spiffy_t, required_size) (ccstructs_serialise_I I)
-@{
-  return sizeof(serialised_spiffy_t);
-@}
-
-static ccmem_block_t
-ccname_iface_method(ccstructs_serialise_I, serialised_spiffy_t, write) (cce_destination_t L,
-   ccstructs_serialise_I I, ccmem_block_t B)
-@{
-  CCSTRUCTS_PC(spiffy_t const, S, ccstructs_serialise_self(I));
-  CCSTRUCTS_PC(serialised_spiffy_t, W, B.ptr);
-  ccmem_block_t N = @{
-    .ptr        = B.ptr + sizeof(serialised_spiffy_t),
-    .len        = B.len - sizeof(serialised_spiffy_t)
-  @};
-
-  W->alpha      = S->alpha;
-  W->beta       = S->beta;
-  return N;
-@}
-
-static ccmem_block_t
-ccname_iface_method(ccstructs_serialise_I, serialised_spiffy_t, read) (cce_destination_t L,
-   ccstructs_serialise_I I, ccmem_block_t B)
-@{
-  CCSTRUCTS_PC(spiffy_t, S, ccstructs_serialise_self(I));
-  CCSTRUCTS_PC(serialised_spiffy_t const, W, B.ptr);
-  ccmem_block_t N = @{
-    .ptr        = B.ptr + sizeof(serialised_spiffy_t),
-    .len        = B.len - sizeof(serialised_spiffy_t)
-  @};
-
-  S->alpha      = W->alpha;
-  S->beta       = W->beta;
-  return N;
-@}
-
-static ccname_iface_table_type(ccstructs_serialise_I) const
-     ccname_iface_table(ccstructs_serialise_t, serialised_spiffy_t) = @{
-  .required_size = ccname_iface_method(ccstructs_serialise_I, serialised_spiffy_t, required_size),
-  .write     = ccname_iface_method(ccstructs_serialise_I, serialised_spiffy_t, write),
-  .read   = ccname_iface_method(ccstructs_serialise_I, serialised_spiffy_t, read)
-@};
-
-__attribute__((__always_inline__,__nonnull__(1)))
-static inline ccstructs_serialise_I
-ccname_iface_new(ccstructs_serialise_I, spiffy_t) (spiffy_t const * S)
-@{
-  return ccname_new(ccstructs_serialise_I)(ccstructs_core(S),
-     &ccname_iface_table(ccstructs_serialise_t, spiffy_t));
-@}
-@end smallexample
-
-@noindent
-then we can use the interface as follows:
-
-@example
-cce_location_t        L[1];
-
-if (cce_location(L)) @{
-  cce_run_catch_handlers_raise(L, upper_L);
-@} else @{
-  spiffy_t   S = @{
-    .alpha    = 1,
-    .beta     = 2
-  @};
-
-  uint8_t     buf[256];
-  ccmem_block_t  B = @{
-    .ptr      = buf,
-    .len      = 256
-  @};
-  ccmem_block_t  N;
-  ccstructs_serialise_I  IS = ccname_iface_new(ccstructs_serialise_I, spiffy_t)(&S);
-
-  N = ccstructs_serialise_write(L, IS, B);
-
-  ...
-
-  spiffy_t   R;
-  ccstructs_serialise_I  IR = ccname_iface_new(ccstructs_serialise_I, spiffy_t)(&R);
-
-  N = ccstructs_serialise_read(L, IR, B);
-
-  cce_run_body_handlers(L);
-@}
-@end example
 
 @c page
 @node pathname
