@@ -1089,6 +1089,10 @@ CCLibraries projects.
 @appendixsec Well known functions for @struct{} types
 
 
+The macros for ``well known functions'' define an @api{} for the basic operations upon a data
+@struct{}.  The following macros are defined in the header file @file{ccnames.h}.
+
+
 @defmac ccname_init (@var{STRUCT_TYPE})
 @defmacx ccname_init (@var{STRUCT_TYPE}, @var{VARIANT})
 Given a @struct{} type name and an optional variant specification: expand into the name of the
@@ -1241,6 +1245,12 @@ main (void)
 @appendixsec Tables of methods for @struct{} types
 
 
+The macros for the ``table of methods known functions'' define an @api{} to implement a table of
+methods in a data @struct{}: every instance of the @struct{} type is meant to hold a pointer to a
+statically allocated @struct{} which in turn holds pointers to method functions.  The following
+macros are defined in the header file @file{ccnames.h}.
+
+
 @defmac ccname_table_type (@var{STRUCT_TYPE})
 @defmacx ccname_table_type (@var{STRUCT_TYPE}, @var{VARIANT})
 Given a @struct{} type name and an optional variant specification: expand into the name of the
@@ -1332,6 +1342,12 @@ ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
 @c page
 @node ccnames iface
 @appendixsec Well known names for interface types.
+
+
+The macros for ``well known interface functions'' define an @api{} to implement interface @struct{}
+types; an interface is a set of operations we can apply to a data @struct{}; multiple data @struct{}
+types can implement multiple interfaces.  The following macros are defined in the header file
+@file{ccnames.h}.
 
 
 @defmac ccname_iface_new_type (@var{IFACE_TYPE})
