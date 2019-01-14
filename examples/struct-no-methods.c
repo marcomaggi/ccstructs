@@ -374,13 +374,11 @@ ccname_iface_method(ccstructs_serialise_I, my_coords_t,
  ** Interface "my_deserialise_I": implementation for "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_deserialise_I, required_size) ccname_iface_method(ccstructs_deserialise_I, my_coords_t, required_size);
-static ccname_iface_method_type(ccstructs_deserialise_I, read)          ccname_iface_method(ccstructs_deserialise_I, my_coords_t, read);
+static ccname_iface_method_type(ccstructs_deserialise_I, read) ccname_iface_method(ccstructs_deserialise_I, my_coords_t, read);
 
 /* Interface  table  of  methods.  Implementation  of  "ccstructs_deserialise_I"  for
    "my_coords_t". */
 static ccname_iface_table_type(ccstructs_deserialise_I) const ccname_iface_table(ccstructs_deserialise_I, my_coords_t) = {
-  .required_size = ccname_iface_method(ccstructs_deserialise_I, my_coords_t, required_size),
   .read          = ccname_iface_method(ccstructs_deserialise_I, my_coords_t, read)
 };
 
@@ -393,13 +391,6 @@ ccname_iface_new(ccstructs_deserialise_I, my_coords_t) (my_coords_t * S)
 }
 
 /* ------------------------------------------------------------------ */
-
-size_t
-ccname_iface_method(ccstructs_deserialise_I, my_coords_t, required_size) (ccstructs_deserialise_I I CCSTRUCTS_UNUSED)
-/* Return the minimum number of */
-{
-  return sizeof(serialised_my_coords_t);
-}
 
 ccmem_block_t
 ccname_iface_method(ccstructs_deserialise_I, my_coords_t,

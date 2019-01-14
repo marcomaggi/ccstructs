@@ -93,7 +93,7 @@ ccstructs_decl void ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, 
 
 /* Initialisation  function  that  initialises  an already  allocated  struct.   This
    initialises in such a  way that it allows for both  finalisation and mutation from
-   deserialisation.. */
+   deserialisation. */
 ccstructs_decl void ccname_init(my_coords_t, deserlialisable) (my_coords_t * S)
   __attribute__((__nonnull__(1)));
 
