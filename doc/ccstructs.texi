@@ -1354,8 +1354,8 @@ types can implement multiple interfaces.  The following macros are defined in th
 @defmacx ccname_iface_new_type (@var{IFACE_TYPE}, @var{STRUCT_TYPE})
 @defmacx ccname_iface_new_type (@var{IFACE_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
 Given an interface type name, an optional struct name and an optional variant specification: expand
-into the function type of interface implementation constructors.  Constructors of such type must
-build instances of @var{IFACE_TYPE} as implemented by @var{STRUCT_TYPE}, as specified for the
+into the function type name of interface implementation constructors.  Constructors of such type
+must build instances of @var{IFACE_TYPE} as implemented by @var{STRUCT_TYPE}, as specified for the
 variant @var{VARIANT}.
 @end defmac
 
