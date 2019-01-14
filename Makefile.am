@@ -47,7 +47,7 @@ libccstructs_la_SOURCES		= \
 	src/ccstructs-internals.h		\
 	src/ccstructs-version.c			\
 	src/ccstructs-exception-handlers.c	\
-	src/ccstructs-pathname.c
+	src/ccstructs-pathname-representation.c
 
 if WANTS_CCNAMES
 include_HEADERS		+= src/ccnames.h

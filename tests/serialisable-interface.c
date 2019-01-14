@@ -68,7 +68,8 @@ static ccname_iface_table_type(ccstructs_serialise_I) const ccname_iface_table(c
 
 size_t
 ccname_iface_method(ccstructs_serialise_I, one_one_t, required_size) (ccstructs_serialise_I I CCSTRUCTS_UNUSED)
-/* Return the minimum number of */
+/* Return the minimum number of bytes  required to hold the serialised representation
+   of "serialised_one_one_t".*/
 {
   return sizeof(serialised_one_one_t);
 }
@@ -102,22 +103,13 @@ ccname_iface_new(ccstructs_serialise_I, one_one_t) (one_one_t * S)
 
 /* ------------------------------------------------------------------ */
 
-static ccname_iface_method_type(ccstructs_deserialise_I, required_size) ccname_iface_method(ccstructs_deserialise_I, one_one_t, required_size);
 static ccname_iface_method_type(ccstructs_deserialise_I, read)          ccname_iface_method(ccstructs_deserialise_I, one_one_t, read);
 
 /* Interface  table  of  methods.    Implementation  of  "ccstructs_deserialise_I"  for
    "one_one_t". */
 static ccname_iface_table_type(ccstructs_deserialise_I) const ccname_iface_table(ccstructs_deserialise_I, one_one_t) = {
-  .required_size	= ccname_iface_method(ccstructs_deserialise_I, one_one_t, required_size),
   .read		= ccname_iface_method(ccstructs_deserialise_I, one_one_t, read)
 };
-
-size_t
-ccname_iface_method(ccstructs_deserialise_I, one_one_t, required_size) (ccstructs_deserialise_I I CCSTRUCTS_UNUSED)
-/* Return the minimum number of */
-{
-  return sizeof(serialised_one_one_t);
-}
 
 ccmem_block_t
 ccname_iface_method(ccstructs_deserialise_I, one_one_t,

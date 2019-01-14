@@ -5,23 +5,20 @@
 
   Abstract
 
-	This file must be included in all the source files making use of
-	CCStructs.
+	This file must be included in all the source files making use of CCStructs.
 
   Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
-  This program is  free software: you can redistribute  it and/or modify
-  it  under the  terms  of  the GNU  Lesser  General  Public License  as
-  published by  the Free  Software Foundation, either  version 3  of the
-  License, or (at your option) any later version.
+  This program is free  software: you can redistribute it and/or  modify it under the
+  terms of the  GNU Lesser General Public  License as published by  the Free Software
+  Foundation, either version 3 of the License, or (at your option) any later version.
 
-  This program  is distributed in the  hope that it will  be useful, but
-  WITHOUT   ANY  WARRANTY;   without  even   the  implied   warranty  of
-  MERCHANTABILITY  or FITNESS  FOR A  PARTICULAR PURPOSE.   See  the GNU
-  General Public License for more details.
+  This program  is distributed in the  hope that it  will be useful, but  WITHOUT ANY
+  WARRANTY; without  even the implied  warranty of  MERCHANTABILITY or FITNESS  FOR A
+  PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  You  should have received  a copy  of the  GNU General  Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  You should have received  a copy of the GNU General Public  License along with this
+  program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef CCSTRUCTS_H
@@ -36,8 +33,8 @@
 extern "C" {
 #endif
 
-/* The  macro  CCSTRUCTS_UNUSED  indicates  that a  function,  function
-   argument or variable may potentially be unused. Usage examples:
+/* The  macro  CCSTRUCTS_UNUSED  indicates  that a  function,  function  argument  or
+   variable may potentially be unused. Usage examples:
 
    static int unused_function (char arg) CCSTRUCTS_UNUSED;
    int foo (char unused_argument CCSTRUCTS_UNUSED);
@@ -323,13 +320,10 @@ struct ccstructs_deserialise_I {
   ccstructs_core_t					const * self;
 };
 
-typedef size_t        ccname_iface_method_type(ccstructs_deserialise_I, required_size)
-  (ccstructs_deserialise_I const I);
 typedef ccmem_block_t ccname_iface_method_type(ccstructs_deserialise_I, read)
-  (cce_destination_t L, ccstructs_deserialise_I const I, ccmem_block_t B);
+  (cce_destination_t L, ccstructs_deserialise_I I, ccmem_block_t B);
 
 struct ccname_iface_table_type(ccstructs_deserialise_I) {
-  ccname_iface_method_type(ccstructs_deserialise_I, required_size)	* required_size;
   ccname_iface_method_type(ccstructs_deserialise_I, read)		* read;
 };
 
@@ -353,13 +347,6 @@ ccstructs_deserialise_self (ccstructs_deserialise_I const I)
   return I.self;
 }
 
-__attribute__((__always_inline__))
-static inline size_t
-ccstructs_deserialise_required_size (ccstructs_deserialise_I const I)
-{
-  return I.methods->required_size(I);
-}
-
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccmem_block_t
 ccstructs_deserialise_read (cce_destination_t L, ccstructs_deserialise_I const I, ccmem_block_t B)
@@ -372,29 +359,31 @@ ccstructs_deserialise_read (cce_destination_t L, ccstructs_deserialise_I const I
  ** Interface: pathname.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccstructs_pathname_I		ccstructs_pathname_I;
-typedef struct ccstructs_pathname_I_methods_t	ccstructs_pathname_I_methods_t;
+typedef struct ccstructs_pathname_I				ccstructs_pathname_I;
+typedef struct ccname_iface_table_type(ccstructs_pathname_I)	ccname_iface_table_type(ccstructs_pathname_I);
 
 struct ccstructs_pathname_I {
-  ccstructs_pathname_I_methods_t	const *	methods;
-  ccstructs_core_t			const * self;
+  ccname_iface_table_type(ccstructs_pathname_I)	const *	methods;
+  ccstructs_core_t				const * self;
 };
 
-typedef size_t		ccstructs_pathname_I_length_fun_t	(cce_destination_t L, ccstructs_pathname_I const I);
-typedef char const *	ccstructs_pathname_I_pointer_fun_t	(cce_destination_t L, ccstructs_pathname_I const I);
-typedef bool		ccstructs_pathname_I_is_static_fun_t	(ccstructs_pathname_I const I);
+typedef ccstructs_dtor_I ccname_iface_method_type(ccstructs_pathname_I, dtor)      (ccstructs_pathname_I I);
+typedef size_t           ccname_iface_method_type(ccstructs_pathname_I, length)    (cce_destination_t L, ccstructs_pathname_I I);
+typedef char const *     ccname_iface_method_type(ccstructs_pathname_I, pointer)   (cce_destination_t L, ccstructs_pathname_I I);
+typedef bool             ccname_iface_method_type(ccstructs_pathname_I, is_static) (ccstructs_pathname_I I);
 
-struct ccstructs_pathname_I_methods_t {
-  ccstructs_pathname_I_length_fun_t	* length;
-  ccstructs_pathname_I_pointer_fun_t	* pointer;
-  ccstructs_pathname_I_is_static_fun_t	* is_static;
+struct ccname_iface_table_type(ccstructs_pathname_I) {
+  ccname_iface_method_type(ccstructs_pathname_I, dtor)		* dtor;
+  ccname_iface_method_type(ccstructs_pathname_I, length)	* length;
+  ccname_iface_method_type(ccstructs_pathname_I, pointer)	* pointer;
+  ccname_iface_method_type(ccstructs_pathname_I, is_static)	* is_static;
 };
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
 static inline ccstructs_pathname_I
-ccstructs_new_pathname (ccstructs_core_t const * S, ccstructs_pathname_I_methods_t const * const M)
+ccname_new(ccstructs_pathname_I) (ccstructs_core_t const * const S, ccname_iface_table_type(ccstructs_pathname_I) const * const M)
 {
   ccstructs_pathname_I	I = {
     .methods	= M,
@@ -411,13 +400,20 @@ ccstructs_pathname_self (ccstructs_pathname_I const I)
 }
 
 __attribute__((__always_inline__))
+static inline ccstructs_dtor_I
+ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I) (ccstructs_pathname_I const I)
+{
+  return I.methods->dtor(I);
+}
+
+__attribute__((__always_inline__))
 static inline size_t
 ccstructs_pathname_length (cce_destination_t L, ccstructs_pathname_I const I)
 {
   return I.methods->length(L, I);
 }
 
-__attribute__((__always_inline__))
+__attribute__((__always_inline__,__returns_nonnull__))
 static inline char const *
 ccstructs_pathname_pointer (cce_destination_t L, ccstructs_pathname_I const I)
 {
@@ -431,18 +427,94 @@ ccstructs_pathname_is_static (ccstructs_pathname_I const I)
   return I.methods->is_static(I);
 }
 
+
+/** --------------------------------------------------------------------
+ ** Simple implementation of file system pathname representation.
+ ** ----------------------------------------------------------------- */
+
+typedef struct ccstructs_pathname_t			ccstructs_pathname_t;
+typedef struct ccname_table_type(ccstructs_pathname_t)	ccname_table_type(ccstructs_pathname_t);
+
+struct ccstructs_pathname_t {
+  ccname_table_type(ccstructs_pathname_t) const * methods;
+  ccmem_asciiz_t	rep;
+};
+
 /* ------------------------------------------------------------------ */
-/* simple implementation for statically allocated strings */
 
-ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_static_string (const char * ptn)
+ccstructs_decl void ccname_init(ccstructs_pathname_t, from_asciiz) (cce_destination_t L, ccstructs_pathname_t * ptn, ccmem_asciiz_t rep)
+  __attribute__((__nonnull__(1,2)));
+
+ccstructs_decl void ccname_init(ccstructs_pathname_t, from_ascii)  (cce_destination_t L, ccstructs_pathname_t * ptn, ccmem_ascii_t  rep)
+  __attribute__((__nonnull__(1,2)));
+
+ccstructs_decl void ccname_init(ccstructs_pathname_t, from_chars)  (cce_destination_t L, ccstructs_pathname_t * ptn, char const * P)
+  __attribute__((__nonnull__(1,2)));
+
+/* Initialisation  function  that  initialises  an already  allocated  struct.   This
+   initialises in such a  way that it allows for both  finalisation and mutation from
+   deserialisation. */
+ccstructs_decl void ccname_init(ccstructs_pathname_t, deserlialisable) (ccstructs_pathname_t const * ptn)
   __attribute__((__nonnull__(1)));
 
-ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_dynamic_string (const char * ptn)
+/* ------------------------------------------------------------------ */
+
+ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_asciiz) (cce_destination_t L, ccmem_asciiz_t rep)
+  __attribute__((__nonnull__(1), __returns_nonnull__));
+
+ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_ascii)  (cce_destination_t L, ccmem_ascii_t rep)
+  __attribute__((__nonnull__(1), __returns_nonnull__));
+
+ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_chars)  (cce_destination_t L, char const * P)
+  __attribute__((__nonnull__(1,2), __returns_nonnull__));
+
+/* Constructor function  that allocates  the struct  on the  heap using  the standard
+   memory allocator implemented by CCMemory.  This  initialises in such a way that it
+   allows for both finalisation and mutation from deserialisation. */
+ccstructs_decl ccstructs_pathname_t * ccname_new(ccstructs_pathname_t, deserialisable) (cce_destination_t L)
+  __attribute__((__nonnull__(1),__returns_nonnull__));
+
+/* ------------------------------------------------------------------ */
+
+/* Type  of  interface  constructor.   Functions  of this  type  build  instances  of
+   "ccstructs_dtor_I" implemented by "ccstructs_pathname_t". */
+typedef ccstructs_dtor_I ccname_iface_new_type(ccstructs_dtor_I, ccstructs_pathname_t) (ccstructs_pathname_t const * ptn);
+
+/* Interface    constructor     for    "ccstructs_dtor_I"    as     implemented    by
+   "ccstructs_pathname_t".   The returned  destructor  interface will  work for  both
+   embedded and standalone instances of "ccstructs_pathname_t". */
+ccstructs_decl ccname_iface_new_type(ccstructs_dtor_I, ccstructs_pathname_t) ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)
   __attribute__((__nonnull__(1)));
 
-ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_static_asciiz (ccmem_asciiz_t const * ptn);
+/* ------------------------------------------------------------------ */
 
-ccstructs_decl ccstructs_pathname_I ccstructs_new_pathname_from_dynamic_asciiz (ccmem_asciiz_t const * ptn);
+/* Type  of  interface  constructor.   Functions  of this  type  build  instances  of
+   "ccstructs_pathname_I" implemented by "ccstructs_pathname_t". */
+typedef ccstructs_pathname_I ccname_iface_new_type(ccstructs_pathname_I, ccstructs_pathname_t) (ccstructs_pathname_t const * const ptn);
+
+/* Interface    constructor   for    "ccstructs_pathname_I"    as   implemented    by
+   "ccstructs_pathname_t". */
+ccstructs_decl ccname_iface_new_type(ccstructs_pathname_I, ccstructs_pathname_t) ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)
+  __attribute__((__nonnull__(1)));
+
+/* ------------------------------------------------------------------ */
+
+/* Constructor for a "ccstructs_serialise_I" interface that serialises an instance of
+   "ccstructs_pathname_t" into a memory block. */
+ccstructs_decl ccstructs_serialise_I ccname_iface_new(ccstructs_serialise_I, ccstructs_pathname_t) (ccstructs_pathname_t const * S)
+  __attribute__((__nonnull__(1)));
+
+/* Constructor  for  a  "ccstructs_deserialise_I"   interface  that  deserialises  an
+   instance of "ccstructs_pathname_t" from a memory block. */
+ccstructs_decl ccstructs_deserialise_I ccname_iface_new(ccstructs_deserialise_I, ccstructs_pathname_t) (ccstructs_pathname_t * S)
+  __attribute__((__nonnull__(1)));
+
+/* ------------------------------------------------------------------ */
+
+/* Constructor  for   a  "ccstructs_writable_I"   interface  that  prints   a  struct
+   representation on some output channel. */
+ccstructs_decl ccstructs_writable_I ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t) (ccstructs_pathname_t const * S)
+  __attribute__((__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------

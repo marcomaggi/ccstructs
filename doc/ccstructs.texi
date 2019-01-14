@@ -782,19 +782,10 @@ to function calls.
 Type of methods table for the @iface{deserialise} interface.  It has the following fields:
 
 @table @code
-@item ccname_iface_method_type(ccstructs_deserialise_I, required_size) * required_size
-Pointer to function implementing the @method{required_size} method.
-
 @item ccname_iface_method_type(ccstructs_deserialise_I, read) * read
 Pointer to function implementing the @method{read} method.
 @end table
 @end deftp
-
-
-@deftypefn {Function Prototype} size_t {ccname_iface_method_type(ccstructs_deserialise_I, required_size)} (ccstructs_deserialise_I const @var{I})
-Type of functions implementing the @method{required_size} method.  Return the minimum number of bytes
-needed to hold the serialisation of the source @struct{}.
-@end deftypefn
 
 
 @deftypefn {Function Prototype} ccmem_block_t {ccname_iface_method_type(ccstructs_deserialise_I, read)} (cce_destination_t @var{L}, ccstructs_deserialise_I const @var{I}, ccmem_block_t @var{B})
@@ -817,11 +808,6 @@ a pointer to the interface methods.
 
 @deftypefun {ccstructs_core_t const *} ccstructs_deserialise_self (ccstructs_deserialise_I @var{I})
 Return a pointer to the @struct{} to which the interface belongs.
-@end deftypefun
-
-
-@deftypefun size_t ccstructs_deserialise_required_size (ccstructs_deserialise_I @var{I})
-Apply the method @method{required_size} to the given argument.
 @end deftypefun
 
 
