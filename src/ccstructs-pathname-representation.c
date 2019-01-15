@@ -390,14 +390,10 @@ ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, standalone, release)
    instances     of     type     "ccstructs_pathname_I"     as     implemented     by
    "ccstructs_pathname_t". */
 static ccname_iface_method_type(ccstructs_pathname_I, dtor)      ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor);
-/* Method  function prototype.   This  function implements  the  method "length"  for
+/* Method  function prototype.   This  function implements  the  method "asciiz"  for
    instances     of     type     "ccstructs_pathname_I"     as     implemented     by
    "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, length)    ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, length);
-/* Method  function prototype.   This function  implements the  method "pointer"  for
-   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
-   "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, pointer)   ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, pointer);
+static ccname_iface_method_type(ccstructs_pathname_I, asciiz)    ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, asciiz);
 /* Method function  prototype.  This function  implements the method  "is_static" for
    instances     of     type     "ccstructs_pathname_I"     as     implemented     by
    "ccstructs_pathname_t". */
@@ -407,8 +403,7 @@ static ccname_iface_method_type(ccstructs_pathname_I, is_static) ccname_iface_me
    interface "ccstructs_pathname_I" as implemented by "ccstructs_pathname_t". */
 static ccname_iface_table_type(ccstructs_pathname_I) const ccname_iface_table(ccstructs_pathname_I, ccstructs_pathname_t) = {
   .dtor		= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor),
-  .length	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, length),
-  .pointer	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, pointer),
+  .asciiz	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, asciiz),
   .is_static	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_static)
 };
 
@@ -425,22 +420,13 @@ ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor) (ccstructs
   return ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn);
 }
 
-size_t
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, length) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
-/* Method implementation  function.  Implement the  method "length" for  instances of
+ccmem_asciiz_t
+ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, asciiz) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
+/* Method implementation  function.  Implement the  method "asciiz" for  instances of
    type "ccstructs_pathname_I" as implemented by "ccstructs_pathname_t". */
 {
   CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
-  return ptn->rep.len;
-}
-
-char const *
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, pointer) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
-/* Method implementation function.   Implement the method "pointer"  for instances of
-   type "ccstructs_pathname_I" as implemented by "ccstructs_pathname_t". */
-{
-  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
-  return ptn->rep.ptr;
+  return ptn->rep;
 }
 
 bool

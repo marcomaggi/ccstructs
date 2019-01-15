@@ -368,14 +368,12 @@ struct ccstructs_pathname_I {
 };
 
 typedef ccstructs_dtor_I ccname_iface_method_type(ccstructs_pathname_I, dtor)      (ccstructs_pathname_I I);
-typedef size_t           ccname_iface_method_type(ccstructs_pathname_I, length)    (cce_destination_t L, ccstructs_pathname_I I);
-typedef char const *     ccname_iface_method_type(ccstructs_pathname_I, pointer)   (cce_destination_t L, ccstructs_pathname_I I);
+typedef ccmem_asciiz_t   ccname_iface_method_type(ccstructs_pathname_I, asciiz)    (cce_destination_t L, ccstructs_pathname_I I);
 typedef bool             ccname_iface_method_type(ccstructs_pathname_I, is_static) (ccstructs_pathname_I I);
 
 struct ccname_iface_table_type(ccstructs_pathname_I) {
   ccname_iface_method_type(ccstructs_pathname_I, dtor)		* dtor;
-  ccname_iface_method_type(ccstructs_pathname_I, length)	* length;
-  ccname_iface_method_type(ccstructs_pathname_I, pointer)	* pointer;
+  ccname_iface_method_type(ccstructs_pathname_I, asciiz)	* asciiz;
   ccname_iface_method_type(ccstructs_pathname_I, is_static)	* is_static;
 };
 
@@ -407,17 +405,10 @@ ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I) (ccstructs_pathname_I c
 }
 
 __attribute__((__always_inline__))
-static inline size_t
-ccstructs_pathname_length (cce_destination_t L, ccstructs_pathname_I const I)
+static inline ccmem_asciiz_t
+ccstructs_pathname_asciiz (cce_destination_t L, ccstructs_pathname_I const I)
 {
-  return I.methods->length(L, I);
-}
-
-__attribute__((__always_inline__,__returns_nonnull__))
-static inline char const *
-ccstructs_pathname_pointer (cce_destination_t L, ccstructs_pathname_I const I)
-{
-  return I.methods->pointer(L, I);
+  return I.methods->asciiz(L, I);
 }
 
 __attribute__((__always_inline__,__pure__))

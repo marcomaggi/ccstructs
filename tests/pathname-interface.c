@@ -54,8 +54,13 @@ test_1_1 (cce_destination_t upper_L)
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
       ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
-
       ccstructs_writable_write(L, W);
+    }
+    {
+      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
+      cctests_assert_equal_size(L, strlen(P), rep.len);
+      cctests_assert_asciiz(L, P, rep.ptr);
     }
     cce_run_body_handlers(L);
   }
@@ -82,8 +87,13 @@ test_1_2 (cce_destination_t upper_L)
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
       ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
-
       ccstructs_writable_write(L, W);
+    }
+    {
+      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
+      cctests_assert_equal_size(L, strlen(P), rep.len);
+      cctests_assert_asciiz(L, P, rep.ptr);
     }
     cce_run_body_handlers(L);
   }
@@ -109,8 +119,13 @@ test_1_3 (cce_destination_t upper_L)
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
       ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
-
       ccstructs_writable_write(L, W);
+    }
+    {
+      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
+      cctests_assert_equal_size(L, strlen(P), rep.len);
+      cctests_assert_asciiz(L, P, rep.ptr);
     }
     cce_run_body_handlers(L);
   }
@@ -138,8 +153,13 @@ test_2_1 (cce_destination_t upper_L)
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
       ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
-
       ccstructs_writable_write(L, W);
+    }
+    {
+      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
+      cctests_assert_equal_size(L, strlen(P), rep.len);
+      cctests_assert_asciiz(L, P, rep.ptr);
     }
     cce_run_body_handlers(L);
   }
@@ -165,8 +185,13 @@ test_2_2 (cce_destination_t upper_L)
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
       ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
-
       ccstructs_writable_write(L, W);
+    }
+    {
+      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
+      cctests_assert_equal_size(L, strlen(P), rep.len);
+      cctests_assert_asciiz(L, P, rep.ptr);
     }
     cce_run_body_handlers(L);
   }
@@ -192,8 +217,13 @@ test_2_3 (cce_destination_t upper_L)
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
       ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
-
       ccstructs_writable_write(L, W);
+    }
+    {
+      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
+      cctests_assert_equal_size(L, strlen(P), rep.len);
+      cctests_assert_asciiz(L, P, rep.ptr);
     }
     cce_run_body_handlers(L);
   }
@@ -245,10 +275,17 @@ test_3_1 (cce_destination_t upper_L)
       M_leftover = ccstructs_deserialise_read(L, ID, M);
 
       /* Check the deserialisation results. */
-      cctests_assert_equal_size(L, A->rep.len, B->rep.len);
-      cctests_assert_asciiz(L, A->rep.ptr, B->rep.ptr);
-      cctests_assert(L, M_leftover.ptr > M.ptr);
-      cctests_assert(L, M_leftover.len < M.len);
+      {
+	ccstructs_pathname_I	IA = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(A);
+	ccstructs_pathname_I	IB = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(B);
+	ccmem_asciiz_t		rep_A = ccstructs_pathname_asciiz(L, IA);
+	ccmem_asciiz_t		rep_B = ccstructs_pathname_asciiz(L, IB);
+
+	cctests_assert_equal_size(L, rep_A.len, rep_B.len);
+	cctests_assert_asciiz(L, rep_A.ptr, rep_B.ptr);
+	cctests_assert(L, M_leftover.ptr > M.ptr);
+	cctests_assert(L, M_leftover.len < M.len);
+      }
     }
     cce_run_body_handlers(L);
   }
@@ -280,9 +317,10 @@ test_4_1 (cce_destination_t upper_L)
 
     {
       ccstructs_pathname_I	I = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
 
-      cctests_assert_equal_size(L, strlen(P), ccstructs_pathname_length(L,I));
-      cctests_assert_asciiz(L, P, ccstructs_pathname_pointer(L,I));
+      cctests_assert_equal_size(L, strlen(P), rep.len);
+      cctests_assert_asciiz(L, P, rep.ptr);
       cctests_assert(L, false == ccstructs_pathname_is_static(I));
     }
     cce_run_body_handlers(L);
@@ -309,10 +347,12 @@ test_4_2 (cce_destination_t upper_L)
       ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
       ccstructs_writable_write(L, W);
     }
-
-    cctests_assert_equal_size(L, strlen(P), ccstructs_pathname_length(L,I));
-    cctests_assert_asciiz(L, P, ccstructs_pathname_pointer(L,I));
-    cctests_assert(L, false == ccstructs_pathname_is_static(I));
+    {
+      ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
+      cctests_assert_equal_size(L, strlen(P), rep.len);
+      cctests_assert_asciiz(L, P, rep.ptr);
+      cctests_assert(L, false == ccstructs_pathname_is_static(I));
+    }
     cce_run_body_handlers(L);
   }
 }
