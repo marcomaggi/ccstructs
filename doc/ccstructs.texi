@@ -70,12 +70,12 @@
 
 @copying
 This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library
-implementing common interface for C structs.
+implementing common programming interfaces for C data structures.
 
-This package supports @posix{} platforms.  This package depends on the packages: CCExceptions, at
-least version @value{CCEXCEPTIONS_VERSION}; CCMemory, at least version @value{CCMEMORY_VERSION}.  To
-run the test suite: this package depends upon the package CCTests, at least version
-@value{CCTESTS_VERSION}.
+This package supports @posix{} platforms.  This package depends on the external packages:
+CCExceptions, at least version @value{CCEXCEPTIONS_VERSION}; CCMemory, at least version
+@value{CCMEMORY_VERSION}.  To run the test suite: this package depends upon the external package
+CCTests, at least version @value{CCTESTS_VERSION}.
 
 The package is distributed under the terms of the @gnu{} Lesser General Public License (@lgpl{}).
 
@@ -175,7 +175,7 @@ Indexes
 
 
 This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library
-implementing common interfaces for C structs.
+implementing common programming interfaces for C data structures.
 
 This package supports @posix{} platforms.  This package depends on the packages: CCExceptions, at
 least version @value{CCEXCEPTIONS_VERSION}; CCMemory, at least version @value{CCMEMORY_VERSION}.  To
@@ -183,9 +183,9 @@ run the test suite: this package depends upon the package CCTests, at least vers
 @value{CCTESTS_VERSION}.
 
 @value{PACKAGE} installs the header files @file{ccstructs.h} and @file{ccnames.h}.  All the function
-names in the @api{} are prefixed with @code{ccstructs_}; all the preprocessor symbol names are
-prefixed with @code{CCSTRUCTS_}; all the type names are prefixed with @code{ccstructs_} and suffixed
-with @code{_t} or @code{_I}.
+names in the @api{} are prefixed with @code{ccstructs_} or @code{ccname_}; all the preprocessor
+symbol names are prefixed with @code{CCSTRUCTS_} or @code{CCNAME_}; all the type names are prefixed
+with @code{ccstructs_} and suffixed with @code{_t} or @code{_I}.
 
 @menu
 * overview linking::            Linking code with the library.
@@ -242,8 +242,8 @@ AC_CHECK_HEADERS([ccstructs.h],,
 
 
 The source distribution comes with some implementation examples under the directory @file{examples}.
-This code is meant to be a starting point when implementing the interfaces defined by
-@value{PACKAGE}: we should copy it and adapt it to our needs.
+That code is meant to be a starting point when implementing the interfaces defined by
+@value{PACKAGE}: we should copy it and adapt it to our needs.  Really!
 
 @c page
 @node version
@@ -256,8 +256,8 @@ Libtool's versioning system, libtool, Shared library support for @gnu{}}.
 
 
 @deftypefun {char const *} ccstructs_version_string (void)
-Return a pointer to a statically allocated @asciiz{} string representing
-the interface version number.
+Return a pointer to a statically allocated @asciiz{} string representing the interface version
+number.
 @end deftypefun
 
 
@@ -267,8 +267,7 @@ Return an integer representing the library interface current number.
 
 
 @deftypefun int ccstructs_version_interface_revision (void)
-Return an integer representing the library interface current revision
-number.
+Return an integer representing the library interface current revision number.
 @end deftypefun
 
 
