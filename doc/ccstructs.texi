@@ -147,7 +147,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * overview::                    Overview of the package.
 * version::                     Version functions.
 * core::                        Core type definitions.
-* dtor::                        The @iface{dtor} interface.
+* dtor::                        The @iface{destructor} interface.
 * dumpable::                    The @iface{dumpable} interface.
 * serialise::                   The @iface{serialise} and @iface{deserialise} interface.
 * pathname::                    The @iface{pathname} interface.
@@ -324,34 +324,34 @@ Cast the pointer @var{S} to @code{ccstructs_core_t *}.
 
 @c page
 @node dtor
-@chapter The @iface{dtor} interface
+@chapter The @iface{destructor} interface
 
 
-The @iface{dtor} interface provides a uniform way to call a @struct{} destructors.  The best way to
-use the @iface{dtor} interface is through the exception handlers @api{}, @ref{dtor handlers,
-Exception handlers}.
+The @iface{destructor} interface provides a uniform way to call the destructors of a @struct{} type.
+The best way to use the @iface{destructor} interface is through the exception handlers @api{},
+@ref{dtor handlers, Exception handlers}.
 
 @menu
-* dtor typedefs::               @iface{dtor} interface: type definitions.
-* dtor operations::             @iface{dtor} interface: operations.
+* dtor typedefs::               @iface{destructor} interface: type definitions.
+* dtor operations::             @iface{destructor} interface: operations.
 * dtor handlers::               Exception handlers.
-* dtor sample::                 Example of @iface{dtor} interface
+* dtor sample::                 Example of @iface{destructor} interface
                                 implementation.
 @end menu
 
 @c page
 @node dtor typedefs
-@section @iface{dtor} interface: type definitions
+@section @iface{destructor} interface: type definitions
 
 
 @deftp {Struct Typedef} ccstructs_dtor_I
-Type of the @iface{dtor} interface @struct{}.  Instances of this type are meant to be handed by
-value to function calls.
+Type of the @iface{destructor} interface @struct{}.  Instances of this type are meant to be handed
+by value to function calls.
 @end deftp
 
 
 @deftp {Struct Typedef} {ccname_iface_table_type(ccstructs_dtor_I)}
-Type of methods table for the @iface{dtor} interface.  It has the following fields:
+Type of methods table for the @iface{destructor} interface.  It has the following fields:
 
 @table @code
 @item ccname_iface_method_type(ccstructs_dtor_I, final) * final
@@ -377,12 +377,12 @@ into an enclosing @struct{}: this method should do nothing.
 
 @c page
 @node dtor operations
-@section @iface{dtor} interface: operations
+@section @iface{destructor} interface: operations
 
 
 @deftypefun ccstructs_dtor_I {ccname_new(ccstructs_dtor_I)} (ccstructs_core_t const * @var{S}, ccname_iface_table_type(ccstructs_dtor_I) const * @var{M})
-Build and return a new @iface{dtor} interface instance as implemented for the @struct{} type of
-@var{S}.
+Build and return a new @iface{destructor} interface instance as implemented for the @struct{} type
+of @var{S}.
 @end deftypefun
 
 
@@ -393,7 +393,7 @@ Return a pointer to the subject @struct{} to which the interface belongs.
 
 @deftypefun void ccstructs_dtor_delete (ccstructs_dtor_I @var{I})
 Apply the @method{final} method to the subject @struct{}, then apply the @method{release} method to
-the subject @struct{}.  This function is always a correct destructor for a @struct{}.
+the subject @struct{}.
 @end deftypefun
 
 @c page
@@ -401,7 +401,7 @@ the subject @struct{}.  This function is always a correct destructor for a @stru
 @section Exception handlers
 
 
-The best way to use the @iface{dtor} interface is through the exception handlers @api{}.
+The best way to use the @iface{destructor} interface is through the exception handlers @api{}.
 
 
 @deftp {Struct Typedef} ccstructs_clean_handler_t
@@ -415,20 +415,20 @@ Type of @struct{} usable has error handler with the facilities of the CCExceptio
 
 
 @deftypefun void ccstructs_clean_handler_init (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, ccstructs_dtor_I @var{I})
-Initialise the exception handler @var{H} to use the @method{delete} method of the @iface{dtor}
-interface @var{I}, in the context of the location @var{L}.
+Initialise the exception handler @var{H} to apply @cfunc{ccstructs_dtor_delete} to @var{I}, in the
+context of the location @var{L}.
 @end deftypefun
 
 
 @deftypefun void ccstructs_error_handler_init (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccstructs_dtor_I @var{I})
-Initialise the exception handler @var{H} to use the @method{delete} method of the @iface{dtor}
-interface @var{I}, in the context of the location @var{L}.
+Initialise the exception handler @var{H} to apply @cfunc{ccstructs_dtor_delete} to @var{I}, in the
+context of the location @var{L}.
 @end deftypefun
 
 
 @deftypefn {Preprocessor Macro} void ccstructs_handler_init (cce_destination_t @var{L}, @var{H}, ccstructs_dtor_I @var{I})
-Initialise the exception handler @var{H} to use the @method{delete} method of the @iface{dtor}
-interface @var{I}, in the context of the location @var{L}.  If @var{H} is a pointer of type:
+Initialise the exception handler @var{H} to apply @cfunc{ccstructs_dtor_delete} to @var{I}, in the
+context of the location @var{L}.  If @var{H} is a pointer of type:
 
 @table @code
 @item ccstructs_clean_handler_t
@@ -441,7 +441,7 @@ The macro use expands to a call to @cfunc{ccstructs_error_handler_init}.
 
 @c page
 @node dtor sample
-@section Example of @iface{dtor} interface implementation
+@section Example of @iface{destructor} interface implementation
 
 
 As example, let's consider this @struct{} definition:
@@ -478,7 +478,7 @@ ccname_new(alpha_t) (cce_destination_t upper_L, int init)
 @end example
 
 @noindent
-we can implement the @iface{dtor} interface as follows:
+we can implement the @iface{destructor} interface as follows:
 
 @smallexample
 static void
