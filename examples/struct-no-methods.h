@@ -171,9 +171,9 @@ ccstructs_decl ccstructs_dtor_I ccname_iface_new(ccstructs_dtor_I, my_coords_t, 
 
 /* ------------------------------------------------------------------ */
 
-/* Constructor  for   a  "ccstructs_writable_I"   interface  that  prints   a  struct
+/* Constructor  for   a  "ccstructs_dumpable_I"   interface  that  prints   a  struct
    representation on some output channel. */
-ccstructs_decl ccstructs_writable_I ccname_iface_new(ccstructs_writable_I, my_coords_t) (my_coords_t const * S)
+ccstructs_decl ccstructs_dumpable_I ccname_iface_new(ccstructs_dumpable_I, my_coords_t) (my_coords_t const * S)
   __attribute__((__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */

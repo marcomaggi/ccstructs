@@ -204,32 +204,32 @@ ccstructs_decl void ccstructs_error_handler_init (cce_destination_t L, ccstructs
 
 
 /** --------------------------------------------------------------------
- ** Interface: writable.
+ ** Interface: dumpable.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccstructs_writable_I				ccstructs_writable_I;
-typedef struct ccname_iface_table_type(ccstructs_writable_I)	ccname_iface_table_type(ccstructs_writable_I);
+typedef struct ccstructs_dumpable_I				ccstructs_dumpable_I;
+typedef struct ccname_iface_table_type(ccstructs_dumpable_I)	ccname_iface_table_type(ccstructs_dumpable_I);
 
-struct ccstructs_writable_I {
-  ccname_iface_table_type(ccstructs_writable_I)	const * methods;
+struct ccstructs_dumpable_I {
+  ccname_iface_table_type(ccstructs_dumpable_I)	const * methods;
   ccstructs_core_t				const * self;
 };
 
 /* Write the  struct to some output  channel.  Raise an exception  if an
    error occurs. */
-typedef void ccname_iface_method_type(ccstructs_writable_I, write) (cce_destination_t, ccstructs_writable_I const);
+typedef void ccname_iface_method_type(ccstructs_dumpable_I, dump) (cce_destination_t, ccstructs_dumpable_I const);
 
-struct ccname_iface_table_type(ccstructs_writable_I) {
-  ccname_iface_method_type(ccstructs_writable_I, write)	* write;
+struct ccname_iface_table_type(ccstructs_dumpable_I) {
+  ccname_iface_method_type(ccstructs_dumpable_I, dump)	* dump;
 };
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
-static inline ccstructs_writable_I
-ccname_new(ccstructs_writable_I) (ccstructs_core_t const * S, ccname_iface_table_type(ccstructs_writable_I) const * M)
+static inline ccstructs_dumpable_I
+ccname_new(ccstructs_dumpable_I) (ccstructs_core_t const * S, ccname_iface_table_type(ccstructs_dumpable_I) const * M)
 {
-  ccstructs_writable_I	I = {
+  ccstructs_dumpable_I	I = {
     .methods	= M,
     .self	= S
   };
@@ -238,16 +238,16 @@ ccname_new(ccstructs_writable_I) (ccstructs_core_t const * S, ccname_iface_table
 
 __attribute__((__always_inline__,__pure__))
 static inline ccstructs_core_t const *
-ccstructs_writable_self (ccstructs_writable_I I)
+ccstructs_dumpable_self (ccstructs_dumpable_I I)
 {
   return I.self;
 }
 
 __attribute__((__nonnull__(1),__always_inline__))
 static inline void
-ccstructs_writable_write (cce_destination_t L, ccstructs_writable_I const I)
+ccstructs_dumpable_dump (cce_destination_t L, ccstructs_dumpable_I const I)
 {
-  I.methods->write(L, I);
+  I.methods->dump(L, I);
 }
 
 
@@ -502,9 +502,9 @@ ccstructs_decl ccstructs_deserialise_I ccname_iface_new(ccstructs_deserialise_I,
 
 /* ------------------------------------------------------------------ */
 
-/* Constructor  for   a  "ccstructs_writable_I"   interface  that  prints   a  struct
+/* Constructor  for   a  "ccstructs_dumpable_I"   interface  that  prints   a  struct
    representation on some output channel. */
-ccstructs_decl ccstructs_writable_I ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t) (ccstructs_pathname_t const * ptn)
+ccstructs_decl ccstructs_dumpable_I ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t) (ccstructs_pathname_t const * ptn)
   __attribute__((__nonnull__(1)));
 
 

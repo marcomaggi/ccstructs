@@ -53,8 +53,8 @@ test_1_1 (cce_destination_t upper_L)
     ccname_init(ccstructs_pathname_t, from_chars)(L, ptn, P);
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
-      ccstructs_writable_write(L, W);
+      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_dump(L, W);
     }
     {
       ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
@@ -86,8 +86,8 @@ test_1_2 (cce_destination_t upper_L)
     ccname_init(ccstructs_pathname_t, from_asciiz)(L, ptn, B);
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
-      ccstructs_writable_write(L, W);
+      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_dump(L, W);
     }
     {
       ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
@@ -118,8 +118,8 @@ test_1_3 (cce_destination_t upper_L)
     ccname_init(ccstructs_pathname_t, from_ascii)(L, ptn, B);
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
-      ccstructs_writable_write(L, W);
+      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_dump(L, W);
     }
     {
       ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
@@ -152,8 +152,8 @@ test_2_1 (cce_destination_t upper_L)
     ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
-      ccstructs_writable_write(L, W);
+      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_dump(L, W);
     }
     {
       ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
@@ -184,8 +184,8 @@ test_2_2 (cce_destination_t upper_L)
     ptn = ccname_new(ccstructs_pathname_t, from_asciiz)(L, B);
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
-      ccstructs_writable_write(L, W);
+      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_dump(L, W);
     }
     {
       ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
@@ -216,8 +216,8 @@ test_2_3 (cce_destination_t upper_L)
     ptn = ccname_new(ccstructs_pathname_t, from_ascii)(L, B);
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
-      ccstructs_writable_write(L, W);
+      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_dump(L, W);
     }
     {
       ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
@@ -370,8 +370,8 @@ test_4_1 (cce_destination_t upper_L)
     ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
-      ccstructs_writable_write(L, W);
+      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_dump(L, W);
     }
 
     {
@@ -403,8 +403,8 @@ test_4_2 (cce_destination_t upper_L)
     ccstructs_pathname_I	I = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(I));
     {
-      ccstructs_writable_I	W = ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
-      ccstructs_writable_write(L, W);
+      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_dump(L, W);
     }
     {
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);

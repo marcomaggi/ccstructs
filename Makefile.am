@@ -60,7 +60,7 @@ check_PROGRAMS	= \
 	tests/version			\
 	tests/dtor-interface		\
 	tests/exception-handlers	\
-	tests/writable-interface	\
+	tests/dumpable-interface	\
 	tests/serialisable-interface	\
 	tests/pathname-interface
 
@@ -82,8 +82,8 @@ tests_dtor_interface_LDADD		= $(ccstructs_tests_ldadd)
 tests_exception_handlers_CPPFLAGS	= $(ccstructs_tests_cppflags)
 tests_exception_handlers_LDADD		= $(ccstructs_tests_ldadd)
 
-tests_writable_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
-tests_writable_interface_LDADD		= $(ccstructs_tests_ldadd)
+tests_dumpable_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
+tests_dumpable_interface_LDADD		= $(ccstructs_tests_ldadd)
 
 tests_serialisable_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
 tests_serialisable_interface_LDADD	= $(ccstructs_tests_ldadd)

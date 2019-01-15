@@ -522,21 +522,21 @@ ccname_iface_method(ccstructs_deserialise_I, ccstructs_pathname_t,
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_writable_I": implementation for "ccstructs_pathname_t".
+ ** Interface "ccstructs_dumpable_I": implementation for "ccstructs_pathname_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_writable_I, write)  ccname_iface_method(ccstructs_writable_I, ccstructs_pathname_t, write);
+static ccname_iface_method_type(ccstructs_dumpable_I, dump)  ccname_iface_method(ccstructs_dumpable_I, ccstructs_pathname_t, dump);
 
-static ccname_iface_table_type(ccstructs_writable_I) const ccname_iface_table(ccstructs_writable_I, ccstructs_pathname_t) = {
-  .write	= ccname_iface_method(ccstructs_writable_I, ccstructs_pathname_t, write)
+static ccname_iface_table_type(ccstructs_dumpable_I) const ccname_iface_table(ccstructs_dumpable_I, ccstructs_pathname_t) = {
+  .dump	= ccname_iface_method(ccstructs_dumpable_I, ccstructs_pathname_t, dump)
 };
 
 /* ------------------------------------------------------------------ */
 
 void
-ccname_iface_method(ccstructs_writable_I, ccstructs_pathname_t, write) (cce_destination_t L, ccstructs_writable_I I)
+ccname_iface_method(ccstructs_dumpable_I, ccstructs_pathname_t, dump) (cce_destination_t L, ccstructs_dumpable_I I)
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_writable_self(I));
+  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_dumpable_self(I));
   int	rv;
 
   errno = 0;
@@ -584,12 +584,12 @@ ccname_iface_new(ccstructs_deserialise_I, ccstructs_pathname_t) (ccstructs_pathn
   return ccname_new(ccstructs_deserialise_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_deserialise_I, ccstructs_pathname_t));
 }
 
-ccstructs_writable_I
-ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t) (ccstructs_pathname_t const * S)
-/* Interface constructor.  Build an instance of "ccstructs_writable_I" as implemented
+ccstructs_dumpable_I
+ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t) (ccstructs_pathname_t const * S)
+/* Interface constructor.  Build an instance of "ccstructs_dumpable_I" as implemented
    by "ccstructs_pathname_t". */
 {
-  return ccname_new(ccstructs_writable_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_writable_I, ccstructs_pathname_t));
+  return ccname_new(ccstructs_dumpable_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_dumpable_I, ccstructs_pathname_t));
 }
 
 /* end of file */

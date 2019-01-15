@@ -1,6 +1,6 @@
 /*
   Part of: CCStructs
-  Contents: tests for the writable interface
+  Contents: tests for the dumpable interface
   Date: Sat Sep 22, 2018
 
   Abstract
@@ -37,7 +37,7 @@
 
 
 /** --------------------------------------------------------------------
- ** Writable interface: fwrite method.
+ ** Dumpable interface: dump method.
  ** ----------------------------------------------------------------- */
 
 typedef struct one_one_t	one_one_t;
@@ -48,9 +48,9 @@ struct one_one_t {
 };
 
 static void
-ccname_iface_method(ccstructs_writable_I, one_one_t, write) (cce_destination_t L, ccstructs_writable_I I)
+ccname_iface_method(ccstructs_dumpable_I, one_one_t, dump) (cce_destination_t L, ccstructs_dumpable_I I)
 {
-  CCSTRUCTS_PC(one_one_t const, S, ccstructs_writable_self(I));
+  CCSTRUCTS_PC(one_one_t const, S, ccstructs_dumpable_self(I));
   int	rv;
 
   errno = 0;
@@ -60,15 +60,15 @@ ccname_iface_method(ccstructs_writable_I, one_one_t, write) (cce_destination_t L
   }
 }
 
-static ccname_iface_table_type(ccstructs_writable_I) const ccname_iface_table(ccstructs_writable_I, one_one_t) = {
-  .write = ccname_iface_method(ccstructs_writable_I, one_one_t, write)
+static ccname_iface_table_type(ccstructs_dumpable_I) const ccname_iface_table(ccstructs_dumpable_I, one_one_t) = {
+  .dump = ccname_iface_method(ccstructs_dumpable_I, one_one_t, dump)
 };
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccstructs_writable_I
-ccname_iface_new(ccstructs_writable_I, one_one_t) (one_one_t const * S)
+static inline ccstructs_dumpable_I
+ccname_iface_new(ccstructs_dumpable_I, one_one_t) (one_one_t const * S)
 {
-  return ccname_new(ccstructs_writable_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_writable_I, one_one_t));
+  return ccname_new(ccstructs_dumpable_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_dumpable_I, one_one_t));
 }
 
 void
@@ -83,9 +83,9 @@ test_1_1 (cce_destination_t upper_L)
       .alpha	= 1,
       .beta	= 2
     };
-    ccstructs_writable_I	I = ccname_iface_new(ccstructs_writable_I, one_one_t)(&S);
+    ccstructs_dumpable_I	I = ccname_iface_new(ccstructs_dumpable_I, one_one_t)(&S);
 
-    ccstructs_writable_write(L, I);
+    ccstructs_dumpable_dump(L, I);
 
     cce_run_body_handlers(L);
   }
@@ -95,9 +95,9 @@ test_1_1 (cce_destination_t upper_L)
 int
 main (void)
 {
-  cctests_init("tests writable interface");
+  cctests_init("tests dumpable interface");
   {
-    cctests_begin_group("fwrite method");
+    cctests_begin_group("dump method");
     {
       cctests_run(test_1_1);
     }

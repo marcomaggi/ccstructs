@@ -15,6 +15,9 @@ Revision 0.1.0-devel.3
 * BACKWARDS  INCOMPATIBILITY The  code started  using the  facilities of
   "ccnames.h".
 
+* BACKWARDS INCOMPATIBILITY Renamed the interface "ccstructs_writable_I"
+  to "ccstructs_dumpable_I".
+
 
 Revision 0.1.0-devel.2
 ----------------------

@@ -276,25 +276,25 @@ ccname_iface_new(ccstructs_dtor_I, my_coords_t) (my_coords_t const * const self)
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_writable_I": implementation for "my_coords_t".
+ ** Interface "ccstructs_dumpable_I": implementation for "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_writable_I, write)  ccname_iface_method(ccstructs_writable_I, my_coords_t, write);
+static ccname_iface_method_type(ccstructs_dumpable_I, dump)  ccname_iface_method(ccstructs_dumpable_I, my_coords_t, dump);
 
-static ccname_iface_table_type(ccstructs_writable_I) const ccname_iface_table(ccstructs_writable_I, my_coords_t) = {
-  .write	= ccname_iface_method(ccstructs_writable_I, my_coords_t, write)
+static ccname_iface_table_type(ccstructs_dumpable_I) const ccname_iface_table(ccstructs_dumpable_I, my_coords_t) = {
+  .dump	= ccname_iface_method(ccstructs_dumpable_I, my_coords_t, dump)
 };
 
-ccstructs_writable_I
-ccname_iface_new(ccstructs_writable_I, my_coords_t) (my_coords_t const * S)
+ccstructs_dumpable_I
+ccname_iface_new(ccstructs_dumpable_I, my_coords_t) (my_coords_t const * S)
 {
-  return ccname_new(ccstructs_writable_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_writable_I, my_coords_t));
+  return ccname_new(ccstructs_dumpable_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_dumpable_I, my_coords_t));
 }
 
 void
-ccname_iface_method(ccstructs_writable_I, my_coords_t, write) (cce_destination_t L, ccstructs_writable_I I)
+ccname_iface_method(ccstructs_dumpable_I, my_coords_t, dump) (cce_destination_t L, ccstructs_dumpable_I I)
 {
-  CCSTRUCTS_PC(my_coords_t, S, ccstructs_writable_self(I));
+  CCSTRUCTS_PC(my_coords_t, S, ccstructs_dumpable_self(I));
   int	rv;
 
   errno = 0;

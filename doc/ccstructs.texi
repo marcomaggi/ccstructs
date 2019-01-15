@@ -148,7 +148,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * version::                     Version functions.
 * core::                        Core type definitions.
 * dtor::                        The @iface{dtor} interface.
-* writable::                    The @iface{writable} interface.
+* dumpable::                    The @iface{dumpable} interface.
 * serialise::                   The @iface{serialise} and @iface{deserialise} interface.
 * pathname::                    The @iface{pathname} interface.
 * utils::                       Utility definitions.
@@ -293,15 +293,15 @@ declaration: there is no actual declaration of this type.
 
 
 When using this type we need to explicitly cast a pointer to client @struct{} values to a pointer to
-@objtype{ccstruct_core_t}.  For example, when defining a constructor for the @emph{writable}
+@objtype{ccstruct_core_t}.  For example, when defining a constructor for the @iface{dumpable}
 interface:
 
 @example
-ccstructs_writable_I
-spiffy_new_I_writable (spiffy_t * S)
+ccstructs_dumpable_I
+ccname_iface_new(ccstructs_dumpable_I, spiffy_t) (spiffy_t * S)
 @{
-  return ccname_new(ccstructs_writable_I(ccstructs_core(S)),
-                    &ccname_iface_table(ccstructs_writable_I));
+  return ccname_new(ccstructs_dumpable_I)(ccstructs_core(S),
+    &ccname_iface_table(ccstructs_dumpable_I, spiffy_t));
 @}
 @end example
 
@@ -549,44 +549,44 @@ two_new_guarded_error (cce_destination_t L,
 @end smallexample
 
 @c page
-@node writable
-@chapter The @iface{writable} interface
+@node dumpable
+@chapter The @iface{dumpable} interface
 
 
-The @iface{writable} interface, represented by the type @objtype{ccstructs_writable_I}, is meant to
+The @iface{dumpable} interface, represented by the type @objtype{ccstructs_dumpable_I}, is meant to
 write an object to some output channel, mostly for inspection and debugging purposes; this interface
 is neither for presentation to the end user of a program, nor for memorisation on a storage device.
 
 @menu
-* writable typedefs::           @iface{writable} interface: type definitions.
-* writable operations::         @iface{writable} interface: operations.
-* writable sample::             Example of @iface{writable} interface
+* dumpable typedefs::           @iface{dumpable} interface: type definitions.
+* dumpable operations::         @iface{dumpable} interface: operations.
+* dumpable sample::             Example of @iface{dumpable} interface
                                 implementation
 @end menu
 
 @c page
-@node writable typedefs
-@section @iface{writable} interface: type definitions
+@node dumpable typedefs
+@section @iface{dumpable} interface: type definitions
 
 
-@deftp {Struct Typedef} ccstructs_writable_I
-Type of the @iface{writable} interface.  Instances of this type are meant to be handed by value to
+@deftp {Struct Typedef} ccstructs_dumpable_I
+Type of the @iface{dumpable} interface.  Instances of this type are meant to be handed by value to
 function calls.
 @end deftp
 
 
-@deftp {Struct Typedef} {ccname_iface_table_type(ccstructs_writable_I)}
-Type of methods table for the @iface{writable} interface.  It has the following fields:
+@deftp {Struct Typedef} {ccname_iface_table_type(ccstructs_dumpable_I)}
+Type of methods table for the @iface{dumpable} interface.  It has the following fields:
 
 @table @code
-@item ccname_iface_method_type(ccstructs_writable_I, write) * write
-Pointer to function implementing the @method{write} method.
+@item ccname_iface_method_type(ccstructs_dumpable_I, dump) * dump
+Pointer to function implementing the @method{dump} method.
 @end table
 @end deftp
 
 
-@deftypefn {Function Prototype} void {ccname_iface_method_type(ccstructs_writable_I, write)} (cce_destination_t @var{L}, ccstructs_writable_I @var{I})
-Type of functions implementing the @method{write} method.  Functions of this type write a
+@deftypefn {Function Prototype} void {ccname_iface_method_type(ccstructs_dumpable_I, dump)} (cce_destination_t @var{L}, ccstructs_dumpable_I @var{I})
+Type of functions implementing the @method{dump} method.  Functions of this type write a
 representation of the object to an output channel; it is responsibility of this method to select
 which output channel to use.  If an error occurs: raise an exception by performing a non--local exit
 to @var{L}.
@@ -594,29 +594,29 @@ to @var{L}.
 
 
 @c page
-@node writable operations
-@section @iface{writable} interface: operations
+@node dumpable operations
+@section @iface{dumpable} interface: operations
 
 
-@deftypefun ccstructs_writable_I {ccname_new(ccstructs_writable_I)} (ccstructs_core_t const * @var{S}, ccname_iface_table_type(ccstructs_writable_I) const * @var{M})
+@deftypefun ccstructs_dumpable_I {ccname_new(ccstructs_dumpable_I)} (ccstructs_core_t const * @var{S}, ccname_iface_table_type(ccstructs_dumpable_I) const * @var{M})
 Interface constructor.  Return a new interface @struct{} given a pointer to the source @struct{} and
 a pointer to the interface methods.
 @end deftypefun
 
 
-@deftypefun {ccstructs_core_t const *} ccstructs_writable_self (ccstructs_writable_I @var{I})
+@deftypefun {ccstructs_core_t const *} ccstructs_dumpable_self (ccstructs_dumpable_I @var{I})
 Return a pointer to the @struct{} to which the interface belongs.
 @end deftypefun
 
 
-@deftypefun void ccstructs_writable_write (cce_destination_t @var{L}, ccstructs_writable_I @var{I})
-Apply the method @method{write} to the @struct{}.  If an error occurs: raise an exception by
+@deftypefun void ccstructs_dumpable_dump (cce_destination_t @var{L}, ccstructs_dumpable_I @var{I})
+Apply the method @method{dump} to the @struct{}.  If an error occurs: raise an exception by
 performing a non--local exit to @var{L}.
 @end deftypefun
 
 @c page
-@node writable sample
-@section Example of @iface{writable} interface implementation
+@node dumpable sample
+@section Example of @iface{dumpable} interface implementation
 
 
 Let's say we have this @struct{} definition:
@@ -631,12 +631,12 @@ struct spiffy_t @{
 @end example
 
 @noindent
-we can implement a @iface{writable} interface as follows:
+we can implement a @iface{dumpable} interface as follows:
 
 @smallexample
 static void
-ccname_iface_method(ccstructs_writable_I, spiffy_t, write)
-  (cce_destination_t L, ccstructs_writable_I I)
+ccname_iface_method(ccstructs_dumpable_I, spiffy_t, dump)
+  (cce_destination_t L, ccstructs_dumpable_I I)
 @{
   CCSTRUCTS_PC(spiffy_t, S, I.self);
   int   rv;
@@ -648,16 +648,16 @@ ccname_iface_method(ccstructs_writable_I, spiffy_t, write)
   @}
 @}
 
-static ccname_iface_table_type(ccstructs_writable_I) const
-    ccname_iface_table(ccstructs_writable_I, spiffy_t) = @{
-  .write = ccname_iface_method(ccstructs_writable_I, spiffy_t, write)
+static ccname_iface_table_type(ccstructs_dumpable_I) const
+    ccname_iface_table(ccstructs_dumpable_I, spiffy_t) = @{
+  .dump = ccname_iface_method(ccstructs_dumpable_I, spiffy_t, dump)
 @};
 
-ccstructs_writable_I
-ccname_iface_new(ccstructs_writable_I, spiffy_t) (spiffy_t * S)
+ccstructs_dumpable_I
+ccname_iface_new(ccstructs_dumpable_I, spiffy_t) (spiffy_t * S)
 @{
-  return ccstructs_new_writable(ccstructs_core(S),
-    &ccname_iface_table(ccstructs_writable_I, spiffy_t));
+  return ccname_iface_new(ccstructs_dumpable_I)(ccstructs_core(S),
+    &ccname_iface_table(ccstructs_dumpable_I, spiffy_t));
 @}
 @end smallexample
 
@@ -674,9 +674,9 @@ if (cce_location(L)) @{
     .alpha    = 1,
     .beta     = 2
   @};
-  ccstructs_writable_I  I = ccname_iface_new(ccstructs_writable_I, spiffy_t)(&S);
+  ccstructs_dumpable_I  I = ccname_iface_new(ccstructs_dumpable_I, spiffy_t)(&S);
 
-  ccstructs_writable_write(L, I);
+  ccstructs_dumpable_dump(L, I);
   cce_run_body_handlers(L);
 @}
 @end smallexample
@@ -1031,8 +1031,8 @@ Constructor for a @objtype{ccstructs_deserialise_I} interface that deserialises 
 @end deftypefun
 
 
-@deftypefun ccstructs_writable_I {ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
-Constructor for a @objtype{ccstructs_writable_I} interface that prints the a representation of the
+@deftypefun ccstructs_dumpable_I {ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
+Constructor for a @objtype{ccstructs_dumpable_I} interface that prints the a representation of the
 underlying @objtype{ccstructs_pathname_t} on the @stderr{} stream.
 @end deftypefun
 
@@ -1065,10 +1065,10 @@ if (cce_location(L)) @{
 We can dump to @stderr{} a string representation of the instance with:
 
 @example
-ccstructs_writable_I  W =
-  ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
+ccstructs_dumpable_I  W =
+  ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
 
-ccstructs_writable_write(L, W);
+ccstructs_dumpable_dump(L, W);
 @end example
 
 We can create an interface @objtype{ccstructs_pathname_I} with:
