@@ -926,6 +926,7 @@ Apply the method @method{is_static} to the interface instance.
 * pathname simple typedefs::    Simple pathname: type definitions.
 * pathname simple ctors::       Simple pathname: constructors.
 * pathname simple ifaces::      Simple pathname: implemented interfaces.
+* pathname simple samples::     Simple pathname: usage examples.
 @end menu
 
 @c page
@@ -1034,6 +1035,81 @@ Constructor for a @objtype{ccstructs_deserialise_I} interface that deserialises 
 Constructor for a @objtype{ccstructs_writable_I} interface that prints the a representation of the
 underlying @objtype{ccstructs_pathname_t} on the @stderr{} stream.
 @end deftypefun
+
+@c page
+@node pathname simple samples
+@subsection Simple pathname: usage examples
+
+
+Let's see how we can build a standalone instance of @objtype{ccstructs_pathname_t} using the
+standard allocator implemented by CCMemory:
+
+@example
+char const *                  P = "/path/to/file.ext";
+cce_location_t                L[1];
+ccstructs_pathname_t const *  ptn;
+ccstructs_clean_handler_t     ptn_H[1];
+
+if (cce_location(L)) @{
+  cce_run_catch_handlers_final(L);
+@} else @{
+  ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
+  ccstructs_clean_handler_init(L, ptn_H,
+    ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+
+  ...
+  cce_run_body_handlers(L);
+@}
+@end example
+
+We can dump to @stderr{} a string representation of the instance with:
+
+@example
+ccstructs_writable_I  W =
+  ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)(ptn);
+
+ccstructs_writable_write(L, W);
+@end example
+
+We can create an interface @objtype{ccstructs_pathname_I} with:
+
+@example
+ccstructs_pathname_I I   =
+  ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+ccmem_asciiz_t       rep = ccstructs_pathname_asciiz(L, I);
+@end example
+
+@noindent
+and use the @asciiz{} representation @code{rep} as we see fit.
+
+We can serialise the pathname with:
+
+@example
+ccstructs_serialise_I  IS =
+  ccname_iface_new(ccstructs_serialise_I, ccstructs_pathname_t)(ptn);
+
+/* Allocate memory for the serialisation. */
+ccmem_block_t  M =
+  ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator,
+    ccstructs_serialise_required_size(IS));
+
+/* Serialise the struct. */
+ccmem_block_t  M_leftover = ccstructs_serialise_write(L, IS, M);
+@end example
+
+@noindent
+and we can deserialise a pathname instance from a memory block @code{M} with:
+
+@example
+ccmem_block_t           M = ...
+ccmem_block_t           M_leftover;
+ccstructs_pathname_t *  B;
+ccstructs_deserialise_I ID;
+
+B  = ccname_new(ccstructs_pathname_t, deserialisable)(L);
+ID = ccname_iface_new(ccstructs_deserialise_I, ccstructs_pathname_t)(B);
+M_leftover = ccstructs_deserialise_read(L, ID, M);
+@end example
 
 @c page
 @node utils
