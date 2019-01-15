@@ -189,6 +189,7 @@ with @code{ccstructs_} and suffixed with @code{_t} or @code{_I}.
 
 @menu
 * overview linking::            Linking code with the library.
+* overview ccnames::            The CCNames @api{}.
 * overview examples::           Implementation examples.
 @end menu
 
@@ -235,6 +236,18 @@ AC_CHECK_LIB([ccstructs],[ccstructs_version_string],,
 AC_CHECK_HEADERS([ccstructs.h],,
   [AC_MSG_FAILURE([test for CCStructs header failed])])
 @end example
+
+@c page
+@node overview ccnames
+@section The CCNames @api{}
+
+
+This package includes and uses the header file @file{ccname.h}, @ref{ccnames, Automatically
+generated @api{} names}.  This header defines a set of preprocessor macros we can use to build
+function names and @struct{} type names having a ``well known'' role in the @api{} associated to
+data @struct{} types and interfaces.
+
+It is weird and foreign.  It is not for everyone.
 
 @c page
 @node overview examples
@@ -305,7 +318,7 @@ ccname_iface_new(ccstructs_dumpable_I, spiffy_t) (spiffy_t * S)
 @end example
 
 
-@deftypefun {ccstructs_core_t *} ccstructs_core (void const * @var{S})
+@deftypefun {ccstructs_core_t const *} ccstructs_core (void const * @var{S})
 Cast the pointer @var{S} to @code{ccstructs_core_t *}.
 @end deftypefun
 
