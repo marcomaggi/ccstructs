@@ -20,6 +20,10 @@
 @code{\NAME\}
 @end macro
 
+@macro ccmemoryref{NODE, TITLE}
+@ref{\NODE\,\TITLE\,\TITLE\,ccmemory}
+@end macro
+
 @c page
 @c ------------------------------------------------------------
 @c Values.
@@ -822,15 +826,14 @@ by performing a non--local exit to @var{L}.
 
 
 The @iface{pathname} interface, represented by the type @objtype{ccstructs_pathname_I}, is meant to
-be used as argument to functions that need to operate on @posix{} pathname specifications without
-being tied to a specific pathname internal representation; the only requirement is that the pathname
-has an external representation as @asciiz{} string.
+be used in algorithm that need to operate on @posix{} pathname specifications without being tied to
+a specific pathname internal representation; the only mandatory requirement is that the pathname has
+an external representation as @asciiz{} string.
 
 @menu
 * pathname typedefs::           Type definitions.
 * pathname api::                Programming interface.
 * pathname simple::             Simple implementations.
-* pathname examples::           Implementation example.
 @end menu
 
 @c page
@@ -848,39 +851,36 @@ function calls.
 Type of methods table for the @iface{pathname} interface.  It has the following fields:
 
 @table @code
-@item ccstructs_pathname_I_length_fun_t * length
-Pointer to function implementing the @method{length} method.
+@item ccname_iface_method_type(ccstructs_pathname_I, dtor) * dtor
+Pointer to function implementing the @method{dtor} method.
 
-@item ccstructs_pathname_I_pointer_fun_t * pointer
-Pointer to function implementing the @method{pointer} method.
+@item ccname_iface_method_type(ccstructs_pathname_I, asciiz) * asciiz
+Pointer to function implementing the @method{asciiz} method.
 
-@item ccstructs_pathname_I_is_static_fun_t * is_static
+@item ccname_iface_method_type(ccstructs_pathname_I, is_static) * is_static
 Pointer to function implementing the @method{is_static} method.
 @end table
 @end deftp
 
 
-@deftypefn {Function Prototype} size_t ccstructs_pathname_I_length_fun_t (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
-Type of functions implementing the @method{length} method.  Return the minimum number of bytes in
-the pathname representation as @asciiz{} string, @strong{not} including the terminating zero.  If an
-error occurs while generating the external @asciiz{} representation: raise an exception by
-performing a non--local exit to @var{L}.
+@deftypefn {Function Prototype} ccstructs_dtor_I {ccname_iface_method_type(ccstructs_pathname_I, dtor)} (ccstructs_pathname_I @var{I})
+Type of functions implementing the @method{dtor} method.  Return an instance of the
+@objtype{ccstructs_dtor_I} interface that destroys the underlying pathname representation.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} {char const *} ccstructs_pathname_I_pointer_fun_t (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
-Type of functions implementing the @method{pointer} method.  Return a pointer to an @asciiz{}
-representation of the pathname.  For ownership handling: see the @method{is_static} method.  If an
-error occurs while generating the external @asciiz{} representation: raise an exception by
-performing a non--local exit to @var{L}.
+@deftypefn {Function Prototype} ccmem_asciiz_t {ccname_iface_method_type(ccstructs_pathname_I, asciiz)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+Type of functions implementing the @method{asciiz} method.  Return an instance of
+@objtype{ccmem_asciiz_t} holding an @asciiz{} representation of the pathname.  If an error occurs
+generating the representation: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} bool ccstructs_pathname_I_is_static_fun_t (ccstructs_pathname_I @var{I})
+@deftypefn {Function Prototype} bool {ccname_iface_method_type(ccstructs_pathname_I, is_static)} (ccstructs_pathname_I @var{I})
 Type of functions implementing the @method{is_static} method.  In general, the user of @var{I}
-should make a copy of the pathname representation if it needs to keep it independently from the
-extent (the lifetime) of @var{I}; but if this function returns @ctrue{}: it can rely on the
-existence of the representation for the time it needs it.
+should make a copy of the @asciiz{} pathname representation, returned by the @method{asciiz} method,
+if it needs to keep it independently from the extent (the lifetime) of @var{I}; but if this function
+returns @ctrue{}: it can rely on the existence of the representation for the time it needs it.
 @end deftypefn
 
 @c page
@@ -888,7 +888,7 @@ existence of the representation for the time it needs it.
 @section Programming interface for the @iface{pathname} interface
 
 
-@deftypefun ccstructs_pathname_I ccstructs_new_pathname (ccstructs_core_t const * @var{S}, ccstructs_pathname_I_methods_t const * @var{M})
+@deftypefun ccstructs_pathname_I {ccname_new(ccstructs_pathname_I)} (ccstructs_core_t const * @var{S}, ccname_iface_table_type(ccstructs_pathname_I) const * @var{M})
 Interface constructor.  Return a new interface @struct{} given a pointer to the source @struct{} and
 a pointer to the interface methods.
 @end deftypefun
@@ -899,20 +899,22 @@ Return a pointer to the @struct{} to which the interface belongs.
 @end deftypefun
 
 
-@deftypefun size_t ccstructs_pathname_length (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
-Apply the method @method{length} to the given argument.  If an error occurs while generating the
-external @asciiz{} representation: raise an exception by performing a non--local exit to @var{L}.
+@deftypefun ccstructs_dtor_I {ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)} (ccstructs_pathname_I @var{I})
+Apply the method @method{dtor} to the interface instance.  Build and return an instance of the
+interface @objtype{ccstructs_dtor_I} that we can use to destroy the underlying pathname
+representation.
 @end deftypefun
 
 
-@deftypefun {char const *} ccstructs_pathname_pointer (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
-Apply the method @method{pointer} to the given argument.  If an error occurs while generating the
-external @asciiz{} representation: raise an exception by performing a non--local exit to @var{L}.
+@deftypefun ccmem_asciiz_t ccstructs_pathname_asciiz (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+Apply the method @method{asciiz} to the interface instance.  Return an instance of
+@objtype{ccmem_asciiz_t} holding an @asciiz{} representation of the pathname.  If an error occurs
+generating the representation: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
 @deftypefun bool ccstructs_pathname_is_static (ccstructs_pathname_I @var{I})
-Apply the method @method{is_static} to the given argument.
+Apply the method @method{is_static} to the interface instance.
 @end deftypefun
 
 @c page
@@ -920,99 +922,118 @@ Apply the method @method{is_static} to the given argument.
 @section Simple implementations of a @iface{pathname} interface
 
 
-@deftypefun ccstructs_pathname_I ccstructs_new_pathname_from_static_string (const char * @var{ptn})
-Build and return a new interface @struct{} for the statically allocated @asciiz{} string referenced
-ty @var{ptn}.
+@menu
+* pathname simple typedefs::    Simple pathname: type definitions.
+* pathname simple ctors::       Simple pathname: constructors.
+* pathname simple ifaces::      Simple pathname: implemented interfaces.
+@end menu
+
+@c page
+@node pathname simple typedefs
+@subsection Simple pathname: type definitions
+
+
+@deftp {Struct Typedef} ccstructs_pathname_t
+Type of simple file system pathname representation implemented by @value{PACKAGE}.
+@end deftp
+
+@c page
+@node pathname simple ctors
+@subsection Simple pathname: constructors
+
+
+@subsubheading Constructors for embedded instances
+
+
+@deftypefun void {ccname_init(ccstructs_pathname_t, from_asciiz)} (cce_destination_t @var{L}, ccstructs_pathname_t * @var{ptn}, ccmem_asciiz_t @var{rep})
+Constructor function that initialises an already allocated @struct{} instance.  This function
+initialises from an @asciiz{} representation.  @ccmemoryref{ascii zero, Zero terminated strings}.
 @end deftypefun
 
 
-@deftypefun ccstructs_pathname_I ccstructs_new_pathname_from_dynamic_string (const char * @var{ptn})
-Build and return a new interface @struct{} for the dynamically allocated @asciiz{} string referenced
-ty @var{ptn}.
+@deftypefun void {ccname_init(ccstructs_pathname_t, from_ascii)} (cce_destination_t @var{L}, ccstructs_pathname_t * @var{ptn}, ccmem_ascii_t @var{rep})
+Constructor function that initialises an already allocated @struct{} instance.  This function
+initialises from an @ascii{} representation.  @ccmemoryref{ascii non-zero, Non--zero terminated
+strings}.
 @end deftypefun
 
 
-@deftypefun ccstructs_pathname_I ccstructs_new_pathname_from_static_asciiz (ccmem_asciiz_t const * @var{ptn})
-Build and return a new interface @struct{} for the statically allocated @asciiz{} string referenced
-ty @var{ptn}.
+@deftypefun void {ccname_init(ccstructs_pathname_t, from_chars)} (cce_destination_t @var{L}, ccstructs_pathname_t * @var{ptn}, char const * @var{P})
+Constructor function that initialises an already allocated @struct{} instance.  This function
+initialises from a C pointer to an @asciiz{} representation.
 @end deftypefun
 
 
-@deftypefun ccstructs_pathname_I ccstructs_new_pathname_from_dynamic_asciiz (ccmem_asciiz_t const * @var{ptn})
-Build and return a new interface @struct{} for the dynamically allocated @asciiz{} string referenced
-ty @var{ptn}.
+@deftypefun void {ccname_init(ccstructs_pathname_t, deserialisable)} (ccstructs_pathname_t * @var{ptn})
+Initialisation function that initialises an already allocated struct.  This function initialises in
+such a way that it allows for both finalisation and mutation from deserialisation.
+@end deftypefun
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Constructors for standalone instances
+
+
+@deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, from_asciiz)} (cce_destination_t @var{L}, ccmem_asciiz_t @var{rep})
+Constructor function that allocates the @struct{} on the heap using the standard memory allocator
+implemented by CCMemory.  This function initialises from an @asciiz{} representation.
+@ccmemoryref{ascii zero, Zero terminated strings}.
+@end deftypefun
+
+
+@deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, from_ascii)} (cce_destination_t @var{L}, ccmem_ascii_t @var{rep})
+Constructor function that allocates the @struct{} on the heap using the standard memory allocator
+implemented by CCMemory.  This function initialises from an @ascii{} representation.
+@ccmemoryref{ascii non-zero, Non--zero terminated strings}.
+@end deftypefun
+
+
+@deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, from_chars)} (cce_destination_t @var{L}, char const * @var{P})
+Constructor function that allocates the @struct{} on the heap using the standard memory allocator
+implemented by CCMemory.  This function initialises from a C pointer to an @asciiz{} representation.
+@end deftypefun
+
+
+@deftypefun {ccstructs_pathname_t *} {ccname_new(ccstructs_pathname_t, deserialisable)} (cce_destination_t @var{L})
+Constructor function that allocates the @struct{} on the heap using the standard memory allocator
+implemented by CCMemory.  This function initialises in such a way that it allows for both
+finalisation and mutation from deserialisation.
 @end deftypefun
 
 @c page
-@node pathname examples
-@section Implementation example for the @iface{pathname} interface.
+@node pathname simple ifaces
+@subsection Simple pathname: implemented interfaces
 
 
-Here is how we can implement the interface for @objtype{ccmem_asciiz_t} representations:
+@deftypefun ccstructs_dtor_I {ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
+Interface constructor for @objtype{ccstructs_dtor_I} as implemented by
+@objtype{ccstructs_pathname_t}.  The returned destructor interface will work for both embedded and
+standalone instances of @objtype{ccstructs_pathname_t}.
+@end deftypefun
 
-@smallexample
-static size_t
-ccstructs_pathname_I_from_asciiz_length (cce_destination_t L,
-                                         ccstructs_pathname_I I)
-@{
-  CCSTRUCTS_PC(ccmem_asciiz_t, S, ccstructs_pathname_self(I));
-  return S->len;
-@}
 
-static char const *
-ccstructs_pathname_I_from_asciiz_pointer (cce_destination_t L,
-                                          ccstructs_pathname_I I)
-@{
-  CCSTRUCTS_PC(ccmem_asciiz_t, S, ccstructs_pathname_self(I));
-  return S->ptr;
-@}
+@deftypefun ccstructs_pathname_I {ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
+Interface constructor for @objtype{ccstructs_pathname_I} as implemented by
+@objtype{ccstructs_pathname_t}.
+@end deftypefun
 
-static bool
-ccstructs_pathname_I_from_static_asciiz_is_static (ccstructs_pathname_I I)
-@{
-  return true;
-@}
 
-static bool
-ccstructs_pathname_I_from_dynamic_asciiz_is_static (ccstructs_pathname_I I)
-@{
-  return false;
-@}
+@deftypefun ccstructs_serialise_I {ccname_iface_new(ccstructs_serialise_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
+Constructor for a @objtype{ccstructs_serialise_I} interface that serialises an instance of
+@objtype{ccstructs_pathname_t} into a memory block.
+@end deftypefun
 
-static ccstructs_pathname_I_methods_t const
-    ccstructs_pathname_I_methods_from_static_asciiz = @{
-  .length       = ccstructs_pathname_I_from_asciiz_length,
-  .pointer      = ccstructs_pathname_I_from_asciiz_pointer,
-  .is_static    = ccstructs_pathname_I_from_static_asciiz_is_static
-@};
 
-static ccstructs_pathname_I_methods_t const
-    ccstructs_pathname_I_methods_from_dynamic_asciiz = @{
-  .length       = ccstructs_pathname_I_from_asciiz_length,
-  .pointer      = ccstructs_pathname_I_from_asciiz_pointer,
-  .is_static    = ccstructs_pathname_I_from_dynamic_asciiz_is_static
-@};
+@deftypefun ccstructs_deserialise_I {ccname_iface_new(ccstructs_deserialise_I, ccstructs_pathname_t)} (ccstructs_pathname_t * @var{ptn})
+Constructor for a @objtype{ccstructs_deserialise_I} interface that deserialises an instance of
+@objtype{ccstructs_pathname_t} from a memory block.
+@end deftypefun
 
-ccstructs_pathname_I
-ccstructs_new_pathname_from_static_asciiz (ccmem_asciiz_t const * const S)
-@{
-  ccstructs_pathname_I  I = @{
-    .methods    = &ccstructs_pathname_I_methods_from_static_asciiz,
-    .self       = ccstructs_core(S)
-  @};
-  return I;
-@}
 
-ccstructs_pathname_I
-ccstructs_new_pathname_from_dynamic_asciiz (ccmem_asciiz_t const * const S)
-@{
-  ccstructs_pathname_I  I = @{
-    .methods    = &ccstructs_pathname_I_methods_from_dynamic_asciiz,
-    .self       = ccstructs_core(S)
-  @};
-  return I;
-@}
-@end smallexample
+@deftypefun ccstructs_writable_I {ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
+Constructor for a @objtype{ccstructs_writable_I} interface that prints the a representation of the
+underlying @objtype{ccstructs_pathname_t} on the @stderr{} stream.
+@end deftypefun
 
 @c page
 @node utils

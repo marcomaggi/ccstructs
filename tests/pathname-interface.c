@@ -236,6 +236,65 @@ test_2_3 (cce_destination_t upper_L)
 
 void
 test_3_1 (cce_destination_t upper_L)
+/* Use pathname structs allocted on the stack. */
+{
+  static char const *		P = "/path/to/file.ext";
+  cce_location_t		L[1];
+  ccstructs_pathname_t		A[1];
+  ccstructs_pathname_t		B[1];
+  ccstructs_clean_handler_t	A_H[1], B_H[1];
+  ccmem_block_t			M, M_leftover;
+  ccmem_clean_handler_t		M_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    /* Build the struct to be serialised. */
+    ccname_init(ccstructs_pathname_t, from_chars)(L, A, P);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(A));
+
+    {
+      /* Build the "serialise" interface. */
+      ccstructs_serialise_I IS = ccname_iface_new(ccstructs_serialise_I, ccstructs_pathname_t)(A);
+
+      /* Allocate memory for the serialisation. */
+      M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialise_required_size(IS));
+
+      /* Serialise the struct. */
+      M_leftover = ccstructs_serialise_write(L, IS, M);
+    }
+
+    {
+      /* Build a struct to be target of deserialisation. */
+      ccname_init(ccstructs_pathname_t, deserialisable)(B);
+      ccstructs_handler_init(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(B));
+
+      /* Build the "deserialise" interface. */
+      ccstructs_deserialise_I ID = ccname_iface_new(ccstructs_deserialise_I, ccstructs_pathname_t)(B);
+
+      /* Deserialise the struct. */
+      M_leftover = ccstructs_deserialise_read(L, ID, M);
+
+      /* Check the deserialisation results. */
+      {
+	ccstructs_pathname_I	IA = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(A);
+	ccstructs_pathname_I	IB = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(B);
+	ccmem_asciiz_t		rep_A = ccstructs_pathname_asciiz(L, IA);
+	ccmem_asciiz_t		rep_B = ccstructs_pathname_asciiz(L, IB);
+
+	cctests_assert_equal_size(L, rep_A.len, rep_B.len);
+	cctests_assert_asciiz(L, rep_A.ptr, rep_B.ptr);
+	cctests_assert(L, M_leftover.ptr > M.ptr);
+	cctests_assert(L, M_leftover.len < M.len);
+      }
+    }
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_3_2 (cce_destination_t upper_L)
+/* Use pathname structs allocted on the heap. */
 {
   static char const *		P = "/path/to/file.ext";
   cce_location_t		L[1];
@@ -382,6 +441,7 @@ main (void)
     cctests_begin_group("pathname representation, serialisable interface");
     {
       cctests_run(test_3_1);
+      cctests_run(test_3_2);
     }
     cctests_end_group();
 

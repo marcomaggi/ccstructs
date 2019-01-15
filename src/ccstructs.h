@@ -445,7 +445,7 @@ ccstructs_decl void ccname_init(ccstructs_pathname_t, from_chars)  (cce_destinat
 /* Initialisation  function  that  initialises  an already  allocated  struct.   This
    initialises in such a  way that it allows for both  finalisation and mutation from
    deserialisation. */
-ccstructs_decl void ccname_init(ccstructs_pathname_t, deserlialisable) (ccstructs_pathname_t const * ptn)
+ccstructs_decl void ccname_init(ccstructs_pathname_t, deserialisable) (ccstructs_pathname_t * ptn)
   __attribute__((__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
@@ -481,7 +481,7 @@ ccstructs_decl ccname_iface_new_type(ccstructs_dtor_I, ccstructs_pathname_t) ccn
 
 /* Type  of  interface  constructor.   Functions  of this  type  build  instances  of
    "ccstructs_pathname_I" implemented by "ccstructs_pathname_t". */
-typedef ccstructs_pathname_I ccname_iface_new_type(ccstructs_pathname_I, ccstructs_pathname_t) (ccstructs_pathname_t const * const ptn);
+typedef ccstructs_pathname_I ccname_iface_new_type(ccstructs_pathname_I, ccstructs_pathname_t) (ccstructs_pathname_t const * ptn);
 
 /* Interface    constructor   for    "ccstructs_pathname_I"    as   implemented    by
    "ccstructs_pathname_t". */
@@ -492,19 +492,19 @@ ccstructs_decl ccname_iface_new_type(ccstructs_pathname_I, ccstructs_pathname_t)
 
 /* Constructor for a "ccstructs_serialise_I" interface that serialises an instance of
    "ccstructs_pathname_t" into a memory block. */
-ccstructs_decl ccstructs_serialise_I ccname_iface_new(ccstructs_serialise_I, ccstructs_pathname_t) (ccstructs_pathname_t const * S)
+ccstructs_decl ccstructs_serialise_I ccname_iface_new(ccstructs_serialise_I, ccstructs_pathname_t) (ccstructs_pathname_t const * ptn)
   __attribute__((__nonnull__(1)));
 
 /* Constructor  for  a  "ccstructs_deserialise_I"   interface  that  deserialises  an
    instance of "ccstructs_pathname_t" from a memory block. */
-ccstructs_decl ccstructs_deserialise_I ccname_iface_new(ccstructs_deserialise_I, ccstructs_pathname_t) (ccstructs_pathname_t * S)
+ccstructs_decl ccstructs_deserialise_I ccname_iface_new(ccstructs_deserialise_I, ccstructs_pathname_t) (ccstructs_pathname_t * ptn)
   __attribute__((__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 /* Constructor  for   a  "ccstructs_writable_I"   interface  that  prints   a  struct
    representation on some output channel. */
-ccstructs_decl ccstructs_writable_I ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t) (ccstructs_pathname_t const * S)
+ccstructs_decl ccstructs_writable_I ccname_iface_new(ccstructs_writable_I, ccstructs_pathname_t) (ccstructs_pathname_t const * ptn)
   __attribute__((__nonnull__(1)));
 
 
