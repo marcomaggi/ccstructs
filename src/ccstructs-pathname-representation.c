@@ -55,10 +55,10 @@ static ccname_iface_new_type(ccstructs_dtor_I, ccstructs_pathname_t) ccname_ifac
    "ccstructs_pathname_t" for standalone structs. */
 static ccname_iface_new_type(ccstructs_dtor_I, ccstructs_pathname_t) ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone);
 
-typedef struct ccstructs_serialiserd_pathname_t	ccstructs_serialiserd_pathname_t;
+typedef struct ccstructs_serialised_pathname_t	ccstructs_serialised_pathname_t;
 
 /* The layout of a serialised "ccstructs_pathname_t". */
-struct ccstructs_serialiserd_pathname_t {
+struct ccstructs_serialised_pathname_t {
   size_t	len;
   char const *	ptr[];
 };
@@ -463,7 +463,7 @@ ccname_iface_method(ccstructs_serialiser_I, ccstructs_pathname_t, required_size)
 {
   CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_serialiser_self(I));
 
-  return sizeof(ccstructs_serialiserd_pathname_t) + ptn->rep.len;
+  return sizeof(ccstructs_serialised_pathname_t) + ptn->rep.len;
 }
 
 ccmem_block_t
@@ -473,10 +473,10 @@ ccname_iface_method(ccstructs_serialiser_I, ccstructs_pathname_t,
    in the memory block "B". */
 {
   CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_serialiser_self(I));
-  CCSTRUCTS_PC(ccstructs_serialiserd_pathname_t, W, B.ptr);
+  CCSTRUCTS_PC(ccstructs_serialised_pathname_t, W, B.ptr);
   ccmem_block_t	N = {
-    .ptr	= B.ptr + sizeof(ccstructs_serialiserd_pathname_t) + ptn->rep.len,
-    .len	= B.len - sizeof(ccstructs_serialiserd_pathname_t) - ptn->rep.len
+    .ptr	= B.ptr + sizeof(ccstructs_serialised_pathname_t) + ptn->rep.len,
+    .len	= B.len - sizeof(ccstructs_serialised_pathname_t) - ptn->rep.len
   };
 
   W->len = ptn->rep.len;
@@ -489,16 +489,29 @@ ccname_iface_method(ccstructs_serialiser_I, ccstructs_pathname_t,
  ** Interface "ccstructs_deserialiser_I": implementation for "ccstructs_pathname_t".
  ** ----------------------------------------------------------------- */
 
+static ccname_iface_method_type(ccstructs_deserialiser_I, required_size)
+  ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t, required_size);
 static ccname_iface_method_type(ccstructs_deserialiser_I, read)
   ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t, read);
 
 /* Interface  table  of  methods.  Implementation  of  "ccstructs_deserialiser_I"  for
    "ccstructs_pathname_t". */
 static ccname_iface_table_type(ccstructs_deserialiser_I) const ccname_iface_table(ccstructs_deserialiser_I, ccstructs_pathname_t) = {
+  .required_size = ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t, required_size),
   .read          = ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t, read)
 };
 
 /* ------------------------------------------------------------------ */
+
+size_t
+ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t, required_size) (ccstructs_deserialiser_I I)
+/* Return the minimum number of bytes  required to hold the serialised representation
+   of "ccstructs_pathname_t".*/
+{
+  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_deserialiser_self(I));
+
+  return sizeof(ccstructs_serialised_pathname_t) + ptn->rep.len;
+}
 
 ccmem_block_t
 ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t,
@@ -507,10 +520,10 @@ ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t,
    the memory block "B". */
 {
   CCSTRUCTS_PC(ccstructs_pathname_t, ptn, ccstructs_deserialiser_self(I));
-  CCSTRUCTS_PC(ccstructs_serialiserd_pathname_t const, W, B.ptr);
+  CCSTRUCTS_PC(ccstructs_serialised_pathname_t const, W, B.ptr);
   ccmem_block_t	N = {
-    .ptr	= B.ptr + sizeof(ccstructs_serialiserd_pathname_t),
-    .len	= B.len - sizeof(ccstructs_serialiserd_pathname_t)
+    .ptr	= B.ptr + sizeof(ccstructs_serialised_pathname_t),
+    .len	= B.len - sizeof(ccstructs_serialised_pathname_t)
   };
 
   ptn->rep.len = W->len;

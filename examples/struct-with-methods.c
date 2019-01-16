@@ -309,8 +309,10 @@ ccname_iface_method(ccstructs_dumpable_I, my_coords_t, dump) (cce_destination_t 
  ** Interface "ccstructs_serialiser_I": implementation for "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_serialiser_I, required_size) ccname_iface_method(ccstructs_serialiser_I, my_coords_t, required_size);
-static ccname_iface_method_type(ccstructs_serialiser_I, write)         ccname_iface_method(ccstructs_serialiser_I, my_coords_t, write);
+static ccname_iface_method_type(ccstructs_serialiser_I, required_size)
+  ccname_iface_method(ccstructs_serialiser_I, my_coords_t, required_size);
+static ccname_iface_method_type(ccstructs_serialiser_I, write)
+  ccname_iface_method(ccstructs_serialiser_I, my_coords_t, write);
 
 /* Interface  table  of  methods.    Implementation  of  "ccstructs_serialiser_I"  for
    "my_coords_t". */
@@ -360,11 +362,15 @@ ccname_iface_method(ccstructs_serialiser_I, my_coords_t,
  ** Interface "ccstructs_deserialiser_I": implementation for "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_deserialiser_I, read) ccname_iface_method(ccstructs_deserialiser_I, my_coords_t, read);
+static ccname_iface_method_type(ccstructs_deserialiser_I, required_size)
+  ccname_iface_method(ccstructs_deserialiser_I, my_coords_t, required_size);
+static ccname_iface_method_type(ccstructs_deserialiser_I, read)
+  ccname_iface_method(ccstructs_deserialiser_I, my_coords_t, read);
 
 /* Interface  table  of  methods.  Implementation  of  "ccstructs_deserialiser_I"  for
    "my_coords_t". */
 static ccname_iface_table_type(ccstructs_deserialiser_I) const ccname_iface_table(ccstructs_deserialiser_I, my_coords_t) = {
+  .required_size = ccname_iface_method(ccstructs_deserialiser_I, my_coords_t, required_size),
   .read          = ccname_iface_method(ccstructs_deserialiser_I, my_coords_t, read)
 };
 
@@ -377,6 +383,14 @@ ccname_iface_new(ccstructs_deserialiser_I, my_coords_t) (my_coords_t * S)
 }
 
 /* ------------------------------------------------------------------ */
+
+size_t
+ccname_iface_method(ccstructs_deserialiser_I, my_coords_t, required_size) (ccstructs_deserialiser_I I CCSTRUCTS_UNUSED)
+/* Return the minimum number of bytes  required to hold the serialised representation
+   of "my_coords_t".*/
+{
+  return sizeof(serialised_my_coords_t);
+}
 
 ccmem_block_t
 ccname_iface_method(ccstructs_deserialiser_I, my_coords_t,

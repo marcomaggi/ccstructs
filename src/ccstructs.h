@@ -320,10 +320,13 @@ struct ccstructs_deserialiser_I {
   ccstructs_core_t					const * self;
 };
 
+typedef size_t        ccname_iface_method_type(ccstructs_deserialiser_I, required_size)
+  (ccstructs_deserialiser_I const I);
 typedef ccmem_block_t ccname_iface_method_type(ccstructs_deserialiser_I, read)
   (cce_destination_t L, ccstructs_deserialiser_I I, ccmem_block_t B);
 
 struct ccname_iface_table_type(ccstructs_deserialiser_I) {
+  ccname_iface_method_type(ccstructs_deserialiser_I, required_size)	* required_size;
   ccname_iface_method_type(ccstructs_deserialiser_I, read)		* read;
 };
 
@@ -345,6 +348,13 @@ static inline ccstructs_core_t const *
 ccstructs_deserialiser_self (ccstructs_deserialiser_I const I)
 {
   return I.self;
+}
+
+__attribute__((__always_inline__))
+static inline size_t
+ccstructs_deserialiser_required_size (ccstructs_deserialiser_I const I)
+{
+  return I.methods->required_size(I);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
