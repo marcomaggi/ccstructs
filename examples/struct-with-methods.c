@@ -306,31 +306,31 @@ ccname_iface_method(ccstructs_dumpable_I, my_coords_t, dump) (cce_destination_t 
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_serialise_I": implementation for "my_coords_t".
+ ** Interface "ccstructs_serialiser_I": implementation for "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_serialise_I, required_size) ccname_iface_method(ccstructs_serialise_I, my_coords_t, required_size);
-static ccname_iface_method_type(ccstructs_serialise_I, write)         ccname_iface_method(ccstructs_serialise_I, my_coords_t, write);
+static ccname_iface_method_type(ccstructs_serialiser_I, required_size) ccname_iface_method(ccstructs_serialiser_I, my_coords_t, required_size);
+static ccname_iface_method_type(ccstructs_serialiser_I, write)         ccname_iface_method(ccstructs_serialiser_I, my_coords_t, write);
 
-/* Interface  table  of  methods.    Implementation  of  "ccstructs_serialise_I"  for
+/* Interface  table  of  methods.    Implementation  of  "ccstructs_serialiser_I"  for
    "my_coords_t". */
-static ccname_iface_table_type(ccstructs_serialise_I) const ccname_iface_table(ccstructs_serialise_I, my_coords_t) = {
-  .required_size = ccname_iface_method(ccstructs_serialise_I, my_coords_t, required_size),
-  .write         = ccname_iface_method(ccstructs_serialise_I, my_coords_t, write),
+static ccname_iface_table_type(ccstructs_serialiser_I) const ccname_iface_table(ccstructs_serialiser_I, my_coords_t) = {
+  .required_size = ccname_iface_method(ccstructs_serialiser_I, my_coords_t, required_size),
+  .write         = ccname_iface_method(ccstructs_serialiser_I, my_coords_t, write),
 };
 
-ccstructs_serialise_I
-ccname_iface_new(ccstructs_serialise_I, my_coords_t) (my_coords_t const * S)
-/* Interface   constructor.   Build   an  instance   of  "ccstructs_serialise_I"   as
+ccstructs_serialiser_I
+ccname_iface_new(ccstructs_serialiser_I, my_coords_t) (my_coords_t const * S)
+/* Interface   constructor.   Build   an  instance   of  "ccstructs_serialiser_I"   as
    implemented by "my_coords_t". */
 {
-  return ccname_new(ccstructs_serialise_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_serialise_I, my_coords_t));
+  return ccname_new(ccstructs_serialiser_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_serialiser_I, my_coords_t));
 }
 
 /* ------------------------------------------------------------------ */
 
 size_t
-ccname_iface_method(ccstructs_serialise_I, my_coords_t, required_size) (ccstructs_serialise_I I CCSTRUCTS_UNUSED)
+ccname_iface_method(ccstructs_serialiser_I, my_coords_t, required_size) (ccstructs_serialiser_I I CCSTRUCTS_UNUSED)
 /* Return the minimum number of bytes  required to hold the serialised representation
    of "ccstructs_pathname_t".*/
 {
@@ -338,12 +338,12 @@ ccname_iface_method(ccstructs_serialise_I, my_coords_t, required_size) (ccstruct
 }
 
 ccmem_block_t
-ccname_iface_method(ccstructs_serialise_I, my_coords_t,
-		    write) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialise_I I, ccmem_block_t B)
+ccname_iface_method(ccstructs_serialiser_I, my_coords_t,
+		    write) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialiser_I I, ccmem_block_t B)
 /* Interface  method implementation.   Serialise an  instance of  "my_coords_t" in  the
    memory block "B". */
 {
-  CCSTRUCTS_PC(my_coords_t const, S, ccstructs_serialise_self(I));
+  CCSTRUCTS_PC(my_coords_t const, S, ccstructs_serialiser_self(I));
   CCSTRUCTS_PC(serialised_my_coords_t, W, B.ptr);
   ccmem_block_t	N = {
     .ptr	= B.ptr + sizeof(serialised_my_coords_t),
@@ -357,34 +357,34 @@ ccname_iface_method(ccstructs_serialise_I, my_coords_t,
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_deserialise_I": implementation for "my_coords_t".
+ ** Interface "ccstructs_deserialiser_I": implementation for "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_deserialise_I, read) ccname_iface_method(ccstructs_deserialise_I, my_coords_t, read);
+static ccname_iface_method_type(ccstructs_deserialiser_I, read) ccname_iface_method(ccstructs_deserialiser_I, my_coords_t, read);
 
-/* Interface  table  of  methods.  Implementation  of  "ccstructs_deserialise_I"  for
+/* Interface  table  of  methods.  Implementation  of  "ccstructs_deserialiser_I"  for
    "my_coords_t". */
-static ccname_iface_table_type(ccstructs_deserialise_I) const ccname_iface_table(ccstructs_deserialise_I, my_coords_t) = {
-  .read          = ccname_iface_method(ccstructs_deserialise_I, my_coords_t, read)
+static ccname_iface_table_type(ccstructs_deserialiser_I) const ccname_iface_table(ccstructs_deserialiser_I, my_coords_t) = {
+  .read          = ccname_iface_method(ccstructs_deserialiser_I, my_coords_t, read)
 };
 
-ccstructs_deserialise_I
-ccname_iface_new(ccstructs_deserialise_I, my_coords_t) (my_coords_t * S)
-/* Interface  constructor.    Build  an  instance  of   "ccstructs_deserialise_I"  as
+ccstructs_deserialiser_I
+ccname_iface_new(ccstructs_deserialiser_I, my_coords_t) (my_coords_t * S)
+/* Interface  constructor.    Build  an  instance  of   "ccstructs_deserialiser_I"  as
    implemented by "my_coords_t". */
 {
-  return ccname_new(ccstructs_deserialise_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_deserialise_I, my_coords_t));
+  return ccname_new(ccstructs_deserialiser_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_deserialiser_I, my_coords_t));
 }
 
 /* ------------------------------------------------------------------ */
 
 ccmem_block_t
-ccname_iface_method(ccstructs_deserialise_I, my_coords_t,
-		    read) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_deserialise_I I, ccmem_block_t B)
+ccname_iface_method(ccstructs_deserialiser_I, my_coords_t,
+		    read) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_deserialiser_I I, ccmem_block_t B)
 /* Interface method implementation.  Dedeserialise  an instance of "my_coords_t" from
    the memory block "B". */
 {
-  CCSTRUCTS_PC(my_coords_t, S, ccstructs_deserialise_self(I));
+  CCSTRUCTS_PC(my_coords_t, S, ccstructs_deserialiser_self(I));
   CCSTRUCTS_PC(serialised_my_coords_t const, W, B.ptr);
   ccmem_block_t	N = {
     .ptr	= B.ptr + sizeof(serialised_my_coords_t),

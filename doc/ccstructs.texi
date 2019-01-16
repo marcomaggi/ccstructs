@@ -149,7 +149,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * core::                        Core type definitions.
 * dtor::                        The @iface{destructor} interface.
 * dumpable::                    The @iface{dumpable} interface.
-* serialise::                   The @iface{serialise} and @iface{deserialise} interface.
+* serialisation::               The @iface{serialiser} and @iface{deserialiser} interfaces.
 * pathname::                    The @iface{pathname} interface.
 * utils::                       Utility definitions.
 
@@ -693,59 +693,62 @@ if (cce_location(L)) @{
 @end smallexample
 
 @c page
-@node serialise
-@chapter The @iface{serialise} and @iface{deserialise} interfaces
+@node serialisation
+@chapter The @iface{serialiser} and @iface{deserialiser} interfaces
 
 
-The @iface{serialise} interface, represented by the type @objtype{ccstructs_serialise_I}, allows us
-to serialise a @struct{} into a destination storage.  The @iface{deserialise} interface, represented
-by the type @objtype{ccstructs_deserialise_I}, allows us to deserialise a @struct{} from a source
-storage.
+The @iface{serialiser} interface, represented by the type @objtype{ccstructs_serialiser_I}, allows
+us to serialise a @struct{} into a destination storage.  The @iface{deserialiser} interface,
+represented by the type @objtype{ccstructs_deserialiser_I}, allows us to deserialise a @struct{}
+from a source storage.
 
 For implementation examples we should look in the source distribution of @value{PACKAGE}.
 
 @menu
-* serialise typedefs::          @iface{serialise} interface: type definitions.
-* serialise operations::        @iface{serialise} interface: operations.
-* deserialise typedefs::        @iface{deserialise} interface: type definitions.
-* deserialise operations::      @iface{deserialise} interface: operations.
+* serialiser typedefs::         @iface{serialiser} interface: type definitions.
+* serialiser operations::       @iface{serialiser} interface: operations.
+* deserialiser typedefs::       @iface{deserialiser} interface: type definitions.
+* deserialiser operations::     @iface{deserialiser} interface: operations.
 @end menu
 
 @c page
-@node serialise typedefs
-@section @iface{serialise} interface: type definitions
+@node serialiser typedefs
+@section @iface{serialiser} interface: type definitions
 
 
-@deftp {Struct Typedef} ccstructs_serialise_I
-Type of the @iface{serialise} interface.  Instances of this type are meant to be handed by value
+@deftp {Struct Typedef} ccstructs_serialiser_I
+Type of the @iface{serialiser} interface.  Instances of this type are meant to be handed by value
 to function calls.
 @end deftp
 
 
-@deftp {Struct Typedef} {ccname_iface_table_type(ccstructs_serialise_I)}
-Type of methods table for the @iface{serialise} interface.  It has the following fields:
+@deftp {Struct Typedef} {ccname_iface_table_type(ccstructs_serialiser_I)}
+Type of methods table for the @iface{serialiser} interface.  It has the following fields:
 
 @table @code
-@item ccname_iface_method_type(ccstructs_serialise_I, required_size) * required_size
+@item ccname_iface_method_type(ccstructs_serialiser_I, required_size) * required_size
 Pointer to function implementing the @method{required_size} method.
 
-@item ccname_iface_method_type(ccstructs_serialise_I, write) * write
+@item ccname_iface_method_type(ccstructs_serialiser_I, write) * write
 Pointer to function implementing the @method{write} method.
 @end table
 @end deftp
 
 
-@deftypefn {Function Prototype} size_t {ccname_iface_method_type(ccstructs_serialise_I, required_size)} (ccstructs_serialise_I const @var{I})
+@deftypefn {Function Prototype} size_t {ccname_iface_method_type(ccstructs_serialiser_I, required_size)} (ccstructs_serialiser_I const @var{I})
 Type of functions implementing the @method{required_size} method.  Return the minimum number of
 bytes needed to hold the serialisation of the source @struct{}.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} ccmem_block_t {ccname_iface_method_type(ccstructs_serialise_I, write)} (cce_destination_t @var{L}, ccstructs_serialise_I const @var{I}, ccmem_block_t @var{B})
+@deftypefn {Function Prototype} ccmem_block_t {ccname_iface_method_type(ccstructs_serialiser_I, write)} (cce_destination_t @var{L}, ccstructs_serialiser_I const @var{I}, ccmem_block_t @var{B})
 Type of functions implementing the @method{write} method.  Serialise the @struct{} to the block of
-memory referenced by @var{B}.  Return a new block referencing the leftover memory right after the
-serialised data.  If an error occurs: raise an exception violation by performing a non--local exit
-to @var{L}.
+memory referenced by @var{B}, which must be big enough to hold the number of bytes returned by the
+method @method{required_size}.
+
+When successful: return a new block referencing the leftover memory right after the serialised data.
+If an error occurs: raise an exception violation by performing a non--local exit to @var{L}; in this
+case there is no way to know the state of the data written on the output block @var{B}.
 
 @example
      memory block described by @var{B}
@@ -757,76 +760,76 @@ to @var{L}.
 @end deftypefn
 
 @c page
-@node serialise operations
-@section @iface{serialise} interface: operations
+@node serialiser operations
+@section @iface{serialiser} interface: operations
 
 
-@deftypefun ccstructs_serialise_I {ccname_new(ccstructs_serialise_I)} (ccstructs_core_t const * @var{S}, ccname_iface_table_type(ccstructs_serialise_I) const * @var{M})
+@deftypefun ccstructs_serialiser_I {ccname_new(ccstructs_serialiser_I)} (ccstructs_core_t const * @var{S}, ccname_iface_table_type(ccstructs_serialiser_I) const * @var{M})
 Interface constructor.  Return a new interface @struct{} given a pointer to the source @struct{} and
 a pointer to the interface methods.
 @end deftypefun
 
 
-@deftypefun {ccstructs_core_t const *} ccstructs_serialise_self (ccstructs_serialise_I @var{I})
+@deftypefun {ccstructs_core_t const *} ccstructs_serialiser_self (ccstructs_serialiser_I @var{I})
 Return a pointer to the @struct{} to which the interface belongs.
 @end deftypefun
 
 
-@deftypefun size_t ccstructs_serialise_required_size (ccstructs_serialise_I @var{I})
+@deftypefun size_t ccstructs_serialiser_required_size (ccstructs_serialiser_I @var{I})
 Apply the method @method{required_size} to the given argument.
 @end deftypefun
 
 
-@deftypefun ccmem_block_t ccstructs_serialise_write (cce_destination_t @var{L}, ccstructs_serialise_I @var{I}, ccmem_block_t @var{B})
+@deftypefun ccmem_block_t ccstructs_serialiser_write (cce_destination_t @var{L}, ccstructs_serialiser_I @var{I}, ccmem_block_t @var{B})
 Apply the method @method{write} to the given arguments.  If an error occurs: raise an exception by
 performing a non--local exit to @var{L}.
 @end deftypefun
 
 @c page
-@node deserialise typedefs
-@section @iface{deserialise} interface: type definitions
+@node deserialiser typedefs
+@section @iface{deserialiser} interface: type definitions
 
 
-@deftp {Struct Typedef} ccstructs_deserialise_I
-Type of the @iface{deserialise} interface.  Instances of this type are meant to be handed by value
+@deftp {Struct Typedef} ccstructs_deserialiser_I
+Type of the @iface{deserialiser} interface.  Instances of this type are meant to be handed by value
 to function calls.
 @end deftp
 
 
-@deftp {Struct Typedef} {ccname_iface_table_type(ccstructs_deserialise_I)}
-Type of methods table for the @iface{deserialise} interface.  It has the following fields:
+@deftp {Struct Typedef} {ccname_iface_table_type(ccstructs_deserialiser_I)}
+Type of methods table for the @iface{deserialiser} interface.  It has the following fields:
 
 @table @code
-@item ccname_iface_method_type(ccstructs_deserialise_I, read) * read
+@item ccname_iface_method_type(ccstructs_deserialiser_I, read) * read
 Pointer to function implementing the @method{read} method.
 @end table
 @end deftp
 
 
-@deftypefn {Function Prototype} ccmem_block_t {ccname_iface_method_type(ccstructs_deserialise_I, read)} (cce_destination_t @var{L}, ccstructs_deserialise_I const @var{I}, ccmem_block_t @var{B})
-Type of functions implementing the @method{read} method. Dedeserialise the @struct{} from the
-block of memory referenced by @var{B}.  Return a new block referencing the memory right after the
+@deftypefn {Function Prototype} ccmem_block_t {ccname_iface_method_type(ccstructs_deserialiser_I, read)} (cce_destination_t @var{L}, ccstructs_deserialiser_I const @var{I}, ccmem_block_t @var{B})
+Type of functions implementing the @method{read} method. Deserialise the @struct{} from the block of
+memory referenced by @var{B}.  Return a new block referencing the memory right after the
 deserialised data.  If an error occurs: raise an exception violation by performing a non--local exit
 to @var{L}.
 @end deftypefn
 
 @c page
-@node deserialise operations
-@section @iface{deserialise} interface: operations
+@node deserialiser operations
+@section @iface{deserialiser} interface: operations
 
 
-@deftypefun ccstructs_deserialise_I {ccname_new(ccstructs_deserialise_I)} (ccstructs_core_t const * @var{S}, ccname_iface_table_type(ccstructs_deserialise_I) const * @var{M})
+@deftypefun ccstructs_deserialiser_I {ccname_new(ccstructs_deserialiser_I)} (ccstructs_core_t const * @var{S}, ccname_iface_table_type(ccstructs_deserialiser_I) const * @var{M})
 Interface constructor.  Return a new interface @struct{} given a pointer to the source @struct{} and
 a pointer to the interface methods.
 @end deftypefun
 
 
-@deftypefun {ccstructs_core_t const *} ccstructs_deserialise_self (ccstructs_deserialise_I @var{I})
+@deftypefun {ccstructs_core_t const *} ccstructs_deserialiser_self (ccstructs_deserialiser_I @var{I})
 Return a pointer to the @struct{} to which the interface belongs.
 @end deftypefun
 
 
-@deftypefun ccmem_block_t ccstructs_deserialise_read (cce_destination_t @var{L}, ccstructs_deserialise_I @var{I}, ccmem_block_t @var{B})
+@deftypefun ccmem_block_t ccstructs_deserialiser_read (cce_destination_t @var{L}, ccstructs_deserialiser_I @var{I}, ccmem_block_t @var{B})
 Apply the method @method{read} to the given arguments.  If an error occurs: raise an exception
 by performing a non--local exit to @var{L}.
 @end deftypefun
@@ -1030,14 +1033,14 @@ Interface constructor for @objtype{ccstructs_pathname_I} as implemented by
 @end deftypefun
 
 
-@deftypefun ccstructs_serialise_I {ccname_iface_new(ccstructs_serialise_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
-Constructor for a @objtype{ccstructs_serialise_I} interface that serialises an instance of
+@deftypefun ccstructs_serialiser_I {ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
+Constructor for a @objtype{ccstructs_serialiser_I} interface that serialises an instance of
 @objtype{ccstructs_pathname_t} into a memory block.
 @end deftypefun
 
 
-@deftypefun ccstructs_deserialise_I {ccname_iface_new(ccstructs_deserialise_I, ccstructs_pathname_t)} (ccstructs_pathname_t * @var{ptn})
-Constructor for a @objtype{ccstructs_deserialise_I} interface that deserialises an instance of
+@deftypefun ccstructs_deserialiser_I {ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t)} (ccstructs_pathname_t * @var{ptn})
+Constructor for a @objtype{ccstructs_deserialiser_I} interface that deserialises an instance of
 @objtype{ccstructs_pathname_t} from a memory block.
 @end deftypefun
 
@@ -1096,16 +1099,16 @@ and use the @asciiz{} representation @code{rep} as we see fit.
 We can serialise the pathname with:
 
 @example
-ccstructs_serialise_I  IS =
-  ccname_iface_new(ccstructs_serialise_I, ccstructs_pathname_t)(ptn);
+ccstructs_serialiser_I  IS =
+  ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t)(ptn);
 
 /* Allocate memory for the serialisation. */
 ccmem_block_t  M =
   ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator,
-    ccstructs_serialise_required_size(IS));
+    ccstructs_serialiser_required_size(IS));
 
 /* Serialise the struct. */
-ccmem_block_t  M_leftover = ccstructs_serialise_write(L, IS, M);
+ccmem_block_t  M_leftover = ccstructs_serialiser_write(L, IS, M);
 @end example
 
 @noindent
@@ -1115,11 +1118,11 @@ and we can deserialise a pathname instance from a memory block @code{M} with:
 ccmem_block_t           M = ...
 ccmem_block_t           M_leftover;
 ccstructs_pathname_t *  B;
-ccstructs_deserialise_I ID;
+ccstructs_deserialiser_I ID;
 
 B  = ccname_new(ccstructs_pathname_t, deserialisable)(L);
-ID = ccname_iface_new(ccstructs_deserialise_I, ccstructs_pathname_t)(B);
-M_leftover = ccstructs_deserialise_read(L, ID, M);
+ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t)(B);
+M_leftover = ccstructs_deserialiser_read(L, ID, M);
 @end example
 
 @c page

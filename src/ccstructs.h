@@ -255,31 +255,31 @@ ccstructs_dumpable_dump (cce_destination_t L, ccstructs_dumpable_I const I)
  ** Interface: serialise.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccstructs_serialise_I				ccstructs_serialise_I;
-typedef struct ccname_iface_table_type(ccstructs_serialise_I)	ccname_iface_table_type(ccstructs_serialise_I);
+typedef struct ccstructs_serialiser_I				ccstructs_serialiser_I;
+typedef struct ccname_iface_table_type(ccstructs_serialiser_I)	ccname_iface_table_type(ccstructs_serialiser_I);
 
-struct ccstructs_serialise_I {
-  ccname_iface_table_type(ccstructs_serialise_I)	const *	methods;
+struct ccstructs_serialiser_I {
+  ccname_iface_table_type(ccstructs_serialiser_I)	const *	methods;
   ccstructs_core_t					const * self;
 };
 
-typedef size_t        ccname_iface_method_type(ccstructs_serialise_I, required_size)
-  (ccstructs_serialise_I const I);
-typedef ccmem_block_t ccname_iface_method_type(ccstructs_serialise_I, write)
-  (cce_destination_t L, ccstructs_serialise_I const I, ccmem_block_t B);
+typedef size_t        ccname_iface_method_type(ccstructs_serialiser_I, required_size)
+  (ccstructs_serialiser_I const I);
+typedef ccmem_block_t ccname_iface_method_type(ccstructs_serialiser_I, write)
+  (cce_destination_t L, ccstructs_serialiser_I const I, ccmem_block_t B);
 
-struct ccname_iface_table_type(ccstructs_serialise_I) {
-  ccname_iface_method_type(ccstructs_serialise_I, required_size)	* required_size;
-  ccname_iface_method_type(ccstructs_serialise_I, write)		* write;
+struct ccname_iface_table_type(ccstructs_serialiser_I) {
+  ccname_iface_method_type(ccstructs_serialiser_I, required_size)	* required_size;
+  ccname_iface_method_type(ccstructs_serialiser_I, write)		* write;
 };
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
-static inline ccstructs_serialise_I
-ccname_new(ccstructs_serialise_I) (ccstructs_core_t const * const S, ccname_iface_table_type(ccstructs_serialise_I) const * const M)
+static inline ccstructs_serialiser_I
+ccname_new(ccstructs_serialiser_I) (ccstructs_core_t const * const S, ccname_iface_table_type(ccstructs_serialiser_I) const * const M)
 {
-  ccstructs_serialise_I	I = {
+  ccstructs_serialiser_I	I = {
     .methods	= M,
     .self	= S
   };
@@ -288,21 +288,21 @@ ccname_new(ccstructs_serialise_I) (ccstructs_core_t const * const S, ccname_ifac
 
 __attribute__((__always_inline__,__pure__))
 static inline ccstructs_core_t const *
-ccstructs_serialise_self (ccstructs_serialise_I const I)
+ccstructs_serialiser_self (ccstructs_serialiser_I const I)
 {
   return I.self;
 }
 
 __attribute__((__always_inline__))
 static inline size_t
-ccstructs_serialise_required_size (ccstructs_serialise_I const I)
+ccstructs_serialiser_required_size (ccstructs_serialiser_I const I)
 {
   return I.methods->required_size(I);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccmem_block_t
-ccstructs_serialise_write (cce_destination_t L, ccstructs_serialise_I const I, ccmem_block_t B)
+ccstructs_serialiser_write (cce_destination_t L, ccstructs_serialiser_I const I, ccmem_block_t B)
 {
   return I.methods->write(L, I, B);
 }
@@ -312,28 +312,28 @@ ccstructs_serialise_write (cce_destination_t L, ccstructs_serialise_I const I, c
  ** Interface: deserialise.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccstructs_deserialise_I				ccstructs_deserialise_I;
-typedef struct ccname_iface_table_type(ccstructs_deserialise_I)	ccname_iface_table_type(ccstructs_deserialise_I);
+typedef struct ccstructs_deserialiser_I				ccstructs_deserialiser_I;
+typedef struct ccname_iface_table_type(ccstructs_deserialiser_I)	ccname_iface_table_type(ccstructs_deserialiser_I);
 
-struct ccstructs_deserialise_I {
-  ccname_iface_table_type(ccstructs_deserialise_I)	const *	methods;
+struct ccstructs_deserialiser_I {
+  ccname_iface_table_type(ccstructs_deserialiser_I)	const *	methods;
   ccstructs_core_t					const * self;
 };
 
-typedef ccmem_block_t ccname_iface_method_type(ccstructs_deserialise_I, read)
-  (cce_destination_t L, ccstructs_deserialise_I I, ccmem_block_t B);
+typedef ccmem_block_t ccname_iface_method_type(ccstructs_deserialiser_I, read)
+  (cce_destination_t L, ccstructs_deserialiser_I I, ccmem_block_t B);
 
-struct ccname_iface_table_type(ccstructs_deserialise_I) {
-  ccname_iface_method_type(ccstructs_deserialise_I, read)		* read;
+struct ccname_iface_table_type(ccstructs_deserialiser_I) {
+  ccname_iface_method_type(ccstructs_deserialiser_I, read)		* read;
 };
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
-static inline ccstructs_deserialise_I
-ccname_new(ccstructs_deserialise_I) (ccstructs_core_t const * const S, ccname_iface_table_type(ccstructs_deserialise_I) const * const M)
+static inline ccstructs_deserialiser_I
+ccname_new(ccstructs_deserialiser_I) (ccstructs_core_t const * const S, ccname_iface_table_type(ccstructs_deserialiser_I) const * const M)
 {
-  ccstructs_deserialise_I	I = {
+  ccstructs_deserialiser_I	I = {
     .methods	= M,
     .self	= S
   };
@@ -342,14 +342,14 @@ ccname_new(ccstructs_deserialise_I) (ccstructs_core_t const * const S, ccname_if
 
 __attribute__((__always_inline__,__pure__))
 static inline ccstructs_core_t const *
-ccstructs_deserialise_self (ccstructs_deserialise_I const I)
+ccstructs_deserialiser_self (ccstructs_deserialiser_I const I)
 {
   return I.self;
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccmem_block_t
-ccstructs_deserialise_read (cce_destination_t L, ccstructs_deserialise_I const I, ccmem_block_t B)
+ccstructs_deserialiser_read (cce_destination_t L, ccstructs_deserialiser_I const I, ccmem_block_t B)
 {
   return I.methods->read(L, I, B);
 }
@@ -490,14 +490,14 @@ ccstructs_decl ccname_iface_new_type(ccstructs_pathname_I, ccstructs_pathname_t)
 
 /* ------------------------------------------------------------------ */
 
-/* Constructor for a "ccstructs_serialise_I" interface that serialises an instance of
+/* Constructor for a "ccstructs_serialiser_I" interface that serialises an instance of
    "ccstructs_pathname_t" into a memory block. */
-ccstructs_decl ccstructs_serialise_I ccname_iface_new(ccstructs_serialise_I, ccstructs_pathname_t) (ccstructs_pathname_t const * ptn)
+ccstructs_decl ccstructs_serialiser_I ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t) (ccstructs_pathname_t const * ptn)
   __attribute__((__nonnull__(1)));
 
-/* Constructor  for  a  "ccstructs_deserialise_I"   interface  that  deserialises  an
+/* Constructor  for  a  "ccstructs_deserialiser_I"   interface  that  deserialises  an
    instance of "ccstructs_pathname_t" from a memory block. */
-ccstructs_decl ccstructs_deserialise_I ccname_iface_new(ccstructs_deserialise_I, ccstructs_pathname_t) (ccstructs_pathname_t * ptn)
+ccstructs_decl ccstructs_deserialiser_I ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t) (ccstructs_pathname_t * ptn)
   __attribute__((__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */

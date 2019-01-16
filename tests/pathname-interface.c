@@ -255,13 +255,13 @@ test_3_1 (cce_destination_t upper_L)
 
     {
       /* Build the "serialise" interface. */
-      ccstructs_serialise_I IS = ccname_iface_new(ccstructs_serialise_I, ccstructs_pathname_t)(A);
+      ccstructs_serialiser_I IS = ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t)(A);
 
       /* Allocate memory for the serialisation. */
-      M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialise_required_size(IS));
+      M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialiser_required_size(IS));
 
       /* Serialise the struct. */
-      M_leftover = ccstructs_serialise_write(L, IS, M);
+      M_leftover = ccstructs_serialiser_write(L, IS, M);
     }
 
     {
@@ -270,10 +270,10 @@ test_3_1 (cce_destination_t upper_L)
       ccstructs_handler_init(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(B));
 
       /* Build the "deserialise" interface. */
-      ccstructs_deserialise_I ID = ccname_iface_new(ccstructs_deserialise_I, ccstructs_pathname_t)(B);
+      ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t)(B);
 
       /* Deserialise the struct. */
-      M_leftover = ccstructs_deserialise_read(L, ID, M);
+      M_leftover = ccstructs_deserialiser_read(L, ID, M);
 
       /* Check the deserialisation results. */
       {
@@ -313,13 +313,13 @@ test_3_2 (cce_destination_t upper_L)
 
     {
       /* Build the "serialise" interface. */
-      ccstructs_serialise_I IS = ccname_iface_new(ccstructs_serialise_I, ccstructs_pathname_t)(A);
+      ccstructs_serialiser_I IS = ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t)(A);
 
       /* Allocate memory for the serialisation. */
-      M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialise_required_size(IS));
+      M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialiser_required_size(IS));
 
       /* Serialise the struct. */
-      M_leftover = ccstructs_serialise_write(L, IS, M);
+      M_leftover = ccstructs_serialiser_write(L, IS, M);
     }
 
     {
@@ -328,10 +328,10 @@ test_3_2 (cce_destination_t upper_L)
       ccstructs_handler_init(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(B));
 
       /* Build the "deserialise" interface. */
-      ccstructs_deserialise_I ID = ccname_iface_new(ccstructs_deserialise_I, ccstructs_pathname_t)(B);
+      ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t)(B);
 
       /* Deserialise the struct. */
-      M_leftover = ccstructs_deserialise_read(L, ID, M);
+      M_leftover = ccstructs_deserialiser_read(L, ID, M);
 
       /* Check the deserialisation results. */
       {

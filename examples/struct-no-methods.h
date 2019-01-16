@@ -178,14 +178,14 @@ ccstructs_decl ccstructs_dumpable_I ccname_iface_new(ccstructs_dumpable_I, my_co
 
 /* ------------------------------------------------------------------ */
 
-/* Constructor for a "ccstructs_serialise_I" interface that serialises an instance of
+/* Constructor for a "ccstructs_serialiser_I" interface that serialises an instance of
    "my_coords_t" into a memory block. */
-ccstructs_decl ccstructs_serialise_I ccname_iface_new(ccstructs_serialise_I, my_coords_t) (my_coords_t const * S)
+ccstructs_decl ccstructs_serialiser_I ccname_iface_new(ccstructs_serialiser_I, my_coords_t) (my_coords_t const * S)
   __attribute__((__nonnull__(1)));
 
-/* Constructor  for  a  "ccstructs_deserialise_I"   interface  that  deserialises  an
+/* Constructor  for  a  "ccstructs_deserialiser_I"   interface  that  deserialises  an
    instance of "my_coords_t" from a memory block. */
-ccstructs_decl ccstructs_deserialise_I ccname_iface_new(ccstructs_deserialise_I, my_coords_t) (my_coords_t * S)
+ccstructs_decl ccstructs_deserialiser_I ccname_iface_new(ccstructs_deserialiser_I, my_coords_t) (my_coords_t * S)
   __attribute__((__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */

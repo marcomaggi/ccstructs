@@ -18,6 +18,9 @@ Revision 0.2.0-devel.0
 * BACKWARDS INCOMPATIBILITY Renamed the interface "ccstructs_writable_I"
   to "ccstructs_dumpable_I".
 
+* BACKWARDS  INCOMPATIBILITY  Renamed  the  serialisation  interface  to
+  "ccstructs_serialiser_I" and "ccstructs_deserialiser_I".
+
 
 Revision 0.1.0-devel.2
 ----------------------
