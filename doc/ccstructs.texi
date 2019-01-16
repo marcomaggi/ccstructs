@@ -599,11 +599,10 @@ Pointer to function implementing the @method{dump} method.
 
 @deftypefn {Function Prototype} void {ccname_iface_method_type(ccstructs_dumpable_I, dump)} (cce_destination_t @var{L}, ccstructs_dumpable_I @var{I})
 Type of functions implementing the @method{dump} method.  Functions of this type write a
-representation of the object to an output channel; it is responsibility of this method to select
-which output channel to use.  If an error occurs: raise an exception by performing a non--local exit
-to @var{L}.
+representation of the object to an output channel (for example @stderr{}); it is responsibility of
+this method to select which output channel to use.  If an error occurs: raise an exception by
+performing a non--local exit to @var{L}.
 @end deftypefn
-
 
 @c page
 @node dumpable operations
@@ -680,7 +679,7 @@ then we can use the interface as follows:
 cce_location_t        L[1];
 
 if (cce_location(L)) @{
-  cce_run_catch_handlers_raise(L, upper_L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   spiffy_t   S = @{
     .alpha    = 1,
