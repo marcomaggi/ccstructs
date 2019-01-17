@@ -149,7 +149,8 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * core::                        Core type definitions.
 * dtor::                        The @iface{destructor} interface.
 * dumpable::                    The @iface{dumpable} interface.
-* serialisation::               The @iface{serialiser} and @iface{deserialiser} interfaces.
+* serialiser::                  The @iface{serialiser} interface.
+* deserialiser::                The @iface{deserialiser} interface.
 * pathname::                    The @iface{pathname} interface.
 * utils::                       Utility definitions.
 
@@ -693,22 +694,20 @@ if (cce_location(L)) @{
 @end smallexample
 
 @c page
-@node serialisation
-@chapter The @iface{serialiser} and @iface{deserialiser} interfaces
+@node serialiser
+@chapter The @iface{serialiser} interface
 
 
 The @iface{serialiser} interface, represented by the type @objtype{ccstructs_serialiser_I}, allows
-us to serialise a @struct{} into a destination storage.  The @iface{deserialiser} interface,
-represented by the type @objtype{ccstructs_deserialiser_I}, allows us to deserialise a @struct{}
-from a source storage.
+us to serialise a @struct{} into a destination storage.  The use of this interface is suggested to
+serialise ``small'' data structures that can be written to storage with a single operation (that is:
+it may be @strong{not} good if the serialisation is an @acronym{XML} document gigabytes in size).
 
 For implementation examples we should look in the source distribution of @value{PACKAGE}.
 
 @menu
 * serialiser typedefs::         @iface{serialiser} interface: type definitions.
 * serialiser operations::       @iface{serialiser} interface: operations.
-* deserialiser typedefs::       @iface{deserialiser} interface: type definitions.
-* deserialiser operations::     @iface{deserialiser} interface: operations.
 @end menu
 
 @c page
@@ -737,7 +736,9 @@ Pointer to function implementing the @method{write} method.
 
 @deftypefn {Function Prototype} size_t {ccname_iface_method_type(ccstructs_serialiser_I, required_size)} (ccstructs_serialiser_I const @var{I})
 Type of functions implementing the @method{required_size} method.  Return the minimum number of
-bytes needed to hold the serialisation of the source @struct{}.
+bytes needed to hold the serialisation of the source @struct{}; we should use the returned number to
+allocate a block of memory for the serialisation operation; it is possible that the actual
+serialisation will consume less memory.
 @end deftypefn
 
 
@@ -786,6 +787,24 @@ performing a non--local exit to @var{L}.
 @end deftypefun
 
 @c page
+@node deserialiser
+@chapter The @iface{deserialiser} interface
+
+
+The @iface{deserialiser} interface, represented by the type @objtype{ccstructs_deserialiser_I},
+allows us to deserialise a @struct{} from a source storage.  The use of this interface is suggested
+to deserialise ``small'' data structures that can be read from storage with a single operation (that
+is: it may be @strong{not} good if the serialisation is an @acronym{XML} document gigabytes in
+size).
+
+For implementation examples we should look in the source distribution of @value{PACKAGE}.
+
+@menu
+* deserialiser typedefs::       @iface{deserialiser} interface: type definitions.
+* deserialiser operations::     @iface{deserialiser} interface: operations.
+@end menu
+
+@c page
 @node deserialiser typedefs
 @section @iface{deserialiser} interface: type definitions
 
@@ -811,7 +830,11 @@ Pointer to function implementing the @method{read} method.
 
 @deftypefn {Function Prototype} size_t {ccname_iface_method_type(ccstructs_deserialiser_I, required_size)} (ccstructs_deserialiser_I const @var{I})
 Type of functions implementing the @method{required_size} method.  Return the minimum number of
-bytes needed to hold the serialisation of the source @struct{}.
+bytes needed to hold the serialisation of the source @struct{}; it is possible that the actual
+serialisation has consumed less memory.
+
+Example: let's say we must read the serialised @struct{} from a file, how many bytes do we need to
+read from the file to be sure to have it all?  This function answers this question.
 @end deftypefn
 
 
