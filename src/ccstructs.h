@@ -380,9 +380,12 @@ struct ccstructs_pathname_I {
 typedef ccmem_asciiz_t   ccname_iface_method_type(ccstructs_pathname_I, asciiz)    (cce_destination_t L, ccstructs_pathname_I I);
 typedef bool             ccname_iface_method_type(ccstructs_pathname_I, is_static) (ccstructs_pathname_I I);
 typedef ccstructs_dtor_I ccname_iface_method_type(ccstructs_pathname_I, dtor) (ccstructs_pathname_I I);
-typedef ccstructs_dumpable_I ccname_iface_method_type(ccstructs_pathname_I, dumpable) (ccstructs_pathname_I I);
-typedef ccstructs_serialiser_I ccname_iface_method_type(ccstructs_pathname_I, serialiser) (ccstructs_pathname_I I);
-typedef ccstructs_deserialiser_I ccname_iface_method_type(ccstructs_pathname_I, deserialiser) (ccstructs_pathname_I I);
+typedef ccstructs_dumpable_I
+  ccname_iface_method_type(ccstructs_pathname_I, dumpable)     (cce_destination_t L, ccstructs_pathname_I I);
+typedef ccstructs_serialiser_I
+  ccname_iface_method_type(ccstructs_pathname_I, serialiser)   (cce_destination_t L, ccstructs_pathname_I I);
+typedef ccstructs_deserialiser_I
+  ccname_iface_method_type(ccstructs_pathname_I, deserialiser) (cce_destination_t L, ccstructs_pathname_I I);
 
 struct ccname_iface_table_type(ccstructs_pathname_I) {
   ccname_iface_method_type(ccstructs_pathname_I, asciiz)	* asciiz;
@@ -438,23 +441,23 @@ ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I) (ccstructs_pathname_I c
 
 __attribute__((__always_inline__))
 static inline ccstructs_dumpable_I
-ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I) (ccstructs_pathname_I const I)
+ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I) (cce_destination_t L, ccstructs_pathname_I const I)
 {
-  return I.methods->dumpable(I);
+  return I.methods->dumpable(L, I);
 }
 
 __attribute__((__always_inline__))
 static inline ccstructs_serialiser_I
-ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_I) (ccstructs_pathname_I const I)
+ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_I) (cce_destination_t L, ccstructs_pathname_I const I)
 {
-  return I.methods->serialiser(I);
+  return I.methods->serialiser(L, I);
 }
 
 __attribute__((__always_inline__))
 static inline ccstructs_deserialiser_I
-ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I) (ccstructs_pathname_I const I)
+ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I) (cce_destination_t L, ccstructs_pathname_I const I)
 {
-  return I.methods->deserialiser(I);
+  return I.methods->deserialiser(L, I);
 }
 
 

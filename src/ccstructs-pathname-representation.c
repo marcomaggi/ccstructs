@@ -459,7 +459,7 @@ ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor) (ccstructs
 }
 
 ccstructs_dumpable_I
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dumpable) (ccstructs_pathname_I I)
+ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dumpable) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
 /* Method implementation function.  Implement the  method "dumpable" for instances of
    type  "ccstructs_pathname_I"   as  implemented  by   "ccstructs_pathname_t".   The
    returned destructor will work for both embedded and standalone instances. */
@@ -470,7 +470,7 @@ ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dumpable) (ccstr
 }
 
 ccstructs_serialiser_I
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, serialiser) (ccstructs_pathname_I I)
+ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, serialiser) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
 /* Method implementation  function.  Implement the method  "serialiser" for instances
    of  type "ccstructs_pathname_I"  as  implemented  by "ccstructs_pathname_t".   The
    returned destructor will work for both embedded and standalone instances. */
@@ -481,7 +481,7 @@ ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, serialiser) (ccs
 }
 
 ccstructs_deserialiser_I
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, deserialiser) (ccstructs_pathname_I I)
+ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, deserialiser) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
 /* Method implementation function.  Implement the method "deserialiser" for instances
    of  type "ccstructs_pathname_I"  as  implemented  by "ccstructs_pathname_t".   The
    returned destructor will work for both embedded and standalone instances. */

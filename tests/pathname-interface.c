@@ -377,7 +377,7 @@ test_4_1 (cce_destination_t upper_L)
       cctests_assert_asciiz(L, P, rep.ptr);
       cctests_assert(L, false == ccstructs_pathname_is_static(I));
       {
-	ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I)(I);
+	ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I)(L, I);
 	ccstructs_dumpable_dump(L, W);
       }
     }
@@ -403,7 +403,7 @@ test_4_2 (cce_destination_t upper_L)
       ccstructs_pathname_I	I = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
       ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(I));
       {
-	ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I)(I);
+	ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I)(L, I);
 	ccstructs_dumpable_dump(L, W);
       }
       {
@@ -444,7 +444,7 @@ test_5_1 (cce_destination_t upper_L)
 
     {
       /* Build the "serialise" interface. */
-      ccstructs_serialiser_I IS = ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_I)(IA);
+      ccstructs_serialiser_I IS = ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_I)(L, IA);
 
       /* Allocate memory for the serialisation. */
       M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialiser_required_size(IS));
@@ -460,7 +460,7 @@ test_5_1 (cce_destination_t upper_L)
       ccstructs_handler_init(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IB));
 
       /* Build the "deserialise" interface. */
-      ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I)(IB);
+      ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I)(L, IB);
 
       /* Deserialise the struct. */
       M_leftover = ccstructs_deserialiser_read(L, ID, M);
@@ -503,7 +503,7 @@ test_5_2 (cce_destination_t upper_L)
 
     {
       /* Build the "serialise" interface. */
-      ccstructs_serialiser_I IS = ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_I)(IA);
+      ccstructs_serialiser_I IS = ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_I)(L, IA);
 
       /* Allocate memory for the serialisation. */
       M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialiser_required_size(IS));
@@ -519,7 +519,7 @@ test_5_2 (cce_destination_t upper_L)
       ccstructs_handler_init(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IB));
 
       /* Build the "deserialise" interface. */
-      ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I)(IB);
+      ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I)(L, IB);
 
       /* Deserialise the struct. */
       M_leftover = ccstructs_deserialiser_read(L, ID, M);
