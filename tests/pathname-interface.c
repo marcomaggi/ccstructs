@@ -352,7 +352,7 @@ test_3_2 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Pathname interface.
+ ** Pathname interface: constructor and dumpable interface.
  ** ----------------------------------------------------------------- */
 
 void
@@ -370,17 +370,16 @@ test_4_1 (cce_destination_t upper_L)
     ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
     ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
-      ccstructs_dumpable_dump(L, W);
-    }
-
-    {
       ccstructs_pathname_I	I = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
 
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
       cctests_assert(L, false == ccstructs_pathname_is_static(I));
+      {
+	ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I)(I);
+	ccstructs_dumpable_dump(L, W);
+      }
     }
     cce_run_body_handlers(L);
   }
@@ -400,21 +399,146 @@ test_4_2 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
-    ccstructs_pathname_I	I = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
-    ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(I));
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
-      ccstructs_dumpable_dump(L, W);
-    }
-    {
-      ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
-      cctests_assert_equal_size(L, strlen(P), rep.len);
-      cctests_assert_asciiz(L, P, rep.ptr);
-      cctests_assert(L, false == ccstructs_pathname_is_static(I));
+      ccstructs_pathname_I	I = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(I));
+      {
+	ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I)(I);
+	ccstructs_dumpable_dump(L, W);
+      }
+      {
+	ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
+	cctests_assert_equal_size(L, strlen(P), rep.len);
+	cctests_assert_asciiz(L, P, rep.ptr);
+	cctests_assert(L, false == ccstructs_pathname_is_static(I));
+      }
     }
     cce_run_body_handlers(L);
   }
 }
+
+
+/** --------------------------------------------------------------------
+ ** Pathname interface: serialise/deserialise interfaces.
+ ** ----------------------------------------------------------------- */
+
+void
+test_5_1 (cce_destination_t upper_L)
+/* Use pathname structs allocted on the stack. */
+{
+  static char const *		P = "/path/to/file.ext";
+  cce_location_t		L[1];
+  ccstructs_pathname_t		A[1], B[1];
+  ccstructs_pathname_I		IA, IB;
+  ccstructs_clean_handler_t	A_H[1], B_H[1];
+  ccmem_block_t			M, M_leftover;
+  ccmem_clean_handler_t		M_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    /* Build the struct to be serialised. */
+    ccname_init(ccstructs_pathname_t, from_chars)(L, A, P);
+    IA = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(A);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IA));
+
+    {
+      /* Build the "serialise" interface. */
+      ccstructs_serialiser_I IS = ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_I)(IA);
+
+      /* Allocate memory for the serialisation. */
+      M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialiser_required_size(IS));
+
+      /* Serialise the struct. */
+      M_leftover = ccstructs_serialiser_write(L, IS, M);
+    }
+
+    {
+      /* Build a struct to be target of deserialisation. */
+      ccname_init(ccstructs_pathname_t, deserialisable)(B);
+      IB = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(B);
+      ccstructs_handler_init(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IB));
+
+      /* Build the "deserialise" interface. */
+      ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I)(IB);
+
+      /* Deserialise the struct. */
+      M_leftover = ccstructs_deserialiser_read(L, ID, M);
+
+      /* Check the deserialisation results. */
+      {
+	ccmem_asciiz_t		rep_A = ccstructs_pathname_asciiz(L, IA);
+	ccmem_asciiz_t		rep_B = ccstructs_pathname_asciiz(L, IB);
+
+	cctests_assert_equal_size(L, rep_A.len, rep_B.len);
+	cctests_assert_asciiz(L, rep_A.ptr, rep_B.ptr);
+	cctests_assert(L, M_leftover.ptr > M.ptr);
+	cctests_assert(L, M_leftover.len < M.len);
+      }
+    }
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_5_2 (cce_destination_t upper_L)
+/* Use pathname structs allocted on the heap. */
+{
+  static char const *		P = "/path/to/file.ext";
+  cce_location_t		L[1];
+  ccstructs_pathname_t const	*A;
+  ccstructs_pathname_t		*B;
+  ccstructs_pathname_I		IA, IB;
+  ccstructs_clean_handler_t	A_H[1], B_H[1];
+  ccmem_block_t			M, M_leftover;
+  ccmem_clean_handler_t		M_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    /* Build the struct to be serialised. */
+    A  = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
+    IA = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(A);
+    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IA));
+
+    {
+      /* Build the "serialise" interface. */
+      ccstructs_serialiser_I IS = ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_I)(IA);
+
+      /* Allocate memory for the serialisation. */
+      M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialiser_required_size(IS));
+
+      /* Serialise the struct. */
+      M_leftover = ccstructs_serialiser_write(L, IS, M);
+    }
+
+    {
+      /* Build a struct to be target of deserialisation. */
+      B  = ccname_new(ccstructs_pathname_t, deserialisable)(L);
+      IB = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(B);
+      ccstructs_handler_init(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IB));
+
+      /* Build the "deserialise" interface. */
+      ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I)(IB);
+
+      /* Deserialise the struct. */
+      M_leftover = ccstructs_deserialiser_read(L, ID, M);
+
+      /* Check the deserialisation results. */
+      {
+	ccmem_asciiz_t		rep_A = ccstructs_pathname_asciiz(L, IA);
+	ccmem_asciiz_t		rep_B = ccstructs_pathname_asciiz(L, IB);
+
+	cctests_assert_equal_size(L, rep_A.len, rep_B.len);
+	cctests_assert_asciiz(L, rep_A.ptr, rep_B.ptr);
+	cctests_assert(L, M_leftover.ptr > M.ptr);
+	cctests_assert(L, M_leftover.len < M.len);
+      }
+    }
+    cce_run_body_handlers(L);
+  }
+}
+
 
 
 int
@@ -438,17 +562,24 @@ main (void)
     }
     cctests_end_group();
 
-    cctests_begin_group("pathname representation, serialisable interface");
+    cctests_begin_group("pathname representation, serialiser/deserialiser interfaces");
     {
       cctests_run(test_3_1);
       cctests_run(test_3_2);
     }
     cctests_end_group();
 
-    cctests_begin_group("pathname representation, pathname interface");
+    cctests_begin_group("pathname representation, pathname interface: constructor, destructor and dumpable interface");
     {
       cctests_run(test_4_1);
       cctests_run(test_4_2);
+    }
+    cctests_end_group();
+
+    cctests_begin_group("pathname representation, pathname interface: serialiser/deserialiser interfaces");
+    {
+      cctests_run(test_5_1);
+      cctests_run(test_5_2);
     }
     cctests_end_group();
   }

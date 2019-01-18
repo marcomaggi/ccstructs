@@ -878,9 +878,8 @@ by performing a non--local exit to @var{L}.
 
 
 The @iface{pathname} interface, represented by the type @objtype{ccstructs_pathname_I}, is meant to
-be used in algorithm that need to operate on @posix{} pathname specifications without being tied to
-a specific pathname internal representation; the only mandatory requirement is that the pathname has
-an external representation as @asciiz{} string.
+be used in algorithms that need to operate on @posix{} pathname specifications without being tied to
+a specific pathname internal representation.
 
 @menu
 * pathname typedefs::           Type definitions.
@@ -903,22 +902,25 @@ function calls.
 Type of methods table for the @iface{pathname} interface.  It has the following fields:
 
 @table @code
-@item ccname_iface_method_type(ccstructs_pathname_I, dtor) * dtor
-Pointer to function implementing the @method{dtor} method.
-
 @item ccname_iface_method_type(ccstructs_pathname_I, asciiz) * asciiz
 Pointer to function implementing the @method{asciiz} method.
 
 @item ccname_iface_method_type(ccstructs_pathname_I, is_static) * is_static
 Pointer to function implementing the @method{is_static} method.
+
+@item ccname_iface_method_type(ccstructs_pathname_I, dtor) * dtor
+Pointer to function implementing the @method{dtor} method.
+
+@item ccname_iface_method_type(ccstructs_pathname_I, dumpable) * dumpable
+Pointer to function implementing the @method{dumpable} method.
+
+@item ccname_iface_method_type(ccstructs_pathname_I, serialiser) * serialiser
+Pointer to function implementing the @method{serialiser} method.
+
+@item ccname_iface_method_type(ccstructs_pathname_I, deserialiser) * deserialiser
+Pointer to function implementing the @method{deserialiser} method.
 @end table
 @end deftp
-
-
-@deftypefn {Function Prototype} ccstructs_dtor_I {ccname_iface_method_type(ccstructs_pathname_I, dtor)} (ccstructs_pathname_I @var{I})
-Type of functions implementing the @method{dtor} method.  Return an instance of the
-@objtype{ccstructs_dtor_I} interface that destroys the underlying pathname representation.
-@end deftypefn
 
 
 @deftypefn {Function Prototype} ccmem_asciiz_t {ccname_iface_method_type(ccstructs_pathname_I, asciiz)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
@@ -933,6 +935,34 @@ Type of functions implementing the @method{is_static} method.  In general, the u
 should make a copy of the @asciiz{} pathname representation, returned by the @method{asciiz} method,
 if it needs to keep it independently from the extent (the lifetime) of @var{I}; but if this function
 returns @ctrue{}: it can rely on the existence of the representation for the time it needs it.
+@end deftypefn
+
+
+@deftypefn {Function Prototype} ccstructs_dtor_I {ccname_iface_method_type(ccstructs_pathname_I, dtor)} (ccstructs_pathname_I @var{I})
+Type of functions implementing the @method{dtor} method.  Return an instance of the
+@objtype{ccstructs_dtor_I} interface that destroys the underlying pathname representation;
+@ref{dtor, The @iface{destructor} interface}.
+@end deftypefn
+
+
+@deftypefn {Function Prototype} ccstructs_dumpable_I {ccname_iface_method_type(ccstructs_pathname_I, dumpable)} (ccstructs_pathname_I @var{I})
+Type of functions implementing the @method{dumpable} method.  Return an instance of the
+@objtype{ccstructs_dumpable_I} that prints the underlying pathname representation; @ref{dumpable,
+The @iface{dumpable} interface}.
+@end deftypefn
+
+
+@deftypefn {Function Prototype} ccstructs_serialiser_I {ccname_iface_method_type(ccstructs_pathname_I, serialiser)} (ccstructs_pathname_I @var{I})
+Type of functions implementing the @method{serialiser} method.  Return an instance of the
+@objtype{ccstructs_serialiser_I} that serialises the underlying pathname representation;
+@ref{serialiser, The @iface{serialiser} interface}.
+@end deftypefn
+
+
+@deftypefn {Function Prototype} ccstructs_deserialiser_I {ccname_iface_method_type(ccstructs_pathname_I, deserialiser)} (ccstructs_pathname_I @var{I})
+Type of functions implementing the @method{deserialiser} method.  Return an instance of the
+@objtype{ccstructs_deserialiser_I} that deserialises the underlying pathname representation;
+@ref{deserialiser, The @iface{deserialiser} interface}.
 @end deftypefn
 
 @c page
@@ -951,13 +981,6 @@ Return a pointer to the @struct{} to which the interface belongs.
 @end deftypefun
 
 
-@deftypefun ccstructs_dtor_I {ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)} (ccstructs_pathname_I @var{I})
-Apply the method @method{dtor} to the interface instance.  Build and return an instance of the
-interface @objtype{ccstructs_dtor_I} that we can use to destroy the underlying pathname
-representation.
-@end deftypefun
-
-
 @deftypefun ccmem_asciiz_t ccstructs_pathname_asciiz (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
 Apply the method @method{asciiz} to the interface instance.  Return an instance of
 @objtype{ccmem_asciiz_t} holding an @asciiz{} representation of the pathname.  If an error occurs
@@ -969,10 +992,42 @@ generating the representation: raise an exception by performing a non--local exi
 Apply the method @method{is_static} to the interface instance.
 @end deftypefun
 
+
+@deftypefun ccstructs_dtor_I {ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)} (ccstructs_pathname_I @var{I})
+Apply the method @method{dtor} to the interface instance.  Build and return an instance of the
+interface @objtype{ccstructs_dtor_I} that we can use to destroy the underlying pathname
+representation; @ref{dtor, The @iface{destructor} interface}.
+@end deftypefun
+
+
+@deftypefun ccstructs_dumpable_I {ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I)} (ccstructs_pathname_I @var{I})
+Apply the method @method{dumpable} to the interface instance.  Build and return an instance of the
+interface @objtype{ccstructs_dumpable_I} acting upon the underlying pathname representation;
+@ref{dumpable, The @iface{destructor} interface}.
+@end deftypefun
+
+
+@deftypefun ccstructs_serialiser_I {ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_I)} (ccstructs_pathname_I @var{I})
+Apply the method @method{serialiser} to the interface instance.  Build and return an instance of the
+interface @objtype{ccstructs_serialiser_I} acting upon the underlying pathname representation;
+@ref{serialiser, The @iface{destructor} interface}.
+@end deftypefun
+
+
+@deftypefun ccstructs_deserialiser_I {ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I)} (ccstructs_pathname_I @var{I})
+Apply the method @method{deserialiser} to the interface instance.  Build and return an instance of
+the interface @objtype{ccstructs_deserialiser_I} acting upon the underlying pathname representation;
+@ref{deserialiser, The @iface{destructor} interface}.
+@end deftypefun
+
 @c page
 @node pathname simple
 @section Simple implementations of a @iface{pathname} interface
 
+
+The @value{PACKAGE} library implements a very simple and incomplete file system pathname
+representation, which supports the @objtype{ccstructs_pathname_I} interface.  Most of the methods
+will just raise an exception of type @objtype{cce_condition_unimplemented_t}.
 
 @menu
 * pathname simple typedefs::    Simple pathname: type definitions.
@@ -1000,20 +1055,22 @@ Type of simple file system pathname representation implemented by @value{PACKAGE
 
 @deftypefun void {ccname_init(ccstructs_pathname_t, from_asciiz)} (cce_destination_t @var{L}, ccstructs_pathname_t * @var{ptn}, ccmem_asciiz_t @var{rep})
 Constructor function that initialises an already allocated @struct{} instance.  This function
-initialises from an @asciiz{} representation.  @ccmemoryref{ascii zero, Zero terminated strings}.
+initialises from an @asciiz{} representation; @ccmemoryref{ascii zero, Zero terminated strings}.  If
+an error occurs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
 @deftypefun void {ccname_init(ccstructs_pathname_t, from_ascii)} (cce_destination_t @var{L}, ccstructs_pathname_t * @var{ptn}, ccmem_ascii_t @var{rep})
 Constructor function that initialises an already allocated @struct{} instance.  This function
-initialises from an @ascii{} representation.  @ccmemoryref{ascii non-zero, Non--zero terminated
-strings}.
+initialises from an @ascii{} representation; @ccmemoryref{ascii non-zero, Non--zero terminated
+strings}.  If an error occurs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
 @deftypefun void {ccname_init(ccstructs_pathname_t, from_chars)} (cce_destination_t @var{L}, ccstructs_pathname_t * @var{ptn}, char const * @var{P})
 Constructor function that initialises an already allocated @struct{} instance.  This function
-initialises from a C pointer to an @asciiz{} representation.
+initialises from a C pointer to an @asciiz{} representation.  If an error occurs: raise an exception
+by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
@@ -1029,28 +1086,33 @@ such a way that it allows for both finalisation and mutation from deserialisatio
 
 @deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, from_asciiz)} (cce_destination_t @var{L}, ccmem_asciiz_t @var{rep})
 Constructor function that allocates the @struct{} on the heap using the standard memory allocator
-implemented by CCMemory.  This function initialises from an @asciiz{} representation.
-@ccmemoryref{ascii zero, Zero terminated strings}.
+implemented by CCMemory; @ccmemoryref{std, The standard allocator}.  This function initialises from
+an @asciiz{} representation; @ccmemoryref{ascii zero, Zero terminated strings}.  If an error occurs:
+raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
 @deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, from_ascii)} (cce_destination_t @var{L}, ccmem_ascii_t @var{rep})
 Constructor function that allocates the @struct{} on the heap using the standard memory allocator
-implemented by CCMemory.  This function initialises from an @ascii{} representation.
-@ccmemoryref{ascii non-zero, Non--zero terminated strings}.
+implemented by CCMemory; @ccmemoryref{std, The standard allocator}.  This function initialises from
+an @ascii{} representation; @ccmemoryref{ascii non-zero, Non--zero terminated strings}.  If an error
+occurs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
 @deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, from_chars)} (cce_destination_t @var{L}, char const * @var{P})
 Constructor function that allocates the @struct{} on the heap using the standard memory allocator
-implemented by CCMemory.  This function initialises from a C pointer to an @asciiz{} representation.
+implemented by CCMemory; @ccmemoryref{std, The standard allocator}.  This function initialises from
+a C pointer to an @asciiz{} representation.  If an error occurs: raise an exception by performing a
+non--local exit to @var{L}.
 @end deftypefun
 
 
 @deftypefun {ccstructs_pathname_t *} {ccname_new(ccstructs_pathname_t, deserialisable)} (cce_destination_t @var{L})
 Constructor function that allocates the @struct{} on the heap using the standard memory allocator
-implemented by CCMemory.  This function initialises in such a way that it allows for both
-finalisation and mutation from deserialisation.
+implemented by CCMemory; @ccmemoryref{std, The standard allocator}.  This function initialises in
+such a way that it allows for both finalisation and mutation from deserialisation.  If an error
+occurs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 @c page
@@ -1060,32 +1122,36 @@ finalisation and mutation from deserialisation.
 
 @deftypefun ccstructs_dtor_I {ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
 Interface constructor for @objtype{ccstructs_dtor_I} as implemented by
-@objtype{ccstructs_pathname_t}.  The returned destructor interface will work for both embedded and
-standalone instances of @objtype{ccstructs_pathname_t}.
+@objtype{ccstructs_pathname_t}; @ref{dtor, The @iface{destructor} interface}.  The returned
+destructor interface will work for both embedded and standalone instances of
+@objtype{ccstructs_pathname_t}.
 @end deftypefun
 
 
 @deftypefun ccstructs_pathname_I {ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
 Interface constructor for @objtype{ccstructs_pathname_I} as implemented by
-@objtype{ccstructs_pathname_t}.
+@objtype{ccstructs_pathname_t}; @ref{pathname, The @iface{pathname} interface}.
 @end deftypefun
 
 
 @deftypefun ccstructs_serialiser_I {ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
 Constructor for a @objtype{ccstructs_serialiser_I} interface that serialises an instance of
-@objtype{ccstructs_pathname_t} into a memory block.
+@objtype{ccstructs_pathname_t} into a memory block; @ref{serialiser, The @iface{serialiser}
+interface}.
 @end deftypefun
 
 
 @deftypefun ccstructs_deserialiser_I {ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t)} (ccstructs_pathname_t * @var{ptn})
 Constructor for a @objtype{ccstructs_deserialiser_I} interface that deserialises an instance of
-@objtype{ccstructs_pathname_t} from a memory block.
+@objtype{ccstructs_pathname_t} from a memory block; @ref{deserialiser, The @iface{deserialiser}
+interface}.
 @end deftypefun
 
 
 @deftypefun ccstructs_dumpable_I {ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
 Constructor for a @objtype{ccstructs_dumpable_I} interface that prints the a representation of the
-underlying @objtype{ccstructs_pathname_t} on the @stderr{} stream.
+underlying @objtype{ccstructs_pathname_t} on the @stderr{} stream; @ref{dumpable, The
+@iface{dumpable} interface}.
 @end deftypefun
 
 @c page
@@ -1141,7 +1207,8 @@ ccstructs_serialiser_I  IS =
   ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t)(ptn);
 
 /* Allocate memory for the serialisation. */
-ccmem_block_t  M =
+ccmem_clean_handler_t  M_H[1];
+ccmem_block_t          M =
   ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator,
     ccstructs_serialiser_required_size(IS));
 

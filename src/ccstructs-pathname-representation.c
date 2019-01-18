@@ -386,39 +386,49 @@ ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, standalone, release)
  ** Interface "ccstructs_pathname_I": implementation for "ccstructs_pathname_t".
  ** ----------------------------------------------------------------- */
 
-/* Method  function  prototype.   This  function implements  the  method  "dtor"  for
-   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
-   "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, dtor)      ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor);
 /* Method  function prototype.   This  function implements  the  method "asciiz"  for
    instances     of     type     "ccstructs_pathname_I"     as     implemented     by
    "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, asciiz)    ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, asciiz);
+static ccname_iface_method_type(ccstructs_pathname_I, asciiz)
+  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, asciiz);
 /* Method function  prototype.  This function  implements the method  "is_static" for
    instances     of     type     "ccstructs_pathname_I"     as     implemented     by
    "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, is_static) ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_static);
+static ccname_iface_method_type(ccstructs_pathname_I, is_static)
+  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_static);
+/* Method  function  prototype.   This  function implements  the  method  "dtor"  for
+   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   "ccstructs_pathname_t". */
+static ccname_iface_method_type(ccstructs_pathname_I, dtor)
+  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor);
+/* Method function  prototype.  This  function implements  the method  "dumpable" for
+   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   "ccstructs_pathname_t". */
+static ccname_iface_method_type(ccstructs_pathname_I, dumpable)
+  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dumpable);
+/* Method function prototype.   This function implements the  method "serialiser" for
+   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   "ccstructs_pathname_t". */
+static ccname_iface_method_type(ccstructs_pathname_I, serialiser)
+  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, serialiser);
+/* Method function prototype.  This function implements the method "deserialiser" for
+   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   "ccstructs_pathname_t". */
+static ccname_iface_method_type(ccstructs_pathname_I, deserialiser)
+  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, deserialiser);
 
 /* Interface  methods  table.  This  struct  implements  the  methods table  for  the
    interface "ccstructs_pathname_I" as implemented by "ccstructs_pathname_t". */
 static ccname_iface_table_type(ccstructs_pathname_I) const ccname_iface_table(ccstructs_pathname_I, ccstructs_pathname_t) = {
-  .dtor		= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor),
   .asciiz	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, asciiz),
-  .is_static	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_static)
+  .is_static	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_static),
+  .dtor		= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor),
+  .dumpable	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dumpable),
+  .serialiser	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, serialiser),
+  .deserialiser	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, deserialiser)
 };
 
 /* ------------------------------------------------------------------ */
-
-ccstructs_dtor_I
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor) (ccstructs_pathname_I I)
-/* Method implementation function.  Implement the method "dtor" for instances of type
-   "ccstructs_pathname_I"  as implemented  by  "ccstructs_pathname_t".  The  returned
-   destructor will work for both embedded and standalone instances. */
-{
-  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
-
-  return ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn);
-}
 
 ccmem_asciiz_t
 ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, asciiz) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
@@ -435,6 +445,50 @@ ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_static) (ccst
    type "ccstructs_pathname_I" as implemented by "ccstructs_pathname_t". */
 {
   return false;
+}
+
+ccstructs_dtor_I
+ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor) (ccstructs_pathname_I I)
+/* Method implementation function.  Implement the method "dtor" for instances of type
+   "ccstructs_pathname_I"  as implemented  by  "ccstructs_pathname_t".  The  returned
+   destructor will work for both embedded and standalone instances. */
+{
+  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
+
+  return ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn);
+}
+
+ccstructs_dumpable_I
+ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dumpable) (ccstructs_pathname_I I)
+/* Method implementation function.  Implement the  method "dumpable" for instances of
+   type  "ccstructs_pathname_I"   as  implemented  by   "ccstructs_pathname_t".   The
+   returned destructor will work for both embedded and standalone instances. */
+{
+  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
+
+  return ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+}
+
+ccstructs_serialiser_I
+ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, serialiser) (ccstructs_pathname_I I)
+/* Method implementation  function.  Implement the method  "serialiser" for instances
+   of  type "ccstructs_pathname_I"  as  implemented  by "ccstructs_pathname_t".   The
+   returned destructor will work for both embedded and standalone instances. */
+{
+  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
+
+  return ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t)(ptn);
+}
+
+ccstructs_deserialiser_I
+ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, deserialiser) (ccstructs_pathname_I I)
+/* Method implementation function.  Implement the method "deserialiser" for instances
+   of  type "ccstructs_pathname_I"  as  implemented  by "ccstructs_pathname_t".   The
+   returned destructor will work for both embedded and standalone instances. */
+{
+  CCSTRUCTS_PC(ccstructs_pathname_t, ptn, ccstructs_pathname_self(I));
+
+  return ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t)(ptn);
 }
 
 

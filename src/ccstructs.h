@@ -377,14 +377,20 @@ struct ccstructs_pathname_I {
   ccstructs_core_t				const * self;
 };
 
-typedef ccstructs_dtor_I ccname_iface_method_type(ccstructs_pathname_I, dtor)      (ccstructs_pathname_I I);
 typedef ccmem_asciiz_t   ccname_iface_method_type(ccstructs_pathname_I, asciiz)    (cce_destination_t L, ccstructs_pathname_I I);
 typedef bool             ccname_iface_method_type(ccstructs_pathname_I, is_static) (ccstructs_pathname_I I);
+typedef ccstructs_dtor_I ccname_iface_method_type(ccstructs_pathname_I, dtor) (ccstructs_pathname_I I);
+typedef ccstructs_dumpable_I ccname_iface_method_type(ccstructs_pathname_I, dumpable) (ccstructs_pathname_I I);
+typedef ccstructs_serialiser_I ccname_iface_method_type(ccstructs_pathname_I, serialiser) (ccstructs_pathname_I I);
+typedef ccstructs_deserialiser_I ccname_iface_method_type(ccstructs_pathname_I, deserialiser) (ccstructs_pathname_I I);
 
 struct ccname_iface_table_type(ccstructs_pathname_I) {
-  ccname_iface_method_type(ccstructs_pathname_I, dtor)		* dtor;
   ccname_iface_method_type(ccstructs_pathname_I, asciiz)	* asciiz;
   ccname_iface_method_type(ccstructs_pathname_I, is_static)	* is_static;
+  ccname_iface_method_type(ccstructs_pathname_I, dtor)		* dtor;
+  ccname_iface_method_type(ccstructs_pathname_I, dumpable)	* dumpable;
+  ccname_iface_method_type(ccstructs_pathname_I, serialiser)	* serialiser;
+  ccname_iface_method_type(ccstructs_pathname_I, deserialiser)	* deserialiser;
 };
 
 /* ------------------------------------------------------------------ */
@@ -408,13 +414,6 @@ ccstructs_pathname_self (ccstructs_pathname_I const I)
 }
 
 __attribute__((__always_inline__))
-static inline ccstructs_dtor_I
-ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I) (ccstructs_pathname_I const I)
-{
-  return I.methods->dtor(I);
-}
-
-__attribute__((__always_inline__))
 static inline ccmem_asciiz_t
 ccstructs_pathname_asciiz (cce_destination_t L, ccstructs_pathname_I const I)
 {
@@ -426,6 +425,36 @@ static inline bool
 ccstructs_pathname_is_static (ccstructs_pathname_I const I)
 {
   return I.methods->is_static(I);
+}
+
+/* ------------------------------------------------------------------ */
+
+__attribute__((__always_inline__))
+static inline ccstructs_dtor_I
+ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I) (ccstructs_pathname_I const I)
+{
+  return I.methods->dtor(I);
+}
+
+__attribute__((__always_inline__))
+static inline ccstructs_dumpable_I
+ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I) (ccstructs_pathname_I const I)
+{
+  return I.methods->dumpable(I);
+}
+
+__attribute__((__always_inline__))
+static inline ccstructs_serialiser_I
+ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_I) (ccstructs_pathname_I const I)
+{
+  return I.methods->serialiser(I);
+}
+
+__attribute__((__always_inline__))
+static inline ccstructs_deserialiser_I
+ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I) (ccstructs_pathname_I const I)
+{
+  return I.methods->deserialiser(I);
 }
 
 
@@ -500,21 +529,35 @@ ccstructs_decl ccname_iface_new_type(ccstructs_pathname_I, ccstructs_pathname_t)
 
 /* ------------------------------------------------------------------ */
 
-/* Constructor for a "ccstructs_serialiser_I" interface that serialises an instance of
-   "ccstructs_pathname_t" into a memory block. */
-ccstructs_decl ccstructs_serialiser_I ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t) (ccstructs_pathname_t const * ptn)
-  __attribute__((__nonnull__(1)));
+/* Type  of  interface  constructor.   Functions  of this  type  build  instances  of
+   "ccstructs_dumpable_I" implemented by "ccstructs_pathname_t". */
+typedef ccstructs_dumpable_I ccname_iface_new_type(ccstructs_dumpable_I, ccstructs_pathname_t) (ccstructs_pathname_t const * ptn);
 
-/* Constructor  for  a  "ccstructs_deserialiser_I"   interface  that  deserialises  an
-   instance of "ccstructs_pathname_t" from a memory block. */
-ccstructs_decl ccstructs_deserialiser_I ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t) (ccstructs_pathname_t * ptn)
+/* Constructor  for   a  "ccstructs_dumpable_I"   interface  that  prints   a  struct
+   representation on some output channel. */
+ccstructs_decl ccname_iface_new_type(ccstructs_dumpable_I, ccstructs_pathname_t) ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)
   __attribute__((__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-/* Constructor  for   a  "ccstructs_dumpable_I"   interface  that  prints   a  struct
-   representation on some output channel. */
-ccstructs_decl ccstructs_dumpable_I ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t) (ccstructs_pathname_t const * ptn)
+/* Type  of  interface  constructor.   Functions  of this  type  build  instances  of
+   "ccstructs_serialiser_I" implemented by "ccstructs_pathname_t". */
+typedef ccstructs_serialiser_I ccname_iface_new_type(ccstructs_serialiser_I, ccstructs_pathname_t) (ccstructs_pathname_t const * ptn);
+
+/* Type  of  interface  constructor.   Functions  of this  type  build  instances  of
+   "ccstructs_deserialiser_I" implemented by "ccstructs_pathname_t". */
+typedef ccstructs_deserialiser_I ccname_iface_new_type(ccstructs_deserialiser_I, ccstructs_pathname_t) (ccstructs_pathname_t * ptn);
+
+/* Constructor for a "ccstructs_serialiser_I" interface that serialises an instance of
+   "ccstructs_pathname_t" into a memory block. */
+ccstructs_decl ccname_iface_new_type(ccstructs_serialiser_I, ccstructs_pathname_t)
+  ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t)
+  __attribute__((__nonnull__(1)));
+
+/* Constructor  for  a  "ccstructs_deserialiser_I"   interface  that  deserialises  an
+   instance of "ccstructs_pathname_t" from a memory block. */
+ccstructs_decl ccname_iface_new_type(ccstructs_deserialiser_I, ccstructs_pathname_t)
+  ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t)
   __attribute__((__nonnull__(1)));
 
 
