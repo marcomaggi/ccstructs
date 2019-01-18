@@ -391,26 +391,55 @@ ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, standalone, release)
    "ccstructs_pathname_t". */
 static ccname_iface_method_type(ccstructs_pathname_I, asciiz)
   ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, asciiz);
+
 /* Method function  prototype.  This function  implements the method  "is_static" for
    instances     of     type     "ccstructs_pathname_I"     as     implemented     by
    "ccstructs_pathname_t". */
 static ccname_iface_method_type(ccstructs_pathname_I, is_static)
   ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_static);
+
+/* Method function prototype.  This function  implements the method "is_absolute" for
+   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   "ccstructs_pathname_t". */
+static ccname_iface_method_type(ccstructs_pathname_I, is_absolute)
+  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_absolute);
+
+/* Method function prototype.  This function  implements the method "is_relative" for
+   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   "ccstructs_pathname_t". */
+static ccname_iface_method_type(ccstructs_pathname_I, is_relative)
+  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_relative);
+
+/* Method function  prototype.  This  function implements the  method "is_normalised"
+   for    instances    of    type   "ccstructs_pathname_I"    as    implemented    by
+   "ccstructs_pathname_t". */
+static ccname_iface_method_type(ccstructs_pathname_I, is_normalised)
+  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_normalised);
+
+/* Method function prototype.  This function  implements the method "is_realpath" for
+   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   "ccstructs_pathname_t". */
+static ccname_iface_method_type(ccstructs_pathname_I, is_realpath)
+  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_realpath);
+
 /* Method  function  prototype.   This  function implements  the  method  "dtor"  for
    instances     of     type     "ccstructs_pathname_I"     as     implemented     by
    "ccstructs_pathname_t". */
 static ccname_iface_method_type(ccstructs_pathname_I, dtor)
   ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor);
+
 /* Method function  prototype.  This  function implements  the method  "dumpable" for
    instances     of     type     "ccstructs_pathname_I"     as     implemented     by
    "ccstructs_pathname_t". */
 static ccname_iface_method_type(ccstructs_pathname_I, dumpable)
   ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dumpable);
+
 /* Method function prototype.   This function implements the  method "serialiser" for
    instances     of     type     "ccstructs_pathname_I"     as     implemented     by
    "ccstructs_pathname_t". */
 static ccname_iface_method_type(ccstructs_pathname_I, serialiser)
   ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, serialiser);
+
 /* Method function prototype.  This function implements the method "deserialiser" for
    instances     of     type     "ccstructs_pathname_I"     as     implemented     by
    "ccstructs_pathname_t". */
@@ -422,6 +451,11 @@ static ccname_iface_method_type(ccstructs_pathname_I, deserialiser)
 static ccname_iface_table_type(ccstructs_pathname_I) const ccname_iface_table(ccstructs_pathname_I, ccstructs_pathname_t) = {
   .asciiz	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, asciiz),
   .is_static	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_static),
+  .is_absolute	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_absolute),
+  .is_relative	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_relative),
+  .is_normalised= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_normalised),
+  .is_realpath	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_realpath),
+
   .dtor		= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor),
   .dumpable	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dumpable),
   .serialiser	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, serialiser),
@@ -446,6 +480,43 @@ ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_static) (ccst
 {
   return false;
 }
+
+bool
+ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_absolute) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
+/* Method implementation function.  Implement  the method "is_absolute" for instances
+   of type "ccstructs_pathname_I" as implemented by "ccstructs_pathname_t". */
+{
+  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
+  return ('/' == ptn->rep.ptr[0])? true : false;
+}
+
+bool
+ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_relative) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
+/* Method implementation function.  Implement  the method "is_relative" for instances
+   of type "ccstructs_pathname_I" as implemented by "ccstructs_pathname_t". */
+{
+  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
+  return ('/' == ptn->rep.ptr[0])? false : true;
+}
+
+bool
+ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_normalised) (cce_destination_t L, ccstructs_pathname_I I CCSTRUCTS_UNUSED)
+/* Method  implementation   function.   Implement  the  method   "is_normalised"  for
+   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   "ccstructs_pathname_t". */
+{
+  cce_raise(L, cce_condition_new_unimplemented());
+}
+
+bool
+ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_realpath) (cce_destination_t L, ccstructs_pathname_I I CCSTRUCTS_UNUSED)
+/* Method implementation function.  Implement  the method "is_realpath" for instances
+   of type "ccstructs_pathname_I" as implemented by "ccstructs_pathname_t". */
+{
+  cce_raise(L, cce_condition_new_unimplemented());
+}
+
+/* ------------------------------------------------------------------ */
 
 ccstructs_dtor_I
 ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor) (ccstructs_pathname_I I)

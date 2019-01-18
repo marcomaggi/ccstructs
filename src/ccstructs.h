@@ -377,8 +377,13 @@ struct ccstructs_pathname_I {
   ccstructs_core_t				const * self;
 };
 
-typedef ccmem_asciiz_t   ccname_iface_method_type(ccstructs_pathname_I, asciiz)    (cce_destination_t L, ccstructs_pathname_I I);
-typedef bool             ccname_iface_method_type(ccstructs_pathname_I, is_static) (ccstructs_pathname_I I);
+typedef ccmem_asciiz_t ccname_iface_method_type(ccstructs_pathname_I, asciiz) (cce_destination_t L, ccstructs_pathname_I I);
+typedef bool ccname_iface_method_type(ccstructs_pathname_I, is_static)     (ccstructs_pathname_I I);
+typedef bool ccname_iface_method_type(ccstructs_pathname_I, is_absolute)   (cce_destination_t L, ccstructs_pathname_I I);
+typedef bool ccname_iface_method_type(ccstructs_pathname_I, is_relative)   (cce_destination_t L, ccstructs_pathname_I I);
+typedef bool ccname_iface_method_type(ccstructs_pathname_I, is_normalised) (cce_destination_t L, ccstructs_pathname_I I);
+typedef bool ccname_iface_method_type(ccstructs_pathname_I, is_realpath)   (cce_destination_t L, ccstructs_pathname_I I);
+
 typedef ccstructs_dtor_I ccname_iface_method_type(ccstructs_pathname_I, dtor) (ccstructs_pathname_I I);
 typedef ccstructs_dumpable_I
   ccname_iface_method_type(ccstructs_pathname_I, dumpable)     (cce_destination_t L, ccstructs_pathname_I I);
@@ -390,6 +395,11 @@ typedef ccstructs_deserialiser_I
 struct ccname_iface_table_type(ccstructs_pathname_I) {
   ccname_iface_method_type(ccstructs_pathname_I, asciiz)	* asciiz;
   ccname_iface_method_type(ccstructs_pathname_I, is_static)	* is_static;
+  ccname_iface_method_type(ccstructs_pathname_I, is_absolute)   * is_absolute;
+  ccname_iface_method_type(ccstructs_pathname_I, is_relative)   * is_relative;
+  ccname_iface_method_type(ccstructs_pathname_I, is_normalised) * is_normalised;
+  ccname_iface_method_type(ccstructs_pathname_I, is_realpath)   * is_realpath;
+
   ccname_iface_method_type(ccstructs_pathname_I, dtor)		* dtor;
   ccname_iface_method_type(ccstructs_pathname_I, dumpable)	* dumpable;
   ccname_iface_method_type(ccstructs_pathname_I, serialiser)	* serialiser;
@@ -428,6 +438,34 @@ static inline bool
 ccstructs_pathname_is_static (ccstructs_pathname_I const I)
 {
   return I.methods->is_static(I);
+}
+
+__attribute__((__always_inline__,__pure__))
+static inline bool
+ccstructs_pathname_is_absolute (cce_destination_t L, ccstructs_pathname_I const I)
+{
+  return I.methods->is_absolute(L, I);
+}
+
+__attribute__((__always_inline__,__pure__))
+static inline bool
+ccstructs_pathname_is_relative (cce_destination_t L, ccstructs_pathname_I const I)
+{
+  return I.methods->is_relative(L, I);
+}
+
+__attribute__((__always_inline__,__pure__))
+static inline bool
+ccstructs_pathname_is_normalised (cce_destination_t L, ccstructs_pathname_I const I)
+{
+  return I.methods->is_normalised(L, I);
+}
+
+__attribute__((__always_inline__,__pure__))
+static inline bool
+ccstructs_pathname_is_realpath (cce_destination_t L, ccstructs_pathname_I const I)
+{
+  return I.methods->is_realpath(L, I);
 }
 
 /* ------------------------------------------------------------------ */

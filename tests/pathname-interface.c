@@ -539,6 +539,112 @@ test_5_2 (cce_destination_t upper_L)
   }
 }
 
+
+/** --------------------------------------------------------------------
+ ** Pathname interface: predicates.
+ ** ----------------------------------------------------------------- */
+
+void
+test_6_1 (cce_destination_t upper_L)
+/* Build a pathname interface; check the results of the implemented predicates. */
+{
+  static char const *		P = "/path/to/file.ext";
+  cce_location_t		L[1];
+  ccstructs_pathname_t const *	ptn;
+  ccstructs_pathname_I		ptn_IP;
+  ccstructs_clean_handler_t	ptn_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    ptn    = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
+    ptn_IP = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+    ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_IP));
+
+    cctests_assert(L, false == ccstructs_pathname_is_static(ptn_IP));
+    cctests_assert(L, true  == ccstructs_pathname_is_absolute(L, ptn_IP));
+    cctests_assert(L, false == ccstructs_pathname_is_relative(L, ptn_IP));
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_6_2 (cce_destination_t upper_L)
+/* Build  a pathname  interface; check  the results  of the  unimplemented predicate:
+   is_normalised. */
+{
+  cce_location_t	L[1];
+  volatile bool		flag = false;
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    {
+      static char const *		P = "/path/to/file.ext";
+      cce_location_t			lower_L[1];
+      ccstructs_pathname_t const *	ptn;
+      ccstructs_pathname_I		ptn_IP;
+      ccstructs_clean_handler_t		ptn_H[1];
+
+      if (cce_location(lower_L)) {
+	if (cce_condition_is_unimplemented(cce_condition(lower_L))) {
+	  flag = true;
+	  cce_run_catch_handlers_final(lower_L);
+	} else {
+	  cce_run_catch_handlers_raise(lower_L, L);
+	}
+      } else {
+	ptn    = ccname_new(ccstructs_pathname_t, from_chars)(lower_L, P);
+	ptn_IP = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+	ccstructs_clean_handler_init(lower_L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_IP));
+
+	cctests_assert(lower_L, ccstructs_pathname_is_normalised(lower_L, ptn_IP));
+	cce_run_body_handlers(lower_L);
+      }
+    }
+    cctests_assert(L, flag);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_6_3 (cce_destination_t upper_L)
+/* Build  a pathname  interface; check  the results  of the  unimplemented predicate:
+   is_realpath. */
+{
+  cce_location_t	L[1];
+  volatile bool		flag = false;
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    {
+      static char const *		P = "/path/to/file.ext";
+      cce_location_t			lower_L[1];
+      ccstructs_pathname_t const *	ptn;
+      ccstructs_pathname_I		ptn_IP;
+      ccstructs_clean_handler_t		ptn_H[1];
+
+      if (cce_location(lower_L)) {
+	if (cce_condition_is_unimplemented(cce_condition(lower_L))) {
+	  flag = true;
+	  cce_run_catch_handlers_final(lower_L);
+	} else {
+	  cce_run_catch_handlers_raise(lower_L, L);
+	}
+      } else {
+	ptn    = ccname_new(ccstructs_pathname_t, from_chars)(lower_L, P);
+	ptn_IP = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+	ccstructs_clean_handler_init(lower_L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_IP));
+
+	cctests_assert(lower_L, ccstructs_pathname_is_realpath(lower_L, ptn_IP));
+	cce_run_body_handlers(lower_L);
+      }
+    }
+    cctests_assert(L, flag);
+    cce_run_body_handlers(L);
+  }
+}
 
 
 int
@@ -580,6 +686,14 @@ main (void)
     {
       cctests_run(test_5_1);
       cctests_run(test_5_2);
+    }
+    cctests_end_group();
+
+    cctests_begin_group("pathname representation, pathname interface: predicates");
+    {
+      cctests_run(test_6_1);
+      cctests_run(test_6_2);
+      cctests_run(test_6_3);
     }
     cctests_end_group();
   }

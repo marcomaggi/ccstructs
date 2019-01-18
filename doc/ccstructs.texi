@@ -908,6 +908,18 @@ Pointer to function implementing the @method{asciiz} method.
 @item ccname_iface_method_type(ccstructs_pathname_I, is_static) * is_static
 Pointer to function implementing the @method{is_static} method.
 
+@item ccname_iface_method_type(ccstructs_pathname_I, is_absolute) * is_absolute
+Pointer to function implementing the @method{is_absolute} method.
+
+@item ccname_iface_method_type(ccstructs_pathname_I, is_relative) * is_relative
+Pointer to function implementing the @method{is_relative} method.
+
+@item ccname_iface_method_type(ccstructs_pathname_I, is_normalised) * is_normalised
+Pointer to function implementing the @method{is_normalised} method.
+
+@item ccname_iface_method_type(ccstructs_pathname_I, is_realpath) * is_realpath
+Pointer to function implementing the @method{is_realpath} method.
+
 @item ccname_iface_method_type(ccstructs_pathname_I, dtor) * dtor
 Pointer to function implementing the @method{dtor} method.
 
@@ -935,6 +947,39 @@ Type of functions implementing the @method{is_static} method.  In general, the u
 should make a copy of the @asciiz{} pathname representation, returned by the @method{asciiz} method,
 if it needs to keep it independently from the extent (the lifetime) of @var{I}; but if this function
 returns @ctrue{}: it can rely on the existence of the representation for the time it needs it.
+@end deftypefn
+
+
+@deftypefn {Function Prototype} bool {ccname_iface_method_type(ccstructs_pathname_I, is_absolute)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+Type of functions implementing the @method{is_absolute} method.  When successful: return @ctrue{} is
+the pathname is absolute; otherwise return @cfalse{}.  If an error occurs (for example: because this
+method is not implemented): raise an exception by performing a non--local exit to @var{L}.
+@end deftypefn
+
+
+@deftypefn {Function Prototype} bool {ccname_iface_method_type(ccstructs_pathname_I, is_relative)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+Type of functions implementing the @method{is_relative} method.  When successful: return @ctrue{} is
+the pathname is relative; otherwise return @cfalse{}.  If an error occurs (for example: because this
+method is not implemented): raise an exception by performing a non--local exit to @var{L}.
+@end deftypefn
+
+
+@deftypefn {Function Prototype} bool {ccname_iface_method_type(ccstructs_pathname_I, is_normalised)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+Type of functions implementing the @method{is_normalised} method.  When successful: return @ctrue{}
+is the pathname has been normalised with a procedure not involving access to the file system;
+otherwise return @cfalse{}.  If an error occurs (for example: because this method is not
+implemented): raise an exception by performing a non--local exit to @var{L}.
+
+Examples of normalisation for a Unix pathname: removal of redundant dots; removal of redundant
+double--dots; removal of double--slashes.
+@end deftypefn
+
+
+@deftypefn {Function Prototype} bool {ccname_iface_method_type(ccstructs_pathname_I, is_realpath)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+Type of functions implementing the @method{is_realpath} method.  When successful: return @ctrue{} is
+the pathname has been normalised with a function like the standard @cfunc{realpath}; otherwise
+return @cfalse{}.  If an error occurs (for example: because this method is not implemented): raise
+an exception by performing a non--local exit to @var{L}.
 @end deftypefn
 
 
@@ -995,6 +1040,30 @@ generating the representation: raise an exception by performing a non--local exi
 
 @deftypefun bool ccstructs_pathname_is_static (ccstructs_pathname_I @var{I})
 Apply the method @method{is_static} to the interface instance.
+@end deftypefun
+
+
+@deftypefun bool ccstructs_pathname_is_absolute (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+Apply the method @method{is_absolute} to the interface instance.  If an error occurs: raise an
+exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun bool ccstructs_pathname_is_relative (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+Apply the method @method{is_relative} to the interface instance.  If an error occurs: raise an
+exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun bool ccstructs_pathname_is_normalised (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+Apply the method @method{is_normalised} to the interface instance.  If an error occurs: raise an
+exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun bool ccstructs_pathname_is_realpath (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+Apply the method @method{is_realpath} to the interface instance.  If an error occurs: raise an
+exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
