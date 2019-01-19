@@ -123,8 +123,10 @@ noinst_PROGRAMS	=					\
 	examples/test-struct-with-methods
 endif
 
-ccstructs_examples_cppflags	= -I$(srcdir)/src -I$(srcdir)/examples $(CCTESTS_CFLAGS)
-ccstructs_examples_ldadd	= libccstructs.la $(CCTESTS_LIBS)
+ccstructs_examples_cppflags	= -I$(srcdir)/src -I$(srcdir)/examples \
+				  $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS) $(CCTESTS_CFLAGS)
+ccstructs_examples_ldadd	= libccstructs.la \
+				  $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS) $(CCTESTS_LIBS)
 
 .PHONY: examples
 
