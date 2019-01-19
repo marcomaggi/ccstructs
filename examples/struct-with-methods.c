@@ -415,7 +415,8 @@ ccname_iface_method(ccstructs_deserialiser_I, my_coords_t,
  ** Interface "my_printable_I": implementation for "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-static void my_printable_fprintf (cce_destination_t L, FILE * stream, char const * format, ...);
+static void my_printable_fprintf (cce_destination_t L, FILE * stream, char const * format, ...)
+  __attribute__((__format__(printf,3,4)));
 
 static ccname_iface_method_type(my_printable_I, print)  ccname_iface_method(my_printable_I, my_coords_t, print_rec);
 static ccname_iface_method_type(my_printable_I, print)  ccname_iface_method(my_printable_I, my_coords_t, print_pol);
