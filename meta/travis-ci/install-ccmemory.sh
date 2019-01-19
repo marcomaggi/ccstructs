@@ -11,11 +11,12 @@ VERSION=0.2.1-devel.2
 STEM="ccmemory-${VERSION}"
 ARCHIVE="${STEM}.tar.gz"
 SOURCE_URI="https://github.com/marcomaggi/ccmemory/archive/v${VERSION}.tar.gz"
-LOCAL_ARCHIVE="/tmp/${ARCHIVE}"
-TOP_SRCDIR="/tmp/${STEM}"
+TMPDIR=${TMPDIR:=/tmp}
+LOCAL_ARCHIVE="${TMPDIR}/${ARCHIVE}"
+TOP_SRCDIR="${TMPDIR}/${STEM}"
 
-test -d /tmp/mine || {
-    if ! mkdir /tmp/mine
+test -d ${TMPDIR}/mine || {
+    if ! mkdir "${TMPDIR}/mine"
     then
 	printf '%s: error creating directory for dependency package building and installation\n' "$PROGNAME" >&2
 	exit 1
@@ -29,7 +30,7 @@ then
     exit 1
 fi
 
-cd /tmp
+cd "${TMPDIR}"
 
 echo "tar -xzf \"$LOCAL_ARCHIVE\"" >&2
 if ! tar -xzf "$LOCAL_ARCHIVE"
@@ -60,8 +61,8 @@ else
     fi
 fi
 
-echo "./configure --prefix=/tmp/mine --enable-maintainer-mode" >&2
-if ! ./configure --prefix=/tmp/mine --enable-maintainer-mode
+echo "./configure --prefix=${TMPDIR}/mine --enable-maintainer-mode" >&2
+if ! ./configure --prefix="${TMPDIR}/mine" --enable-maintainer-mode
 then
     printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
     exit 1
