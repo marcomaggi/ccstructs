@@ -6,10 +6,6 @@ EXTRA_DIST		= INSTALL			\
 			  meta/slackware/slack-desc.in
 dist_doc_DATA		= README COPYING
 AM_CFLAGS		= $(MMUX_CFLAGS) -I$(srcdir)/src
-AM_ETAGSFLAGS		= \
-	$(CCEXCEPTIONS_HEADER)		\
-	$(CCMEMORY_HEADER)		\
-	--regex='{c}/"\\_<\\(ccname_\\(?:alloc\\|delete\\|final\\|i\\(?:face_\\(?:method\\(?:_type\\)?\\|new\\(?:_type\\)?\\|table\\(?:_type\\)?\\)\\|nit\\)\\|method\\(?:_type\\)?\\|new\\|\\(?:releas\\|tabl\\(?:e_typ\\)?\\)e\\)\\)\\_>"/'
 
 ## --------------------------------------------------------------------
 
@@ -97,21 +93,6 @@ installcheck-local: $(TESTS)
 	@for f in $(TESTS); do $(builddir)/$$f; done
 
 
-#### testing under GDB
-
-$(builddir)/.gdbinit:
-	ln -sv "$(top_srcdir)/gdbinit" "$(builddir)/.gdbinit"
-
-# This rule is meant to be used as:
-#
-#   $ make all gdb-test FILE=tests/inspection CFLAGS='-g'
-#
-# after having created an appropriate file "$(top_srcdir)/.gdbinit".
-#
-gdb-test: $(builddir)/.gdbinit
-	libtool --mode=execute gdb $$FILE
-
-
 #### examples
 #
 # The example programs use CCTests to drive the code.
@@ -161,52 +142,8 @@ examples_test_struct_with_methods_LDADD		= $(ccstructs_examples_ldadd) -lm
 $(examples_test_struct_with_methods_OBJECTS): libccstructs.la
 
 
-#### Valgrind analysis
-#
-# First do this:
-#
-#   make clean
-#   make CFLAGS='-O0 -g' all check
-#
-# To use this rule on the file "tests/standard-allocator" we do:
-#
-#   make valgrind file=standard-allocator
-#
+#### common rules
 
-VALGRIND_PROGRAM	= valgrind
-VALGRIND_FLAGS		= --leak-check=yes --track-origins=yes
-VALGRIND_FULL_FLAGS	= $(VALGRIND_FLAGS) --leak-check=full --show-leak-kinds=all
-
-.PHONY: valgrind valgrind-full
-
-valgrind:
-	for f in $(builddir)/tests/$(file) ; \
-	do $(LIBTOOL) --mode=execute $(VALGRIND_PROGRAM) $(VALGRIND_FLAGS) $$f ; \
-	done
-
-valgrind-full:
-	for f in $(builddir)/tests/$(file) ; \
-	do $(LIBTOOL) --mode=execute $(VALGRIND_PROGRAM) $(VALGRIND_FULL_FLAGS) $$f ; \
-	done
-
-
-#### Static analysis with Clang's Static Analyzer
-#
-# See the documentation for the command line tool at:
-#
-#    <http://clang-analyzer.llvm.org/scan-build.html>
-#
-# To run the tool we must do:
-#
-#    $ make clean
-#    $ make clang-static-analysis
-#
-# The  program  "scan-build"  works  by  overriding  the  CC  and  CXX
-# environment variables.
-
-.PHONY: clang-static-analysis
-
-clang-static-analysis:
-	scan-build make CXXFLAGS='-std=c++11'
+include $(top_srcdir)/meta/automake/mmux-makefile-rules
 
 ### end of file
