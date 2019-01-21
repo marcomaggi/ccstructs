@@ -13,7 +13,8 @@ EXTRA_DIST		+= meta/scripts/ccstructs.pc.in
 pkgconfigdir		= $(libdir)/pkgconfig
 nodist_pkgconfig_DATA	= meta/scripts/ccstructs.pc
 
-## --------------------------------------------------------------------
+
+#### documentation
 
 AM_MAKEINFOFLAGS	= --no-split
 AM_MAKEINFOHTMLFLAGS	= --split=node -c WORDS_IN_PAGE=0 \
