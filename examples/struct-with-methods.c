@@ -334,7 +334,7 @@ ccname_iface_new(ccstructs_serialiser_I, my_coords_t) (my_coords_t const * S)
 size_t
 ccname_iface_method(ccstructs_serialiser_I, my_coords_t, required_size) (ccstructs_serialiser_I I CCSTRUCTS_UNUSED)
 /* Return the minimum number of bytes  required to hold the serialised representation
-   of "ccstructs_pathname_t".*/
+   of "my_coords_t".*/
 {
   return sizeof(serialised_my_coords_t);
 }
