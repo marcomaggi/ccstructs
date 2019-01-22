@@ -238,7 +238,7 @@ ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded) (my_coords_t const * c
 void
 ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, release) (ccstructs_dtor_I I CCSTRUCTS_UNUSED)
 {
-  if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
+  if (1) { fprintf(stderr, "%-35s: released by dtor\n", __func__); }
 }
 
 void
@@ -277,7 +277,7 @@ ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, release) (ccstruc
   CCSTRUCTS_PC(my_coords_t, self, ccstructs_dtor_self(I));
 
   ccname_release(my_coords_t)(self);
-  if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
+  if (1) { fprintf(stderr, "%-35s: released by dtor\n", __func__); }
 }
 
 void
