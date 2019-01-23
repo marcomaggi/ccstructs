@@ -8,6 +8,9 @@ Revision 0.2.0-devel.1
 
 * Package infrastructure development.
 
+* Added support  for one  more variant specification  to "ccname_init()"
+  and "ccname_new()".
+
 
 Revision 0.2.0-devel.0
 ----------------------

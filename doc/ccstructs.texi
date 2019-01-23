@@ -1379,6 +1379,7 @@ The macros for ``well known functions'' define an @api{} for the basic operation
 
 @defmac ccname_init (@var{STRUCT_TYPE})
 @defmacx ccname_init (@var{STRUCT_TYPE}, @var{VARIANT})
+@defmacx ccname_init (@var{STRUCT_TYPE}, @vari{VARIANT}, @varii{VARIANT})
 Given a @struct{} type name and an optional variant specification: expand into the name of the
 @api{} function @cfunc{init}.
 
@@ -1415,6 +1416,7 @@ might perform the release using the @api{} of the library CCMemory.
 
 @defmac ccname_new (@var{STRUCT_TYPE})
 @defmacx ccname_new (@var{STRUCT_TYPE}, @var{VARIANT})
+@defmacx ccname_new (@var{STRUCT_TYPE}, @vari{VARIANT}, @varii{VARIANT})
 Given a @struct{} type name and an optional variant specification: expand into the name of the
 @api{} function @cfunc{new}.
 
