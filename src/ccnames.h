@@ -163,10 +163,16 @@ extern "C" {
 
 /* Given  a struct  type  name and  an  optional variant  specification:
    expand into the name of the API function "new()". */
-#define ccname_new_1(STRUCT_TYPE)			_CCNAME_NEW(STRUCT_TYPE, )
-#define ccname_new_2(STRUCT_TYPE, VARIANT)		_CCNAME_NEW(STRUCT_TYPE, VARIANT)
-#define ccname_new_3(STRUCT_TYPE, VARIANT1, VARIANT2)	_CCNAME_NEW(STRUCT_TYPE, VARIANT1 ## __ ## VARIANT2)
-#define ccname_new(...)					_CCNAMES_VFUNC(ccname_new, __VA_ARGS__)
+#define ccname_new_1(STRUCT_TYPE)				\
+  _CCNAME_NEW(STRUCT_TYPE, )
+#define ccname_new_2(STRUCT_TYPE, VARIANT)			\
+  _CCNAME_NEW(STRUCT_TYPE, VARIANT)
+#define ccname_new_3(STRUCT_TYPE, VARIANT1, VARIANT2)		\
+  _CCNAME_NEW(STRUCT_TYPE, VARIANT1 ## _ ## VARIANT2)
+#define ccname_new_4(STRUCT_TYPE, VARIANT1, VARIANT2, VARIANT3)	\
+  _CCNAME_NEW(STRUCT_TYPE, VARIANT1 ## _ ## VARIANT2 ## _ ## VARIANT3)
+#define ccname_new(...)						\
+  _CCNAMES_VFUNC(ccname_new, __VA_ARGS__)
 
 /* Given a  struct type name: expand  into the name of  the API function
    "delete()". */
@@ -174,10 +180,16 @@ extern "C" {
 
 /* Given  a struct  type  name and  an  optional variant  specification:
    expand into the name of the API function "init()". */
-#define ccname_init_1(STRUCT_TYPE)			_CCNAME_INIT(STRUCT_TYPE, )
-#define ccname_init_2(STRUCT_TYPE, VARIANT)		_CCNAME_INIT(STRUCT_TYPE, VARIANT)
-#define ccname_init_3(STRUCT_TYPE, VARIANT1, VARIANT2)	_CCNAME_INIT(STRUCT_TYPE, VARIANT1 ## __ ## VARIANT2)
-#define ccname_init(...)				_CCNAMES_VFUNC(ccname_init, __VA_ARGS__)
+#define ccname_init_1(STRUCT_TYPE)				\
+  _CCNAME_INIT(STRUCT_TYPE, )
+#define ccname_init_2(STRUCT_TYPE, VARIANT)			\
+  _CCNAME_INIT(STRUCT_TYPE, VARIANT)
+#define ccname_init_3(STRUCT_TYPE, VARIANT1, VARIANT2)		\
+  _CCNAME_INIT(STRUCT_TYPE, VARIANT1 ## __ ## VARIANT2)
+#define ccname_init_4(STRUCT_TYPE, VARIANT1, VARIANT2, VARIANT3)\
+  _CCNAME_INIT(STRUCT_TYPE, VARIANT1 ## _ ## VARIANT2 ## _ ## VARIANT3)
+#define ccname_init(...)					\
+  _CCNAMES_VFUNC(ccname_init, __VA_ARGS__)
 
 /* Given a  struct type name: expand  into the name of  the API function
    "final()". */
