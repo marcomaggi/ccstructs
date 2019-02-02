@@ -5,8 +5,32 @@
 #   include $(top_srcdir)/meta/automake/mmux-makefile-rules
 #
 
+# The following  regexp has been  generated under emacs  by evaluating
+# this form:
+#
+#   (regexp-opt
+#     '("ccname_alloc"
+#     "ccname_delete"
+#     "ccname_final"
+#     "ccname_iface_method"
+#     "ccname_iface_method_type"
+#     "ccname_iface_new"
+#     "ccname_iface_new_type"
+#     "ccname_iface_table"
+#     "ccname_iface_table_type"
+#     "ccname_init"
+#     "ccname_is"
+#     "ccname_method"
+#     "ccname_method_type"
+#     "ccname_new"
+#     "ccname_release"
+#     "ccname_table"
+#     "ccname_table_type"
+#     "ccname_type")
+#     'symbols)
+#
 AM_ETAGSFLAGS		= $(MMUX_DEPENDENCIES_INCLUDES) \
-	--regex='{c}/"\\_<\\(ccname_\\(?:alloc\\|delete\\|final\\|i\\(?:face_\\(?:method\\(?:_type\\)?\\|new\\(?:_type\\)?\\|table\\(?:_type\\)?\\)\\|nit\\)\\|method\\(?:_type\\)?\\|new\\|\\(?:releas\\|tabl\\(?:e_typ\\)?\\)e\\)\\)\\_>"/'
+	--regex='{c}/"\\_<\\(ccname_\\(?:alloc\\|delete\\|final\\|i\\(?:face_\\(?:method\\(?:_type\\)?\\|new\\(?:_type\\)?\\|table\\(?:_type\\)?\\)\\|nit\\|s\\)\\|method\\(?:_type\\)?\\|new\\|\\(?:releas\\|t\\(?:abl\\(?:e_typ\\)?\\|yp\\)\\)e\\)\\)\\_>"/'
 
 
 #### testing under GDB
