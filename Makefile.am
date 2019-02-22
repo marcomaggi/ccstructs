@@ -5,12 +5,11 @@ AUTOMAKE_OPTIONS	= foreign
 EXTRA_DIST		= INSTALL			\
 			  meta/slackware/slack-desc.in
 dist_doc_DATA		= README COPYING
-AM_CFLAGS		= $(MMUX_CFLAGS) -I$(srcdir)/src
+AM_CPPFLAGS		= -I$(srcdir)/src
+AM_CFLAGS		= $(MMUX_CFLAGS)
 
 ## --------------------------------------------------------------------
 
-EXTRA_DIST		+= meta/scripts/ccstructs.pc.in
-pkgconfigdir		= $(libdir)/pkgconfig
 nodist_pkgconfig_DATA	= meta/scripts/ccstructs.pc
 
 
@@ -36,7 +35,8 @@ ccstructs_AGE		= @ccstructs_VERSION_INTERFACE_AGE@
 include_HEADERS		= src/ccstructs.h
 
 lib_LTLIBRARIES			= libccstructs.la
-libccstructs_la_CPPFLAGS	= $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS)
+libccstructs_la_CPPFLAGS	= $(AM_CPPFLAGS)
+libccstructs_la_CFLAGS		= $(AM_CFLAGS) $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS)
 libccstructs_la_LDFLAGS		= -version-info $(ccstructs_CURRENT):$(ccstructs_REVISION):$(ccstructs_AGE) \
 				  $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS)
 libccstructs_la_SOURCES		= \
@@ -65,27 +65,34 @@ if MMUX_TESTING_ENABLED
 TESTS				= $(check_PROGRAMS)
 endif
 
-ccstructs_tests_cppflags	= -I$(srcdir)/src $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS) $(CCTESTS_CFLAGS)
-ccstructs_tests_ldadd		= libccstructs.la $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS) $(CCTESTS_LIBS)
+ccstructs_tests_cppflags	= $(AM_CPPFLAGS)
+ccstructs_tests_cflags		= $(AM_CFLAGS) $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS) $(CCTESTS_CFLAGS)
+ccstructs_tests_ldadd		= libccstructs.la $(CCTESTS_LIBS)
 
 ## --------------------------------------------------------------------
 
 tests_version_CPPFLAGS			= $(ccstructs_tests_cppflags)
+tests_version_CFLAGS			= $(ccstructs_tests_cflags)
 tests_version_LDADD			= $(ccstructs_tests_ldadd)
 
 tests_dtor_interface_CPPFLAGS		= $(ccstructs_tests_cppflags)
+tests_dtor_interface_CFLAGS		= $(ccstructs_tests_cflags)
 tests_dtor_interface_LDADD		= $(ccstructs_tests_ldadd)
 
 tests_exception_handlers_CPPFLAGS	= $(ccstructs_tests_cppflags)
+tests_exception_handlers_CFLAGS		= $(ccstructs_tests_cflags)
 tests_exception_handlers_LDADD		= $(ccstructs_tests_ldadd)
 
 tests_dumpable_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
+tests_dumpable_interface_CFLAGS		= $(ccstructs_tests_cflags)
 tests_dumpable_interface_LDADD		= $(ccstructs_tests_ldadd)
 
 tests_serialisable_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
+tests_serialisable_interface_CFLAGS	= $(ccstructs_tests_cflags)
 tests_serialisable_interface_LDADD	= $(ccstructs_tests_ldadd)
 
 tests_pathname_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
+tests_pathname_interface_CFLAGS		= $(ccstructs_tests_cflags)
 tests_pathname_interface_LDADD		= $(ccstructs_tests_ldadd)
 
 ## --------------------------------------------------------------------
@@ -105,10 +112,9 @@ noinst_PROGRAMS	=					\
 	examples/test-struct-with-methods
 endif
 
-ccstructs_examples_cppflags	= -I$(srcdir)/src -I$(srcdir)/examples \
-				  $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS) $(CCTESTS_CFLAGS)
-ccstructs_examples_ldadd	= libccstructs.la \
-				  $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS) $(CCTESTS_LIBS)
+ccstructs_examples_cppflags	= $(AM_CPPFLAGS) -I$(srcdir)/examples
+ccstructs_examples_cflags	= $(AM_CFLAGS) $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS) $(CCTESTS_CFLAGS)
+ccstructs_examples_ldadd	= libccstructs.la $(CCTESTS_LIBS)
 
 .PHONY: examples
 
@@ -125,6 +131,7 @@ examples_test_struct_no_methods_SOURCES =	\
 	examples/test-struct-no-methods.c
 
 examples_test_struct_no_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
+examples_test_struct_no_methods_CFLAGS		= $(ccstructs_examples_cflags)
 examples_test_struct_no_methods_LDADD		= $(ccstructs_examples_ldadd) -lm
 
 $(examples_test_struct_no_methods_OBJECTS): libccstructs.la
@@ -138,6 +145,7 @@ examples_test_struct_with_methods_SOURCES =	\
 	examples/test-struct-with-methods.c
 
 examples_test_struct_with_methods_CPPFLAGS	= $(ccstructs_examples_cppflags)
+examples_test_struct_with_methods_CFLAGS	= $(ccstructs_examples_cflags)
 examples_test_struct_with_methods_LDADD		= $(ccstructs_examples_ldadd) -lm
 
 $(examples_test_struct_with_methods_OBJECTS): libccstructs.la
