@@ -443,6 +443,14 @@ Revised^6 Report on the algorithmic language Scheme
 @code{struct}
 @end macro
 
+@macro method{NAME}
+@cfunc{\NAME\}
+@end macro
+
+@macro iface{NAME}
+@code{\NAME\}
+@end macro
+
 @macro stdin{}
 @code{stdin}
 @end macro
@@ -476,16 +484,20 @@ Revised^6 Report on the algorithmic language Scheme
 @ref{\NODE\,\TITLE\,\TITLE\,autoconf}
 @end macro
 
-@macro vicareref{NODE, TITLE}
-@ref{\NODE\,\TITLE\,\TITLE\,vicare}
+@macro ccexceptionsref{NODE, TITLE}
+@ref{\NODE\,\TITLE\,\TITLE\,ccexceptions}
 @end macro
 
-@macro nauref{NODE, TITLE}
-@ref{\NODE\,\TITLE\,\TITLE\,nausicaa}
+@macro ccmemoryref{NODE, TITLE}
+@ref{\NODE\,\TITLE\,\TITLE\,ccmemory}
 @end macro
 
-@macro naumoreref{NODE, TITLE}
-@ref{\NODE\,\TITLE\,\TITLE\,nausicaa-more}
+@macro ccstructsref{NODE, TITLE}
+@ref{\NODE\,\TITLE\,\TITLE\,ccstructs}
+@end macro
+
+@macro ccstringsref{NODE, TITLE}
+@ref{\NODE\,\TITLE\,\TITLE\,ccstrings}
 @end macro
 
 @c page

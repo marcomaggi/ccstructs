@@ -9,23 +9,6 @@
 
 @c page
 @c ------------------------------------------------------------
-@c Macros.
-@c ------------------------------------------------------------
-
-@macro method{NAME}
-@cfunc{\NAME\}
-@end macro
-
-@macro iface{NAME}
-@code{\NAME\}
-@end macro
-
-@macro ccmemoryref{NODE, TITLE}
-@ref{\NODE\,\TITLE\,\TITLE\,ccmemory}
-@end macro
-
-@c page
-@c ------------------------------------------------------------
 @c Values.
 @c ------------------------------------------------------------
 
@@ -54,14 +37,28 @@
 
 @c ------------------------------------------------------------
 
-@set CCEXCEPTIONS_VERSION       0.8.0
-@set CCMEMORY_VERSION           0.2.1
-@set CCTESTS_VERSION            0.3.0
+@set CCExceptionsVersion       0.8.0
+@set CCMemoryVersion           0.2.1
+@set CCTestsVersion            0.3.0
 
-@set GITHUB_URL                 @url{https://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
-@set BITBUCKET_URL              @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}}
-@set DOWNLOAD_URL               @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}/downloads}
-@set DOCUMENTATION_URL          @url{https://marcomaggi.github.io/docs/@value{PACKAGE_NICKNAME}.html}
+@c ------------------------------------------------------------------------
+
+@set PackageAutoconfPrefix              CCSTRUCTS
+@set PackagePkgconfigModule             ccstructs
+@set PackageLibsVar                     @env{CCSTRUCTS_LIBS}
+@set PackageCflagsVar                   @env{CCSTRUCTS_CFLAGS}
+@c This is the stem of the library in "libccstructs.so".
+@set PackageLibstem                     ccstructs
+@set PackageApiPrefixLower              ccstructs_
+@set PackageApiPrefixUpper              CCSTRUCTS_
+
+@set PackageHeader                      ccstructs.h
+@set PackageHeader_FILE                 @file{@value{PackageHeader}}
+
+@set GithubUrl                 @url{https://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
+@set BitbucketUrl              @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}}
+@set DownloadUrl               @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}/downloads}
+@set DocumentationUrl          @url{https://marcomaggi.github.io/docs/@value{PACKAGE_NICKNAME}.html}
 
 @c page
 @c ------------------------------------------------------------
@@ -73,25 +70,25 @@ This document describes version @value{VERSION} of @value{PACKAGE}, a C11 langua
 implementing common programming interfaces for C data structures.
 
 This package supports @posix{} platforms.  This package depends on the external packages:
-CCExceptions, at least version @value{CCEXCEPTIONS_VERSION}; CCMemory, at least version
-@value{CCMEMORY_VERSION}.  To run the test suite: this package depends upon the external package
-CCTests, at least version @value{CCTESTS_VERSION}.
+CCExceptions, at least version @value{CCExceptionsVersion}; CCMemory, at least version
+@value{CCMemoryVersion}.  To run the test suite: this package depends upon the external package
+CCTests, at least version @value{CCTestsVersion}.
 
 The package is distributed under the terms of the @gnu{} Lesser General Public License (@lgpl{}).
 
 The latest release can be downloaded from:
 
-@center @value{DOWNLOAD_URL}
+@center @value{DownloadUrl}
 
 @noindent
 development takes place at:
 
-@center @value{GITHUB_URL}
+@center @value{GithubUrl}
 
 @noindent
 and as backup at:
 
-@center @value{BITBUCKET_URL}
+@center @value{BitbucketUrl}
 
 @noindent
 Copyright @copyright{} @value{COPYRIGHT_YEARS} by @value{AUTHOR} @value{AUTHOR_EMAIL}
@@ -179,76 +176,33 @@ This document describes version @value{VERSION} of @value{PACKAGE}, a C11 langua
 implementing common programming interfaces for C data structures.
 
 This package supports @posix{} platforms.  This package depends on the packages: CCExceptions, at
-least version @value{CCEXCEPTIONS_VERSION}; CCMemory, at least version @value{CCMEMORY_VERSION}.  To
+least version @value{CCExceptionsVersion}; CCMemory, at least version @value{CCMemoryVersion}.  To
 run the test suite: this package depends upon the package CCTests, at least version
-@value{CCTESTS_VERSION}.
+@value{CCTestsVersion}.
 
-@value{PACKAGE} installs the header files @file{ccstructs.h} and @file{ccnames.h}.  All the function
-names in the @api{} are prefixed with @code{ccstructs_} or @code{ccname_}; all the preprocessor
-symbol names are prefixed with @code{CCSTRUCTS_} or @code{CCNAME_}; all the type names are prefixed
-with @code{ccstructs_} and suffixed with @code{_t} or @code{_I}.
+@cindex @value{PackageHeader_FILE}, header file
+@cindex Header file @value{PackageHeader_FILE}
+@value{PACKAGE} installs the single header file @value{PackageHeader_FILE}.  All the function names
+in the @api{} are prefixed with @code{@value{PackageApiPrefixLower}}; all the preprocessor symbol
+names are prefixed with @code{@value{PackageApiPrefixUpper}}; all the type names are prefixed
+with @code{@value{PackageApiPrefixLower}} and suffixed with @code{_t}.
+
+In addition the package installs the header file @file{ccnames.h}; in this file: all the macro names
+are prefixed with @code{ccname_}; all the preprocessor symbol names are prefixed with
+@code{CCNAME_}.
 
 @menu
 * overview linking::            Linking code with the library.
-* overview ccnames::            The CCNames @api{}.
+* overview ccnames::            Generated function names.
+* overview exceptions::         Handling exceptional conditions.
+* overview allocation::         Memory allocation for pathname instances.
 * overview examples::           Implementation examples.
 @end menu
 
-@c page
-@node overview linking
-@section Linking code with the library
-
-
-This package installs a data file for @command{pkg-config}, so when searching for the installed
-library with the @gnu{} Autotools, we can add the following macro use to @file{configure.ac}:
-
-@example
-PKG_CHECK_MODULES([CCSTRUCTS],[ccstructs >= 0.1.0])
-@end example
-
-@noindent
-which will set the variables @code{CCSTRUCTS_LIBS} and @code{CCSTRUCTS_CFLAGS}.  To avoid
-problems with @command{pkg-config}, we need to remember that:
-
-@itemize
-@item
-The macro file defining @code{PKG_CHECK_MODULES} is installed by the package @code{pkg-config}; such
-file usually is in one of the locations:
-
-@center @file{/usr/share/aclocal/pkg.m4}
-@center @file{/usr/local/share/aclocal/pkg.m4}
-
-@item
-The macro file is located by @command{aclocal}, which in turn is installed by the package @gnu{}
-Automake; @command{aclocal} is used by @command{autoreconf}.  We must make sure that
-@command{aclocal} finds the installed macro files; for this purpose we can use the environment
-variable @env{ACLOCAL_PATH}; under a Bourne shell we can do this with:
-
-@example
-export ACLOCAL_PATH=/usr/local/share/aclocal:/usr/share/aclocal
-@end example
-@end itemize
-
-Alternatively we can use the raw @gnu{} Autoconf macros:
-
-@example
-AC_CHECK_LIB([ccstructs],[ccstructs_version_string],,
-  [AC_MSG_FAILURE([test for CCStructs library failed])])
-AC_CHECK_HEADERS([ccstructs.h],,
-  [AC_MSG_FAILURE([test for CCStructs header failed])])
-@end example
-
-@c page
-@node overview ccnames
-@section The CCNames @api{}
-
-
-This package includes and uses the header file @file{ccname.h}, @ref{ccnames, Automatically
-generated @api{} names}.  This header defines a set of preprocessor macros we can use to build
-function names and @struct{} type names having a ``well known'' role in the @api{} associated to
-data @struct{} types and interfaces.
-
-It is weird and foreign.  It is not for everyone.
+@include overview-linking.texi
+@include overview-ccnames.texi
+@include overview-ccexceptions.texi
+@include overview-ccmemory.texi
 
 @c page
 @node overview examples
@@ -1833,22 +1787,22 @@ main (void)
 
 The documentation of @value{PACKAGE} is available online:
 
-@center @value{DOCUMENTATION_URL}
+@center @value{DocumentationUrl}
 
 @noindent
 the latest release of this package can be downloaded from:
 
-@center @value{DOWNLOAD_URL}
+@center @value{DownloadUrl}
 
 @noindent
 development takes place at:
 
-@center @value{GITHUB_URL}
+@center @value{GithubUrl}
 
 @noindent
 and as backup at:
 
-@center @value{BITBUCKET_URL}
+@center @value{BitbucketUrl}
 
 @noindent
 the package CCExceptions is available at:
