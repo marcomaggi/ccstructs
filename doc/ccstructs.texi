@@ -53,7 +53,7 @@
 @set PackageApiPrefixUpper              CCSTRUCTS_
 
 @set PackageHeader                      ccstructs.h
-@set PackageHeader_FILE                 @file{@value{PackageHeader}}
+@set PackageHeaderFile                 @file{@value{PackageHeader}}
 
 @set GithubUrl                 @url{https://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
 @set BitbucketUrl              @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}}
@@ -180,12 +180,12 @@ least version @value{CCExceptionsVersion}; CCMemory, at least version @value{CCM
 run the test suite: this package depends upon the package CCTests, at least version
 @value{CCTestsVersion}.
 
-@cindex @value{PackageHeader_FILE}, header file
-@cindex Header file @value{PackageHeader_FILE}
-@value{PACKAGE} installs the single header file @value{PackageHeader_FILE}.  All the function names
+@cindex @value{PackageHeaderFile}, header file
+@cindex Header file @value{PackageHeaderFile}
+@value{PACKAGE} installs the single header file @value{PackageHeaderFile}.  All the function names
 in the @api{} are prefixed with @code{@value{PackageApiPrefixLower}}; all the preprocessor symbol
-names are prefixed with @code{@value{PackageApiPrefixUpper}}; all the type names are prefixed
-with @code{@value{PackageApiPrefixLower}} and suffixed with @code{_t}.
+names are prefixed with @code{@value{PackageApiPrefixUpper}}; all the type names are prefixed with
+@code{@value{PackageApiPrefixLower}} and suffixed with @code{_t}.
 
 In addition the package installs the header file @file{ccnames.h}; in this file: all the macro names
 are prefixed with @code{ccname_}; all the preprocessor symbol names are prefixed with
