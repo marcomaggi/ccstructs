@@ -32,17 +32,17 @@ doc_ccstructs_TEXINFOS	= \
 
 #### libraries
 
-ccstructs_CURRENT	= @ccstructs_VERSION_INTERFACE_CURRENT@
-ccstructs_REVISION	= @ccstructs_VERSION_INTERFACE_REVISION@
-ccstructs_AGE		= @ccstructs_VERSION_INTERFACE_AGE@
+ccstructs_CURRENT		= @ccstructs_VERSION_INTERFACE_CURRENT@
+ccstructs_REVISION		= @ccstructs_VERSION_INTERFACE_REVISION@
+ccstructs_AGE			= @ccstructs_VERSION_INTERFACE_AGE@
+ccstructs_LINKER_VERSION	= -version-info $(ccstructs_CURRENT):$(ccstructs_REVISION):$(ccstructs_AGE)
 
 include_HEADERS		= src/ccstructs.h
 
 lib_LTLIBRARIES			= libccstructs.la
 libccstructs_la_CPPFLAGS	= $(AM_CPPFLAGS)
 libccstructs_la_CFLAGS		= $(AM_CFLAGS) $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS)
-libccstructs_la_LDFLAGS		= -version-info $(ccstructs_CURRENT):$(ccstructs_REVISION):$(ccstructs_AGE) \
-				  $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS)
+libccstructs_la_LDFLAGS		= $(ccstructs_LINKER_VERSION) $(AM_LDFLAGS) $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS)
 libccstructs_la_SOURCES		= \
 	src/ccstructs.h				\
 	src/ccstructs-internals.h		\
@@ -71,7 +71,7 @@ endif
 
 ccstructs_tests_cppflags	= $(AM_CPPFLAGS)
 ccstructs_tests_cflags		= $(AM_CFLAGS) $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS) $(CCTESTS_CFLAGS)
-ccstructs_tests_ldadd		= libccstructs.la $(CCTESTS_LIBS)
+ccstructs_tests_ldadd		= $(AM_LDFLAGS) libccstructs.la $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS) $(CCTESTS_LIBS)
 
 ## --------------------------------------------------------------------
 
@@ -118,7 +118,7 @@ endif
 
 ccstructs_examples_cppflags	= $(AM_CPPFLAGS) -I$(srcdir)/examples
 ccstructs_examples_cflags	= $(AM_CFLAGS) $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS) $(CCTESTS_CFLAGS)
-ccstructs_examples_ldadd	= libccstructs.la $(CCTESTS_LIBS)
+ccstructs_examples_ldadd	= $(AM_LDFLAGS) libccstructs.la $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS) $(CCTESTS_LIBS)
 
 .PHONY: examples
 
