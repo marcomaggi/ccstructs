@@ -37,7 +37,7 @@ ccstructs_REVISION		= @ccstructs_VERSION_INTERFACE_REVISION@
 ccstructs_AGE			= @ccstructs_VERSION_INTERFACE_AGE@
 ccstructs_LINKER_VERSION	= -version-info $(ccstructs_CURRENT):$(ccstructs_REVISION):$(ccstructs_AGE)
 
-include_HEADERS		= src/ccstructs.h
+include_HEADERS		= src/ccstructs.h src/ccnames.h
 
 lib_LTLIBRARIES			= libccstructs.la
 libccstructs_la_CPPFLAGS	= $(AM_CPPFLAGS)
@@ -45,14 +45,11 @@ libccstructs_la_CFLAGS		= $(AM_CFLAGS) $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS)
 libccstructs_la_LDFLAGS		= $(ccstructs_LINKER_VERSION) $(AM_LDFLAGS) $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS)
 libccstructs_la_SOURCES		= \
 	src/ccstructs.h				\
+	src/ccnames.h				\
 	src/ccstructs-internals.h		\
 	src/ccstructs-version.c			\
 	src/ccstructs-exception-handlers.c	\
 	src/ccstructs-pathname-representation.c
-
-if WANTS_CCNAMES
-include_HEADERS		+= src/ccnames.h
-endif
 
 
 #### tests

@@ -33,14 +33,6 @@ AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([1.16 foreign subdir-objects])
 AM_MAINTAINER_MODE
 
-AC_CACHE_CHECK([whether to install ccnames.h (default yes)],
-  [ccstructs_cv_install_ccnames],
-  [AC_ARG_ENABLE([CCNAMES],
-     [AS_HELP_STRING([--enable-ccnames],[enables installation of ccnames.h])],
-     [AS_VAR_SET([ccstructs_cv_install_ccnames],[$enable_CCNAMES])],
-     [AS_VAR_SET([ccstructs_cv_install_ccnames],[yes])])])
-AM_CONDITIONAL([WANTS_CCNAMES],[test "$ccstructs_cv_install_ccnames" = yes])
-
 AM_PROG_AR
 AC_PROG_INSTALL
 AC_PROG_LN_S
