@@ -36,42 +36,44 @@
  ** Generic struct handling: exception handlers.
  ** ----------------------------------------------------------------- */
 
-__attribute__((nonnull(1,2)))
+__attribute__((__nonnull__(1,2)))
 static void
 ccstructs_clean_handler_function (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H)
 {
-  CCSTRUCTS_PC(ccstructs_clean_handler_t, S_H, H);
+  CCSTRUCTS_PC(ccstructs_clean_handler_t, I_H, H);
 
-  ccstructs_dtor_delete(S_H->dtor);
-  if (0) { fprintf(stderr, "%s: done releasing '%p'\n", __func__, (void *)(ccstructs_dtor_self(S_H->dtor))); }
+  ccstructs_dtor_delete(I_H->dtor);
 }
 
 void
 ccstructs_clean_handler_init (cce_location_t * L, ccstructs_clean_handler_t * I_H, ccstructs_dtor_I I)
 {
-  I_H->handler.handler.function	= ccstructs_clean_handler_function;
-  I_H->dtor			= I;
-  cce_register_clean_handler(L, &(I_H->handler));
+  cce_clean_handler_t	*H = ccstructs_handler_handler(I_H);
+
+  cce_clean_handler_set(H, NULL, ccstructs_clean_handler_function);
+  I_H->dtor = I;
+  cce_register_clean_handler(L, H);
 }
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((nonnull(1,2)))
+__attribute__((__nonnull__(1,2)))
 static void
 ccstructs_error_handler_function (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H)
 {
-  CCSTRUCTS_PC(ccstructs_error_handler_t, S_H, H);
+  CCSTRUCTS_PC(ccstructs_error_handler_t, I_H, H);
 
-  ccstructs_dtor_delete(S_H->dtor);
-  if (0) { fprintf(stderr, "%s: done releasing '%p'\n", __func__, (void *)(ccstructs_dtor_self(S_H->dtor))); }
+  ccstructs_dtor_delete(I_H->dtor);
 }
 
 void
 ccstructs_error_handler_init (cce_location_t * L, ccstructs_error_handler_t * I_H, ccstructs_dtor_I I)
 {
-  I_H->handler.handler.function	= ccstructs_error_handler_function;
-  I_H->dtor			= I;
-  cce_register_error_handler(L, &(I_H->handler));
+  cce_error_handler_t	*H = ccstructs_handler_handler(I_H);
+
+  cce_error_handler_set(H, NULL, ccstructs_error_handler_function);
+  I_H->dtor = I;
+  cce_register_error_handler(L, H);
 }
 
 /* end of file */

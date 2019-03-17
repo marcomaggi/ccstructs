@@ -368,6 +368,15 @@ Type of @struct{} usable has clean handler with the facilities of the CCExceptio
 Type of @struct{} usable has error handler with the facilities of the CCExceptions library.
 @end deftp
 
+@menu
+* dtor handlers init::          Initialising exception handlers.
+* dtor handlers access::        Accessing exception handlers.
+@end menu
+
+@c page
+@node dtor handlers init
+@subsection Initialising exception handlers
+
 
 @deftypefun void ccstructs_clean_handler_init (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, ccstructs_dtor_I @var{I})
 Initialise the exception handler @var{H} to apply @cfunc{ccstructs_dtor_delete} to @var{I}, in the
@@ -387,12 +396,39 @@ context of the location @var{L}.  If @var{H} is a pointer of type:
 
 @table @code
 @item ccstructs_clean_handler_t
-The macro use expands to a call to @cfunc{ccstructs_clean_handler_init}.
+The macro use expands into a call to @cfunc{ccstructs_clean_handler_init}.
 
 @item ccstructs_error_handler_t
-The macro use expands to a call to @cfunc{ccstructs_error_handler_init}.
+The macro use expands into a call to @cfunc{ccstructs_error_handler_init}.
 @end table
 @end deftypefn
+
+@c page
+@node dtor handlers access
+@subsection Accessing exception handlers
+
+
+@deftypefun {cce_clean_handler_t *} ccstructs_clean_handler_handler (ccstructs_clean_handler_t * @var{H})
+Return a pointer to the CCExceptions clean handler.
+@end deftypefun
+
+
+@deftypefun void ccstructs_error_handler_handler (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccstructs_dtor_I @var{I})
+Return a pointer to the CCExceptions error handler.
+@end deftypefun
+
+
+@defmac ccstructs_handler_handler (@var{H})
+Return a pointer to the CCExceptions handler.  If @var{H} is a pointer of type:
+
+@table @code
+@item ccstructs_clean_handler_t
+The macro use expands into a call to @cfunc{ccstructs_clean_handler_handler}.
+
+@item ccstructs_error_handler_t
+The macro use expands into a call to @cfunc{ccstructs_error_handler_handler}.
+@end table
+@end defmac
 
 @c page
 @node dtor sample
