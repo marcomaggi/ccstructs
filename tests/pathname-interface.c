@@ -236,19 +236,20 @@ test_2_3 (cce_destination_t upper_L)
 
 void
 test_3_1 (cce_destination_t upper_L)
-/* Use pathname structs allocted on the stack. */
+/* Use pathname structs allocated on the stack. */
 {
   static char const *		P = "/path/to/file.ext";
   cce_location_t		L[1];
-  ccstructs_pathname_t		A[1];
-  ccstructs_pathname_t		B[1];
   ccstructs_clean_handler_t	A_H[1], B_H[1];
-  ccmem_block_t			M, M_leftover;
   ccmem_clean_handler_t		M_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
+    ccstructs_pathname_t	A[1];
+    ccstructs_pathname_t	B[1];
+    ccmem_block_t		M, M_leftover;
+
     /* Build the struct to be serialised. */
     ccname_init(ccstructs_pathname_t, from_chars)(L, A, P);
     ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(A));
@@ -294,7 +295,7 @@ test_3_1 (cce_destination_t upper_L)
 
 void
 test_3_2 (cce_destination_t upper_L)
-/* Use pathname structs allocted on the heap. */
+/* Use pathname structs allocated on the heap. */
 {
   static char const *		P = "/path/to/file.ext";
   cce_location_t		L[1];
