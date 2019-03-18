@@ -413,7 +413,7 @@ Return a pointer to the CCExceptions clean handler.
 @end deftypefun
 
 
-@deftypefun void ccstructs_error_handler_handler (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccstructs_dtor_I @var{I})
+@deftypefun {cce_error_handler_t *} ccstructs_error_handler_handler (ccstructs_error_handler_t * @var{H})
 Return a pointer to the CCExceptions error handler.
 @end deftypefun
 
