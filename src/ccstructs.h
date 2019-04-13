@@ -195,14 +195,28 @@ struct ccstructs_error_handler_t {
 
 __attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
 static inline cce_clean_handler_t *
-ccstructs_clean_handler_handler (ccstructs_clean_handler_t * H)
+ccstructs_clean_handler_handler (ccstructs_clean_handler_t * const H)
 {
   return &(H->handler);
 }
 
 __attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
 static inline cce_error_handler_t *
-ccstructs_error_handler_handler (ccstructs_error_handler_t * H)
+ccstructs_error_handler_handler (ccstructs_error_handler_t * const H)
+{
+  return &(H->handler);
+}
+
+__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+static inline cce_clean_handler_t const *
+ccstructs_const_clean_handler_handler (ccstructs_clean_handler_t const * const H)
+{
+  return &(H->handler);
+}
+
+__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+static inline cce_error_handler_t const *
+ccstructs_const_error_handler_handler (ccstructs_error_handler_t const * const H)
 {
   return &(H->handler);
 }
@@ -210,20 +224,22 @@ ccstructs_error_handler_handler (ccstructs_error_handler_t * H)
 #define ccstructs_handler_handler(H)					\
   _Generic((H),								\
 	   ccstructs_clean_handler_t *: ccstructs_clean_handler_handler, \
-	   ccstructs_error_handler_t *: ccstructs_error_handler_handler)(H)
+	   ccstructs_error_handler_t *: ccstructs_error_handler_handler, \
+	   ccstructs_clean_handler_t const *: ccstructs_const_clean_handler_handler, \
+	   ccstructs_error_handler_t const *: ccstructs_const_error_handler_handler)(H)
 
 /* ------------------------------------------------------------------ */
 
-ccstructs_decl void ccstructs_clean_handler_init (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_dtor_I I)
+ccstructs_decl void ccstructs_init_and_register_clean_handler (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_dtor_I I)
   __attribute__((__nonnull__(1,2)));
 
-ccstructs_decl void ccstructs_error_handler_init (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_dtor_I I)
+ccstructs_decl void ccstructs_init_and_register_error_handler (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_dtor_I I)
   __attribute__((__nonnull__(1,2)));
 
-#define ccstructs_handler_init(L,S_H,S)					\
+#define ccstructs_init_and_register_handler(L,S_H,S)			\
   _Generic((S_H),							\
-	   ccstructs_clean_handler_t	*: ccstructs_clean_handler_init, \
-	   ccstructs_error_handler_t	*: ccstructs_error_handler_init)(L,S_H,S)
+	   ccstructs_clean_handler_t	*: ccstructs_init_and_register_clean_handler, \
+	   ccstructs_error_handler_t	*: ccstructs_init_and_register_error_handler)(L,S_H,S)
 
 
 /** --------------------------------------------------------------------

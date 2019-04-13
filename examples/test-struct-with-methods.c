@@ -52,7 +52,7 @@
 
 /* This handler is used to signal that the "clean" handlers have been executed. */
 static void
-flag_clean_handler (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H CCSTRUCTS_UNUSED)
+flag_clean_handler (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_clean_handler_t const * H CCSTRUCTS_UNUSED)
 {
   fprintf(stderr, "%-35s: clean handler fired\n", __func__);
 }
@@ -60,15 +60,14 @@ flag_clean_handler (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * 
 void
 flag_register_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
 {
-  H->handler.function	= flag_clean_handler;
-  cce_register_clean_handler(L, H);
+  cce_init_and_register_handler(L, H, flag_clean_handler, cce_resource_pointer(NULL));
 }
 
 /* ------------------------------------------------------------------ */
 
 /* This handler is used to signal that the "error" handlers have been executed. */
 static void
-flag_error_handler (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H CCSTRUCTS_UNUSED)
+flag_error_handler (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_error_handler_t const * H CCSTRUCTS_UNUSED)
 {
   fprintf(stderr, "%-35s: error handler fired\n", __func__);
 }
@@ -76,8 +75,7 @@ flag_error_handler (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * 
 void
 flag_register_error_handler (cce_destination_t L, cce_error_handler_t * H)
 {
-  H->handler.function	= flag_error_handler;
-  cce_register_error_handler(L, H);
+  cce_init_and_register_handler(L, H, flag_error_handler, cce_resource_pointer(NULL));
 }
 
 
@@ -101,7 +99,7 @@ test_1_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccname_init(my_coords_t, rec)(A, 1.0, 2.0);
-    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -132,7 +130,7 @@ test_1_2 (cce_destination_t upper_L)
     }
   } else {
     ccname_init(my_coords_t, rec)(A, 1.0, 2.0);
-    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -165,7 +163,7 @@ test_2_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -196,7 +194,7 @@ test_2_2 (cce_destination_t upper_L)
     }
   } else {
     A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
@@ -225,7 +223,7 @@ test_3_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
 
     PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
 
@@ -252,7 +250,7 @@ test_4_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
 
     WA = ccname_iface_new(ccstructs_dumpable_I, my_coords_t)(A);
 
@@ -281,7 +279,7 @@ test_5_1 (cce_destination_t upper_L)
   } else {
     /* Build the struct to be serialised. */
     A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(A));
 
     {
       /* Build the "serialise" interface. */
@@ -297,7 +295,7 @@ test_5_1 (cce_destination_t upper_L)
     {
       /* Build a struct to be target of deserialisation. */
       B = ccname_new(my_coords_t, deserialisable)(L);
-      ccstructs_handler_init(L, B_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(B));
+      ccstructs_init_and_register_handler(L, B_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t)(B));
 
       /* Build the "deserialise" interface. */
       ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, my_coords_t)(B);

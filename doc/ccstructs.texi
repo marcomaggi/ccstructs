@@ -37,9 +37,9 @@
 
 @c ------------------------------------------------------------
 
-@set CCExceptionsVersion       0.8.0
-@set CCMemoryVersion           0.2.1
-@set CCTestsVersion            0.3.0
+@set CCExceptionsVersion       0.9.0
+@set CCMemoryVersion           0.2.2
+@set CCTestsVersion            0.4.1
 
 @c ------------------------------------------------------------------------
 
@@ -378,28 +378,28 @@ Type of @struct{} usable has error handler with the facilities of the CCExceptio
 @subsection Initialising exception handlers
 
 
-@deftypefun void ccstructs_clean_handler_init (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, ccstructs_dtor_I @var{I})
+@deftypefun void ccstructs_init_and_register_clean_handler (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, ccstructs_dtor_I @var{I})
 Initialise the exception handler @var{H} to apply @cfunc{ccstructs_dtor_delete} to @var{I}, in the
 context of the location @var{L}.
 @end deftypefun
 
 
-@deftypefun void ccstructs_error_handler_init (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccstructs_dtor_I @var{I})
+@deftypefun void ccstructs_init_and_register_error_handler (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccstructs_dtor_I @var{I})
 Initialise the exception handler @var{H} to apply @cfunc{ccstructs_dtor_delete} to @var{I}, in the
 context of the location @var{L}.
 @end deftypefun
 
 
-@deftypefn {Preprocessor Macro} void ccstructs_handler_init (cce_destination_t @var{L}, @var{H}, ccstructs_dtor_I @var{I})
+@deftypefn {Preprocessor Macro} void ccstructs_init_and_register_handler (cce_destination_t @var{L}, @var{H}, ccstructs_dtor_I @var{I})
 Initialise the exception handler @var{H} to apply @cfunc{ccstructs_dtor_delete} to @var{I}, in the
 context of the location @var{L}.  If @var{H} is a pointer of type:
 
 @table @code
 @item ccstructs_clean_handler_t
-The macro use expands into a call to @cfunc{ccstructs_clean_handler_init}.
+The macro use expands into a call to @cfunc{ccstructs_init_and_register_clean_handler}.
 
 @item ccstructs_error_handler_t
-The macro use expands into a call to @cfunc{ccstructs_error_handler_init}.
+The macro use expands into a call to @cfunc{ccstructs_init_and_register_error_handler}.
 @end table
 @end deftypefn
 
@@ -1244,7 +1244,7 @@ if (cce_location(L)) @{
 @} else @{
   ptn   = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
   ptn_I = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
-  ccstructs_clean_handler_init(L, ptn_H,
+  ccstructs_init_and_register_clean_handler(L, ptn_H,
     ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_I));
 
   ...

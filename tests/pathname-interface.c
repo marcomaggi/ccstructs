@@ -51,7 +51,7 @@ test_1_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccname_init(ccstructs_pathname_t, from_chars)(L, ptn, P);
-    ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
       ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
@@ -84,7 +84,7 @@ test_1_2 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccname_init(ccstructs_pathname_t, from_asciiz)(L, ptn, B);
-    ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
       ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
@@ -116,7 +116,7 @@ test_1_3 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccname_init(ccstructs_pathname_t, from_ascii)(L, ptn, B);
-    ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
       ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
@@ -150,7 +150,7 @@ test_2_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
-    ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
       ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
@@ -182,7 +182,7 @@ test_2_2 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_asciiz)(L, B);
-    ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
       ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
@@ -214,7 +214,7 @@ test_2_3 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_ascii)(L, B);
-    ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
       ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
@@ -252,7 +252,7 @@ test_3_1 (cce_destination_t upper_L)
 
     /* Build the struct to be serialised. */
     ccname_init(ccstructs_pathname_t, from_chars)(L, A, P);
-    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(A));
 
     {
       /* Build the "serialise" interface. */
@@ -268,7 +268,7 @@ test_3_1 (cce_destination_t upper_L)
     {
       /* Build a struct to be target of deserialisation. */
       ccname_init(ccstructs_pathname_t, deserialisable)(B);
-      ccstructs_handler_init(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(B));
+      ccstructs_init_and_register_handler(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(B));
 
       /* Build the "deserialise" interface. */
       ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t)(B);
@@ -310,7 +310,7 @@ test_3_2 (cce_destination_t upper_L)
   } else {
     /* Build the struct to be serialised. */
     A = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
-    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(A));
 
     {
       /* Build the "serialise" interface. */
@@ -326,7 +326,7 @@ test_3_2 (cce_destination_t upper_L)
     {
       /* Build a struct to be target of deserialisation. */
       B = ccname_new(ccstructs_pathname_t, deserialisable)(L);
-      ccstructs_handler_init(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(B));
+      ccstructs_init_and_register_handler(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(B));
 
       /* Build the "deserialise" interface. */
       ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t)(B);
@@ -369,7 +369,7 @@ test_4_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
-    ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
     {
       ccstructs_pathname_I	I = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
@@ -402,7 +402,7 @@ test_4_2 (cce_destination_t upper_L)
     ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
     {
       ccstructs_pathname_I	I = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
-      ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(I));
+      ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(I));
       {
 	ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I)(L, I);
 	ccstructs_dumpable_dump(L, W);
@@ -441,7 +441,7 @@ test_5_1 (cce_destination_t upper_L)
     /* Build the struct to be serialised. */
     ccname_init(ccstructs_pathname_t, from_chars)(L, A, P);
     IA = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(A);
-    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IA));
+    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IA));
 
     {
       /* Build the "serialise" interface. */
@@ -458,7 +458,7 @@ test_5_1 (cce_destination_t upper_L)
       /* Build a struct to be target of deserialisation. */
       ccname_init(ccstructs_pathname_t, deserialisable)(B);
       IB = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(B);
-      ccstructs_handler_init(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IB));
+      ccstructs_init_and_register_handler(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IB));
 
       /* Build the "deserialise" interface. */
       ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I)(L, IB);
@@ -500,7 +500,7 @@ test_5_2 (cce_destination_t upper_L)
     /* Build the struct to be serialised. */
     A  = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
     IA = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(A);
-    ccstructs_handler_init(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IA));
+    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IA));
 
     {
       /* Build the "serialise" interface. */
@@ -517,7 +517,7 @@ test_5_2 (cce_destination_t upper_L)
       /* Build a struct to be target of deserialisation. */
       B  = ccname_new(ccstructs_pathname_t, deserialisable)(L);
       IB = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(B);
-      ccstructs_handler_init(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IB));
+      ccstructs_init_and_register_handler(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IB));
 
       /* Build the "deserialise" interface. */
       ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I)(L, IB);
@@ -560,7 +560,7 @@ test_6_1 (cce_destination_t upper_L)
   } else {
     ptn    = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
     ptn_IP = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
-    ccstructs_clean_handler_init(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_IP));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_IP));
 
     cctests_assert(L, false == ccstructs_pathname_is_static(ptn_IP));
     cctests_assert(L, true  == ccstructs_pathname_is_absolute(L, ptn_IP));
@@ -597,7 +597,7 @@ test_6_2 (cce_destination_t upper_L)
       } else {
 	ptn    = ccname_new(ccstructs_pathname_t, from_chars)(lower_L, P);
 	ptn_IP = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
-	ccstructs_clean_handler_init(lower_L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_IP));
+	ccstructs_init_and_register_handler(lower_L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_IP));
 
 	cctests_assert(lower_L, ccstructs_pathname_is_normalised(lower_L, ptn_IP));
 	cce_run_body_handlers(lower_L);
@@ -636,7 +636,7 @@ test_6_3 (cce_destination_t upper_L)
       } else {
 	ptn    = ccname_new(ccstructs_pathname_t, from_chars)(lower_L, P);
 	ptn_IP = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
-	ccstructs_clean_handler_init(lower_L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_IP));
+	ccstructs_init_and_register_handler(lower_L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_IP));
 
 	cctests_assert(lower_L, ccstructs_pathname_is_realpath(lower_L, ptn_IP));
 	cce_run_body_handlers(lower_L);

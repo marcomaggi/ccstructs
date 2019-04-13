@@ -155,11 +155,22 @@ ccname_delete(my_coords_t) (my_coords_t const * S)
  ** ----------------------------------------------------------------- */
 
 static void
-my_coords_handler_final (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H)
+my_coords_clean_handler_final (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_clean_handler_t const * const H)
 /* Destructor handler for embedded instances.  Release all the asynchronous resources
    associated to the struct instance; does not touch the struct itself. */
 {
-  CCSTRUCTS_PC(my_coords_t, self, H->pointer);
+  CCSTRUCTS_PC(my_coords_t, self, cce_handler_resource_pointer(H));
+
+  ccname_final(my_coords_t)(self);
+  if (1) { fprintf(stderr, "%-35s: finalised by plain handler\n", __func__); }
+}
+
+static void
+my_coords_error_handler_final (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_error_handler_t const * const H)
+/* Destructor handler for embedded instances.  Release all the asynchronous resources
+   associated to the struct instance; does not touch the struct itself. */
+{
+  CCSTRUCTS_PC(my_coords_t, self, cce_handler_resource_pointer(H));
 
   ccname_final(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: finalised by plain handler\n", __func__); }
@@ -168,31 +179,42 @@ my_coords_handler_final (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler
 void
 my_coords_register_clean_handler_final (cce_destination_t L, cce_clean_handler_t * H, my_coords_t const * self)
 {
-  H->handler.function	= my_coords_handler_final;
-  H->handler.pointer	= (void *)self;
-  cce_register_clean_handler(L, H);
+  cce_init_and_register_handler(L, H, my_coords_clean_handler_final, cce_resource_pointer(self));
 }
 
 void
 my_coords_register_error_handler_final (cce_destination_t L, cce_error_handler_t * H, my_coords_t const * self)
 {
-  H->handler.function	= my_coords_handler_final;
-  H->handler.pointer	= (void *)self;
-  cce_register_error_handler(L, H);
+  cce_init_and_register_handler(L, H, my_coords_error_handler_final, cce_resource_pointer(self));
 }
 
 /* ------------------------------------------------------------------ */
 
 static void
-my_coords_handler_delete (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handler_t * H)
+my_coords_clean_handler_delete (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_clean_handler_t const * const H)
 /* Destructor  handler  for  standalone  instances.   Release  all  the  asynchronous
-   resources associated  to the struct  instance; release the memory  block allocated
+   aresources associated  to the struct  instance; release the memory  block allocated
    for  the  struct instance  using  the  standard  memory allocator  implemented  by
    CCMemory.
 
    To be used to destroy instances dynamically allocated on the heap. */
 {
-  CCSTRUCTS_PC(my_coords_t, self, H->pointer);
+  CCSTRUCTS_PC(my_coords_t, self, cce_handler_resource_pointer(H));
+
+  ccname_delete(my_coords_t)(self);
+  if (1) { fprintf(stderr, "%-35s: deleted by plain handler\n", __func__); }
+}
+
+static void
+my_coords_error_handler_delete (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_error_handler_t const * const H)
+/* Destructor  handler  for  standalone  instances.   Release  all  the  asynchronous
+   aresources associated  to the struct  instance; release the memory  block allocated
+   for  the  struct instance  using  the  standard  memory allocator  implemented  by
+   CCMemory.
+
+   To be used to destroy instances dynamically allocated on the heap. */
+{
+  CCSTRUCTS_PC(my_coords_t, self, cce_handler_resource_pointer(H));
 
   ccname_delete(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: deleted by plain handler\n", __func__); }
@@ -201,17 +223,13 @@ my_coords_handler_delete (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_handle
 void
 my_coords_register_clean_handler_delete (cce_destination_t L, cce_clean_handler_t * H, my_coords_t const * self)
 {
-  H->handler.function	= my_coords_handler_delete;
-  H->handler.pointer	= (void *)self;
-  cce_register_clean_handler(L, H);
+  cce_init_and_register_handler(L, H, my_coords_clean_handler_delete, cce_resource_pointer(self));
 }
 
 void
 my_coords_register_error_handler_delete (cce_destination_t L, cce_error_handler_t * H, my_coords_t const * self)
 {
-  H->handler.function	= my_coords_handler_delete;
-  H->handler.pointer	= (void *)self;
-  cce_register_error_handler(L, H);
+  cce_init_and_register_handler(L, H, my_coords_error_handler_delete, cce_resource_pointer(self));
 }
 
 
