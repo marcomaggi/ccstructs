@@ -60,6 +60,7 @@ check_PROGRAMS	= \
 	tests/exception-handlers	\
 	tests/dumpable-interface	\
 	tests/serialisable-interface	\
+	tests/pathname-representation	\
 	tests/pathname-interface
 
 if MMUX_TESTING_ENABLED
@@ -91,6 +92,10 @@ tests_dumpable_interface_LDADD		= $(ccstructs_tests_ldadd)
 tests_serialisable_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
 tests_serialisable_interface_CFLAGS	= $(ccstructs_tests_cflags)
 tests_serialisable_interface_LDADD	= $(ccstructs_tests_ldadd)
+
+tests_pathname_representation_CPPFLAGS	= $(ccstructs_tests_cppflags)
+tests_pathname_representation_CFLAGS	= $(ccstructs_tests_cflags)
+tests_pathname_representation_LDADD	= $(ccstructs_tests_ldadd)
 
 tests_pathname_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
 tests_pathname_interface_CFLAGS		= $(ccstructs_tests_cflags)

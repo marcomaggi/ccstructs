@@ -568,6 +568,58 @@ ccstructs_decl ccstructs_pathname_t * ccname_new(ccstructs_pathname_t, deseriali
 
 /* ------------------------------------------------------------------ */
 
+ccstructs_decl void ccname_init(ccstructs_pathname_t, from_asciiz, guarded, clean) \
+  (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_pathname_t * const ptn, ccmem_asciiz_t const rep)
+  __attribute__((__nonnull__(1,2,3)));
+
+ccstructs_decl void ccname_init(ccstructs_pathname_t, from_asciiz, guarded, error) \
+  (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_pathname_t * const ptn, ccmem_asciiz_t const rep)
+  __attribute__((__nonnull__(1,2,3)));
+
+ccstructs_decl void ccname_init(ccstructs_pathname_t, from_ascii, guarded, clean) \
+  (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_pathname_t * const ptn, ccmem_ascii_t const rep)
+  __attribute__((__nonnull__(1,2,3)));
+
+ccstructs_decl void ccname_init(ccstructs_pathname_t, from_ascii, guarded, error) \
+  (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_pathname_t * const ptn, ccmem_ascii_t const rep)
+  __attribute__((__nonnull__(1,2,3)));
+
+ccstructs_decl void ccname_init(ccstructs_pathname_t, from_chars, guarded, clean) \
+  (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_pathname_t * const ptn, char const * const P)
+  __attribute__((__nonnull__(1,2,3,4)));
+
+ccstructs_decl void ccname_init(ccstructs_pathname_t, from_chars, guarded, error) \
+  (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_pathname_t * const ptn, char const * const P)
+  __attribute__((__nonnull__(1,2,3,4)));
+
+/* ------------------------------------------------------------------ */
+
+ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_asciiz, guarded, clean) \
+  (cce_destination_t L, ccstructs_clean_handler_t * H, ccmem_asciiz_t const rep)
+  __attribute__((__nonnull__(1,2), __returns_nonnull__));
+
+ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_asciiz, guarded, error) \
+  (cce_destination_t L, ccstructs_error_handler_t * H, ccmem_asciiz_t const rep)
+  __attribute__((__nonnull__(1,2), __returns_nonnull__));
+
+ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_ascii, guarded, clean) \
+  (cce_destination_t L, ccstructs_clean_handler_t * H, ccmem_ascii_t const rep)
+  __attribute__((__nonnull__(1,2), __returns_nonnull__));
+
+ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_ascii, guarded, error) \
+  (cce_destination_t L, ccstructs_error_handler_t * H, ccmem_ascii_t const rep)
+  __attribute__((__nonnull__(1,2), __returns_nonnull__));
+
+ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_chars, guarded, clean) \
+  (cce_destination_t L, ccstructs_clean_handler_t * H, char const * const P)
+  __attribute__((__nonnull__(1,2,3), __returns_nonnull__));
+
+ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_chars, guarded, error) \
+  (cce_destination_t L, ccstructs_error_handler_t * H, char const * const P)
+  __attribute__((__nonnull__(1,2,3), __returns_nonnull__));
+
+/* ------------------------------------------------------------------ */
+
 /* Type  of  interface  constructor.   Functions  of this  type  build  instances  of
    "ccstructs_dtor_I" implemented by "ccstructs_pathname_t". */
 typedef ccstructs_dtor_I ccname_iface_new_type(ccstructs_dtor_I, ccstructs_pathname_t) (ccstructs_pathname_t const * ptn);

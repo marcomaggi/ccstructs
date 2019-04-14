@@ -40,7 +40,7 @@
 #include <errno.h>
 
 #undef CCSTRUCTS_DEBUGGING
-#define CCSTRUCTS_DEBUGGING		0
+#define CCSTRUCTS_DEBUGGING		1
 
 
 /** --------------------------------------------------------------------
@@ -270,6 +270,166 @@ ccname_delete(ccstructs_pathname_t) (ccstructs_pathname_t * const ptn)
 {
   ccname_final(ccstructs_pathname_t)(ptn);
   ccname_release(ccstructs_pathname_t)(ptn);
+  if (CCSTRUCTS_DEBUGGING) { fprintf(stderr, "%s: deleted\n", __func__); }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Data struct "ccstructs_pathname_t": guarded constructors.
+ ** ----------------------------------------------------------------- */
+
+void
+ccname_init(ccstructs_pathname_t, from_asciiz, guarded, clean) (cce_destination_t L, ccstructs_clean_handler_t * H,
+								ccstructs_pathname_t * const ptn, ccmem_asciiz_t const rep)
+/* Guarded instance constructor.  Initialise a  struct already allocated on the stack
+   or  embedded  into   an  enclosing  struct.   Initialise   the  internal  pathname
+   representation from an ASCIIZ block.   Register the instance for finalisation with
+   the handler H. */
+{
+  ccname_init(ccstructs_pathname_t, from_asciiz)(L, ptn, rep);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(ptn));
+}
+
+void
+ccname_init(ccstructs_pathname_t, from_asciiz, guarded, error) (cce_destination_t L, ccstructs_error_handler_t * H,
+								ccstructs_pathname_t * const ptn, ccmem_asciiz_t const rep)
+/* Guarded instance constructor.  Initialise a  struct already allocated on the stack
+   or  embedded  into   an  enclosing  struct.   Initialise   the  internal  pathname
+   representation from an ASCIIZ block.   Register the instance for finalisation with
+   the handler H. */
+{
+  ccname_init(ccstructs_pathname_t, from_asciiz)(L, ptn, rep);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(ptn));
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+ccname_init(ccstructs_pathname_t, from_ascii, guarded, clean) (cce_destination_t L, ccstructs_clean_handler_t * H,
+							       ccstructs_pathname_t * const ptn, ccmem_ascii_t const rep)
+/* Guarded instance constructor.  Initialise a  struct already allocated on the stack
+   or  embedded  into   an  enclosing  struct.   Initialise   the  internal  pathname
+   representation from an  ASCII block.  Register the instance  for finalisation with
+   the handler H. */
+{
+  ccname_init(ccstructs_pathname_t, from_ascii)(L, ptn, rep);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(ptn));
+}
+
+void
+ccname_init(ccstructs_pathname_t, from_ascii, guarded, error) (cce_destination_t L, ccstructs_error_handler_t * H,
+							       ccstructs_pathname_t * const ptn, ccmem_ascii_t const rep)
+/* Guarded instance constructor.  Initialise a  struct already allocated on the stack
+   or  embedded  into   an  enclosing  struct.   Initialise   the  internal  pathname
+   representation from an  ASCII block.  Register the instance  for finalisation with
+   the handler H. */
+{
+  ccname_init(ccstructs_pathname_t, from_ascii)(L, ptn, rep);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(ptn));
+}
+
+/* ------------------------------------------------------------------ */
+
+void
+ccname_init(ccstructs_pathname_t, from_chars, guarded, clean) (cce_destination_t L, ccstructs_clean_handler_t * H,
+							       ccstructs_pathname_t * const ptn, char const * const P)
+/* Guarded instance constructor.  Initialise a  struct already allocated on the stack
+   or  embedded  into   an  enclosing  struct.   Initialise   the  internal  pathname
+   representation  from  an  ASCIIZ  string   pointer.   Register  the  instance  for
+   finalisation with the handler H. */
+{
+  ccname_init(ccstructs_pathname_t, from_chars)(L, ptn, P);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(ptn));
+}
+
+void
+ccname_init(ccstructs_pathname_t, from_chars, guarded, error) (cce_destination_t L, ccstructs_error_handler_t * H,
+							       ccstructs_pathname_t * const ptn, char const * const P)
+/* Guarded instance constructor.  Initialise a  struct already allocated on the stack
+   or  embedded  into   an  enclosing  struct.   Initialise   the  internal  pathname
+   representation  from  an  ASCIIZ  string   pointer.   Register  the  instance  for
+   finalisation with the handler H. */
+{
+  ccname_init(ccstructs_pathname_t, from_chars)(L, ptn, P);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(ptn));
+}
+
+/* ------------------------------------------------------------------ */
+
+ccstructs_pathname_t const *
+ccname_new(ccstructs_pathname_t, from_asciiz, guarded, clean) (cce_destination_t L, ccstructs_clean_handler_t * H,
+							       ccmem_asciiz_t const rep)
+/* Guarded  instance  constructor.    Allocate  a  new  struct   and  initialise  it.
+   Initialise the  internal pathname representation  from an ASCIIZ  block.  Register
+   the instance for finalisation with the handler H. */
+{
+  ccstructs_pathname_t const	* ptn = ccname_new(ccstructs_pathname_t, from_asciiz)(L, rep);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(ptn));
+  return ptn;
+}
+
+ccstructs_pathname_t const *
+ccname_new(ccstructs_pathname_t, from_asciiz, guarded, error) (cce_destination_t L, ccstructs_error_handler_t * H,
+							       ccmem_asciiz_t const rep)
+/* Guarded  instance  constructor.    Allocate  a  new  struct   and  initialise  it.
+   Initialise the  internal pathname representation  from an ASCIIZ  block.  Register
+   the instance for finalisation with the handler H. */
+{
+  ccstructs_pathname_t const	* ptn = ccname_new(ccstructs_pathname_t, from_asciiz)(L, rep);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(ptn));
+  return ptn;
+}
+
+/* ------------------------------------------------------------------ */
+
+ccstructs_pathname_t const *
+ccname_new(ccstructs_pathname_t, from_ascii, guarded, clean) (cce_destination_t L, ccstructs_clean_handler_t * H,
+							      ccmem_ascii_t const rep)
+/* Guarded  instance  constructor.    Allocate  a  new  struct   and  initialise  it.
+   Initialise the internal pathname representation from an ASCII block.  Register the
+   instance for finalisation with the handler H. */
+{
+  ccstructs_pathname_t const	* ptn = ccname_new(ccstructs_pathname_t, from_ascii)(L, rep);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(ptn));
+  return ptn;
+}
+
+ccstructs_pathname_t const *
+ccname_new(ccstructs_pathname_t, from_ascii, guarded, error) (cce_destination_t L, ccstructs_error_handler_t * H,
+							      ccmem_ascii_t const rep)
+/* Guarded  instance  constructor.    Allocate  a  new  struct   and  initialise  it.
+   Initialise the internal pathname representation from an ASCII block.  Register the
+   instance for finalisation with the handler H. */
+{
+  ccstructs_pathname_t const	* ptn = ccname_new(ccstructs_pathname_t, from_ascii)(L, rep);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(ptn));
+  return ptn;
+}
+
+/* ------------------------------------------------------------------ */
+
+ccstructs_pathname_t const *
+ccname_new(ccstructs_pathname_t, from_chars, guarded, clean) (cce_destination_t L, ccstructs_clean_handler_t * H,
+							      char const * const P)
+/* Guarded  instance  constructor.    Allocate  a  new  struct   and  initialise  it.
+   Initialise the  internal pathname  representation from  an ASCIIZ  string pointer.
+   Register the instance for finalisation with the handler H. */
+{
+  ccstructs_pathname_t const	* ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(ptn));
+  return ptn;
+}
+
+ccstructs_pathname_t const *
+ccname_new(ccstructs_pathname_t, from_chars, guarded, error) (cce_destination_t L, ccstructs_error_handler_t * H,
+							      char const * const P)
+/* Guarded  instance  constructor.    Allocate  a  new  struct   and  initialise  it.
+   Initialise the  internal pathname  representation from  an ASCIIZ  string pointer.
+   Register the instance for finalisation with the handler H. */
+{
+  ccstructs_pathname_t const	* ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(ptn));
+  return ptn;
 }
 
 

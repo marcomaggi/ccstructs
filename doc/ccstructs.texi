@@ -922,6 +922,7 @@ will just raise an exception of type @objtype{cce_condition_unimplemented_t}.
 @menu
 * pathname simple typedefs::    Simple pathname: type definitions.
 * pathname simple ctors::       Simple pathname: constructors.
+* pathname simple gctors::      Simple pathname: guarded constructors.
 * pathname simple ifaces::      Simple pathname: implemented interfaces.
 * pathname simple samples::     Simple pathname: usage examples.
 @end menu
@@ -1003,6 +1004,100 @@ Constructor function that allocates the @struct{} on the heap using the standard
 implemented by CCMemory; @ccmemoryref{std, The standard allocator}.  This function initialises in
 such a way that it allows for both finalisation and mutation from deserialisation.  If an error
 occurs: raise an exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+@c page
+@node pathname simple gctors
+@subsection Simple pathname: guarded constructors
+
+
+@subsubheading Constructors for embedded instances
+
+
+@deftypefun void {ccname_init(ccstructs_pathname_t, from_asciiz, guarded, clean)} (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, ccstructs_pathname_t * @var{ptn}, ccmem_asciiz_t @var{rep})
+Guarded instance constructor.  Initialise a struct already allocated on the stack or embedded into
+an enclosing struct.  Initialise the internal pathname representation from an @asciiz{} block.
+Register the instance for finalisation with the handler @var{H}.
+@end deftypefun
+
+
+@deftypefun void {ccname_init(ccstructs_pathname_t, from_asciiz, guarded, error)} (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccstructs_pathname_t * @var{ptn}, ccmem_asciiz_t @var{rep})
+Guarded instance constructor.  Initialise a struct already allocated on the stack or embedded into
+an enclosing struct.  Initialise the internal pathname representation from an @asciiz{} block.
+Register the instance for finalisation with the handler @var{H}.
+@end deftypefun
+
+
+@deftypefun void {ccname_init(ccstructs_pathname_t, from_ascii, guarded, clean)} (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, ccstructs_pathname_t * @var{ptn}, ccmem_ascii_t @var{rep})
+Guarded instance constructor.  Initialise a struct already allocated on the stack or embedded into
+an enclosing struct.  Initialise the internal pathname representation from an @ascii{} block.  Register
+the instance for finalisation with the handler @var{H}.
+@end deftypefun
+
+
+@deftypefun void {ccname_init(ccstructs_pathname_t, from_ascii, guarded, error)} (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccstructs_pathname_t * @var{ptn}, ccmem_ascii_t @var{rep})
+Guarded instance constructor.  Initialise a struct already allocated on the stack or embedded into
+an enclosing struct.  Initialise the internal pathname representation from an @ascii{} block.  Register
+the instance for finalisation with the handler @var{H}.
+@end deftypefun
+
+
+@deftypefun void {ccname_init(ccstructs_pathname_t, from_chars, guarded, clean)} (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, ccstructs_pathname_t * @var{ptn}, char const * @var{P})
+Guarded instance constructor.  Initialise a struct already allocated on the stack or embedded into
+an enclosing struct.  Initialise the internal pathname representation from an @asciiz{} string pointer.
+Register the instance for finalisation with the handler @var{H}.
+@end deftypefun
+
+
+@deftypefun void {ccname_init(ccstructs_pathname_t, from_chars, guarded, error)} (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccstructs_pathname_t * @var{ptn}, char const * @var{P})
+Guarded instance constructor.  Initialise a struct already allocated on the stack or embedded into
+an enclosing struct.  Initialise the internal pathname representation from an @asciiz{} string pointer.
+Register the instance for finalisation with the handler @var{H}.
+@end deftypefun
+@c ------------------------------------------------------------------------
+
+@subsubheading Constructors for standalone instances
+
+
+@deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, from_asciiz, guarded, clean)} (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, ccmem_asciiz_t @var{rep})
+Guarded instance constructor.  Allocate a new struct and initialise it.  Initialise the internal
+pathname representation from an @asciiz{} block.  Register the instance for finalisation with the
+handler @var{H}.
+@end deftypefun
+
+
+@deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, from_asciiz, guarded, error)} (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccmem_asciiz_t @var{rep})
+Guarded instance constructor.  Allocate a new struct and initialise it.  Initialise the internal
+pathname representation from an @asciiz{} block.  Register the instance for finalisation with the
+handler @var{H}.
+@end deftypefun
+
+
+@deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, from_ascii, guarded, clean)} (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, ccmem_ascii_t @var{rep})
+Guarded instance constructor.  Allocate a new struct and initialise it.  Initialise the internal
+pathname representation from an @ascii{} block.  Register the instance for finalisation with the
+handler @var{H}.
+@end deftypefun
+
+
+@deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, from_ascii, guarded, error)} (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccmem_ascii_t @var{rep})
+Guarded instance constructor.  Allocate a new struct and initialise it.  Initialise the internal
+pathname representation from an @ascii{} block.  Register the instance for finalisation with the
+handler @var{H}.
+@end deftypefun
+
+
+@deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, from_chars, guarded, clean)} (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, char const * @var{P})
+Guarded instance constructor.  Allocate a new struct and initialise it.  Initialise the internal
+pathname representation from an @asciiz{} string pointer.  Register the instance for finalisation with
+the handler @var{H}.
+@end deftypefun
+
+
+@deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, from_chars, guarded, error)} (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, char const * @var{P})
+Guarded instance constructor.  Allocate a new struct and initialise it.  Initialise the internal
+pathname representation from an @asciiz{} string pointer.  Register the instance for finalisation with
+the handler @var{H}.
 @end deftypefun
 
 @c page

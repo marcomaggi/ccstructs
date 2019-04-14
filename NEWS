@@ -18,6 +18,8 @@ The release series 0.3 is backwards incompatible with the previous one.
 
 * Reimplemented dtor trait for better interface with CCExceptions.
 
+* Added guarded constructors for "ccstructs_pathname_t".
+
 
 Revision 0.2.0-devel.4
 ----------------------
