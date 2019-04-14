@@ -965,9 +965,16 @@ by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
+@deftypefun void {ccname_init(ccstructs_pathname_t, copy)} (cce_destination_t @var{L}, ccstructs_pathname_t * @var{dst}, ccstructs_pathname_t const * @var{src})
+Constructor function that initialises an already allocated @struct{} instance.  This function
+initialises from an already built pathname instance.  If an error occurs: raise an exception by
+performing a non--local exit to @var{L}.
+@end deftypefun
+
+
 @deftypefun void {ccname_init(ccstructs_pathname_t, deserialisable)} (ccstructs_pathname_t * @var{ptn})
-Initialisation function that initialises an already allocated struct.  This function initialises in
-such a way that it allows for both finalisation and mutation from deserialisation.
+Constructor function that initialises an already allocated @struct{} instance.  This function
+initialises in such a way that it allows for both finalisation and mutation from deserialisation.
 @end deftypefun
 
 @c ------------------------------------------------------------------------
@@ -995,6 +1002,14 @@ occurs: raise an exception by performing a non--local exit to @var{L}.
 Constructor function that allocates the @struct{} on the heap using the standard memory allocator
 implemented by CCMemory; @ccmemoryref{std, The standard allocator}.  This function initialises from
 a C pointer to an @asciiz{} representation.  If an error occurs: raise an exception by performing a
+non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, copy)} (cce_destination_t @var{L}, ccstructs_pathname_t const * @var{src})
+Constructor function that allocates the @struct{} on the heap using the standard memory allocator
+implemented by CCMemory; @ccmemoryref{std, The standard allocator}.  This function initialises from
+an already built pathname representation.  If an error occurs: raise an exception by performing a
 non--local exit to @var{L}.
 @end deftypefun
 
@@ -1054,6 +1069,21 @@ Guarded instance constructor.  Initialise a struct already allocated on the stac
 an enclosing struct.  Initialise the internal pathname representation from an @asciiz{} string pointer.
 Register the instance for finalisation with the handler @var{H}.
 @end deftypefun
+
+
+@deftypefun void {ccname_init(ccstructs_pathname_t, copy, guarded, clean)} (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, ccstructs_pathname_t * @var{ptn}, ccstructs_pathname_t const * @var{src})
+Guarded instance constructor.  Initialise a struct already allocated on the stack or embedded into
+an enclosing struct.  Initialise the internal pathname representation from an already built pathname
+representation.  Register the instance for finalisation with the handler @var{H}.
+@end deftypefun
+
+
+@deftypefun void {ccname_init(ccstructs_pathname_t, copy, guarded, error)} (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccstructs_pathname_t * @var{ptn}, ccstructs_pathname_t const * @var{src})
+Guarded instance constructor.  Initialise a struct already allocated on the stack or embedded into
+an enclosing struct.  Initialise the internal pathname representation from an already built pathname
+representation.  Register the instance for finalisation with the handler @var{H}.
+@end deftypefun
+
 @c ------------------------------------------------------------------------
 
 @subsubheading Constructors for standalone instances
@@ -1098,6 +1128,20 @@ the handler @var{H}.
 Guarded instance constructor.  Allocate a new struct and initialise it.  Initialise the internal
 pathname representation from an @asciiz{} string pointer.  Register the instance for finalisation with
 the handler @var{H}.
+@end deftypefun
+
+
+@deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, copy, guarded, clean)} (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, ccstructs_pathname_t const * @var{src})
+Guarded instance constructor.  Allocate a new struct and initialise it.  Initialise the internal
+pathname representation from an already built pathname representation.  Register the instance for
+finalisation with the handler @var{H}.
+@end deftypefun
+
+
+@deftypefun {ccstructs_pathname_t const *} {ccname_new(ccstructs_pathname_t, copy, guarded, error)} (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccstructs_pathname_t const * @var{src})
+Guarded instance constructor.  Allocate a new struct and initialise it.  Initialise the internal
+pathname representation from an already built pathname representation.  Register the instance for
+finalisation with the handler @var{H}.
 @end deftypefun
 
 @c page

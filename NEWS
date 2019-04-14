@@ -20,6 +20,8 @@ The release series 0.3 is backwards incompatible with the previous one.
 
 * Added guarded constructors for "ccstructs_pathname_t".
 
+* Added copy constructors for "ccstructs_pathname_t", plain and guarded.
+
 
 Revision 0.2.0-devel.4
 ----------------------

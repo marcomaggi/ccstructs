@@ -543,6 +543,10 @@ ccstructs_decl void ccname_init(ccstructs_pathname_t, from_ascii)  (cce_destinat
 ccstructs_decl void ccname_init(ccstructs_pathname_t, from_chars)  (cce_destination_t L, ccstructs_pathname_t * ptn, char const * P)
   __attribute__((__nonnull__(1,2)));
 
+ccstructs_decl void ccname_init(ccstructs_pathname_t, copy) (cce_destination_t L, ccstructs_pathname_t * dst,
+							     ccstructs_pathname_t const * src)
+  __attribute__((__nonnull__(1,2,3)));
+
 /* Initialisation  function  that  initialises  an already  allocated  struct.   This
    initialises in such a  way that it allows for both  finalisation and mutation from
    deserialisation. */
@@ -558,6 +562,9 @@ ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, fro
   __attribute__((__nonnull__(1), __returns_nonnull__));
 
 ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_chars)  (cce_destination_t L, char const * P)
+  __attribute__((__nonnull__(1,2), __returns_nonnull__));
+
+ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, copy)  (cce_destination_t L, ccstructs_pathname_t const * src)
   __attribute__((__nonnull__(1,2), __returns_nonnull__));
 
 /* Constructor function  that allocates  the struct  on the  heap using  the standard
@@ -592,6 +599,14 @@ ccstructs_decl void ccname_init(ccstructs_pathname_t, from_chars, guarded, error
   (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_pathname_t * const ptn, char const * const P)
   __attribute__((__nonnull__(1,2,3,4)));
 
+ccstructs_decl void ccname_init(ccstructs_pathname_t, copy, guarded, clean) \
+  (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_pathname_t * const dst, ccstructs_pathname_t const * const src)
+  __attribute__((__nonnull__(1,2,3,4)));
+
+ccstructs_decl void ccname_init(ccstructs_pathname_t, copy, guarded, error) \
+  (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_pathname_t * const dst, ccstructs_pathname_t const * const src)
+  __attribute__((__nonnull__(1,2,3,4)));
+
 /* ------------------------------------------------------------------ */
 
 ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_asciiz, guarded, clean) \
@@ -616,6 +631,14 @@ ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, fro
 
 ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_chars, guarded, error) \
   (cce_destination_t L, ccstructs_error_handler_t * H, char const * const P)
+  __attribute__((__nonnull__(1,2,3), __returns_nonnull__));
+
+ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, copy, guarded, clean) \
+  (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_pathname_t const * const src)
+  __attribute__((__nonnull__(1,2,3), __returns_nonnull__));
+
+ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, copy, guarded, error) \
+  (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_pathname_t const * const src)
   __attribute__((__nonnull__(1,2,3), __returns_nonnull__));
 
 /* ------------------------------------------------------------------ */

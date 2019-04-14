@@ -166,6 +166,12 @@ ccname_init(ccstructs_pathname_t, from_chars) (cce_destination_t L, ccstructs_pa
 }
 
 void
+ccname_init(ccstructs_pathname_t, copy) (cce_destination_t L, ccstructs_pathname_t * const dst, ccstructs_pathname_t const * const src)
+{
+  ccname_init(ccstructs_pathname_t, from_asciiz)(L, dst, src->rep);
+}
+
+void
 ccname_init(ccstructs_pathname_t, deserialisable) (ccstructs_pathname_t * ptn)
 {
   ptn->methods	= &ccname_table(ccstructs_pathname_t, embedded);
@@ -185,7 +191,7 @@ ccname_final(ccstructs_pathname_t) (ccstructs_pathname_t * ptn)
   }
   ptn->rep.ptr = NULL;
   ptn->rep.len = 0;
-  if (CCSTRUCTS_PATHNAME_DEBUGGING) { fprintf(stderr, "%s: finalised\n", __func__); }
+  if (CCSTRUCTS_PATHNAME_DEBUGGING) { fprintf(stderr, "%s: finalised %p\n", __func__, (void *)ptn); }
 }
 
 /* ------------------------------------------------------------------ */
@@ -207,7 +213,7 @@ ccname_release(ccstructs_pathname_t) (ccstructs_pathname_t const * ptn)
    by CCMemory. */
 {
   ccmem_std_free((void *)ptn);
-  if (CCSTRUCTS_PATHNAME_DEBUGGING) { fprintf(stderr, "%s: released\n", __func__); }
+  if (CCSTRUCTS_PATHNAME_DEBUGGING) { fprintf(stderr, "%s: released %p\n", __func__, (void *)ptn); }
 }
 
 /* ------------------------------------------------------------------ */
@@ -248,6 +254,12 @@ ccname_new(ccstructs_pathname_t, from_chars)  (cce_destination_t L, char const *
   return ptn;
 }
 
+ccstructs_pathname_t const *
+ccname_new(ccstructs_pathname_t, copy) (cce_destination_t L, ccstructs_pathname_t const * src)
+{
+  return ccname_new(ccstructs_pathname_t, from_asciiz)(L, src->rep);
+}
+
 ccstructs_pathname_t *
 ccname_new(ccstructs_pathname_t, deserialisable) (cce_destination_t L)
 {
@@ -270,7 +282,7 @@ ccname_delete(ccstructs_pathname_t) (ccstructs_pathname_t * const ptn)
 {
   ccname_final(ccstructs_pathname_t)(ptn);
   ccname_release(ccstructs_pathname_t)(ptn);
-  if (CCSTRUCTS_PATHNAME_DEBUGGING) { fprintf(stderr, "%s: deleted\n", __func__); }
+  if (CCSTRUCTS_PATHNAME_DEBUGGING) { fprintf(stderr, "%s: deleted %p\n", __func__, (void *)ptn); }
 }
 
 
@@ -356,6 +368,32 @@ ccname_init(ccstructs_pathname_t, from_chars, guarded, error) (cce_destination_t
 
 /* ------------------------------------------------------------------ */
 
+void
+ccname_init(ccstructs_pathname_t, copy, guarded, clean) (cce_destination_t L, ccstructs_clean_handler_t * H,
+							 ccstructs_pathname_t * const dst, ccstructs_pathname_t const * const src)
+/* Guarded instance constructor.  Initialise a  struct already allocated on the stack
+   or  embedded  into   an  enclosing  struct.   Initialise   the  internal  pathname
+   representation  from  an  already  built pathname  representation.   Register  the
+   instance for finalisation with the handler H. */
+{
+  ccname_init(ccstructs_pathname_t, copy)(L, dst, src);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(dst));
+}
+
+void
+ccname_init(ccstructs_pathname_t, copy, guarded, error) (cce_destination_t L, ccstructs_error_handler_t * H,
+							 ccstructs_pathname_t * const dst, ccstructs_pathname_t const * const src)
+/* Guarded instance constructor.  Initialise a  struct already allocated on the stack
+   or  embedded  into   an  enclosing  struct.   Initialise   the  internal  pathname
+   representation  from  an  already  built pathname  representation.   Register  the
+   instance for finalisation with the handler H. */
+{
+  ccname_init(ccstructs_pathname_t, copy)(L, dst, src);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(dst));
+}
+
+/* ------------------------------------------------------------------ */
+
 ccstructs_pathname_t const *
 ccname_new(ccstructs_pathname_t, from_asciiz, guarded, clean) (cce_destination_t L, ccstructs_clean_handler_t * H,
 							       ccmem_asciiz_t const rep)
@@ -430,6 +468,32 @@ ccname_new(ccstructs_pathname_t, from_chars, guarded, error) (cce_destination_t 
   ccstructs_pathname_t const	* ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
   ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(ptn));
   return ptn;
+}
+
+/* ------------------------------------------------------------------ */
+
+ccstructs_pathname_t const *
+ccname_new(ccstructs_pathname_t, copy, guarded, clean) (cce_destination_t L, ccstructs_clean_handler_t * H,
+							ccstructs_pathname_t const * const src)
+/* Guarded  instance  constructor.    Allocate  a  new  struct   and  initialise  it.
+   Initialise the  internal pathname representation  from an ASCIIZ  block.  Register
+   the instance for finalisation with the handler H. */
+{
+  ccstructs_pathname_t const	* dst = ccname_new(ccstructs_pathname_t, copy)(L, src);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(dst));
+  return dst;
+}
+
+ccstructs_pathname_t const *
+ccname_new(ccstructs_pathname_t, copy, guarded, error) (cce_destination_t L, ccstructs_error_handler_t * H,
+							ccstructs_pathname_t const * const src)
+/* Guarded  instance  constructor.    Allocate  a  new  struct   and  initialise  it.
+   Initialise the  internal pathname representation  from an ASCIIZ  block.  Register
+   the instance for finalisation with the handler H. */
+{
+  ccstructs_pathname_t const	* dst = ccname_new(ccstructs_pathname_t, copy)(L, src);
+  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(dst));
+  return dst;
 }
 
 
