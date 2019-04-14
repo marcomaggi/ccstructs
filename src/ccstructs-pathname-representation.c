@@ -277,52 +277,24 @@ ccname_delete(ccstructs_pathname_t) (ccstructs_pathname_t * const ptn)
  ** Interface "ccstructs_dtor_I": implementation for embedded "ccstructs_pathname_t".
  ** ----------------------------------------------------------------- */
 
-/* Method  function  prototype.  This  function  implements  the method  "final"  for
-   instances  of type  "ccstructs_dtor_I" as  implemented by  "ccstructs_pathname_t".
-   This is for embedded instances. */
-static ccname_iface_method_type(ccstructs_dtor_I, final)   ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, embedded, final);
-/* Method  function prototype.   This function  implements the  method "release"  for
-   instances  of type  "ccstructs_dtor_I" as  implemented by  "ccstructs_pathname_t".
-   This is for embedded instances. */
-static ccname_iface_method_type(ccstructs_dtor_I, release) ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, embedded, release);
-
-/* Interface  methods  table.  This  struct  implements  the  methods table  for  the
-   interface "ccstructs_dtor_I"  as implemented  by "ccstructs_pathname_t".   This is
-   for embedded instances. */
-static ccname_iface_table_type(ccstructs_dtor_I) const ccname_iface_table(ccstructs_dtor_I, ccstructs_pathname_t, embedded) = {
-  .final	= ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, embedded, final),
-  .release	= ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, embedded, release)
-};
+static ccstructs_core_destructor_fun_t ccstructs_embedded_pathname_destructor;
 
 ccstructs_dtor_I
 ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded) (ccstructs_pathname_t const * const ptn)
 /* Interface constructor.   Build and  return a  new interface  "ccstructs_dtor_I" as
    implemented by "ccstructs_pathname_t".  This is for embedded instances. */
 {
-  return ccname_new(ccstructs_dtor_I)(ccstructs_core(ptn), &ccname_iface_table(ccstructs_dtor_I, ccstructs_pathname_t, embedded));
+  return ccname_new(ccstructs_dtor_I)(ccstructs_core(ptn), ccstructs_embedded_pathname_destructor);
 }
 
 /* ------------------------------------------------------------------ */
 
 void
-ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, embedded, final) (ccstructs_dtor_I I)
-/* Method implementation  function.  Implement  the method  "final" for  instances of
-   type  "ccstructs_dtor_I" as  implemented by  "ccstructs_pathname_t".  This  is for
-   embedded instances. */
+ccstructs_embedded_pathname_destructor (ccstructs_core_t * S)
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t, ptn, ccstructs_dtor_self(I));
+  CCSTRUCTS_PC(ccstructs_pathname_t, ptn, S);
 
   ccname_final(ccstructs_pathname_t)(ptn);
-  if (CCSTRUCTS_DEBUGGING) { fprintf(stderr, "%s: finalised\n", __func__); }
-}
-
-void
-ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, embedded, release) (ccstructs_dtor_I I CCSTRUCTS_UNUSED)
-/* Method implementation function.   Implement the method "release"  for instances of
-   type  "ccstructs_dtor_I" as  implemented by  "ccstructs_pathname_t".  This  is for
-   embedded instances. */
-{
-  if (CCSTRUCTS_DEBUGGING) { fprintf(stderr, "%s: released\n", __func__); }
 }
 
 
@@ -330,55 +302,24 @@ ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, embedded, release) (
  ** Interface "ccstructs_dtor_I": implementation for standalone "ccstructs_pathname_t".
  ** ----------------------------------------------------------------- */
 
-/* Method  function  prototype.  This  function  implements  the method  "final"  for
-   instances  of type  "ccstructs_dtor_I" as  implemented by  "ccstructs_pathname_t".
-   This is for standalone instances. */
-static ccname_iface_method_type(ccstructs_dtor_I, final)   ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, standalone, final);
-/* Method  function prototype.   This function  implements the  method "release"  for
-   instances  of type  "ccstructs_dtor_I" as  implemented by  "ccstructs_pathname_t".
-   This is for standalone instances. */
-static ccname_iface_method_type(ccstructs_dtor_I, release) ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, standalone, release);
-
-/* Interface  methods  table.  This  struct  implements  the  methods table  for  the
-   interface "ccstructs_dtor_I"  as implemented  by "ccstructs_pathname_t".   This is
-   for standalone instances. */
-static ccname_iface_table_type(ccstructs_dtor_I) const ccname_iface_table(ccstructs_dtor_I, ccstructs_pathname_t, standalone) = {
-  .final	= ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, standalone, final),
-  .release	= ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, standalone, release)
-};
+static ccstructs_core_destructor_fun_t ccstructs_standalone_pathname_destructor;
 
 ccstructs_dtor_I
 ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone) (ccstructs_pathname_t const * const ptn)
 /* Interface constructor.   Build and  return a  new interface  "ccstructs_dtor_I" as
    implemented by "ccstructs_pathname_t".  This is for standalone instances. */
 {
-  return ccname_new(ccstructs_dtor_I)(ccstructs_core(ptn), &ccname_iface_table(ccstructs_dtor_I, ccstructs_pathname_t, standalone));
+  return ccname_new(ccstructs_dtor_I)(ccstructs_core(ptn), ccstructs_standalone_pathname_destructor);
 }
 
 /* ------------------------------------------------------------------ */
 
 void
-ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, standalone, final) (ccstructs_dtor_I I)
-/* Method implementation  function.  Implement  the method  "final" for  instances of
-   type  "ccstructs_dtor_I" as  implemented by  "ccstructs_pathname_t".  This  is for
-   standalone instances. */
+ccstructs_standalone_pathname_destructor (ccstructs_core_t * S)
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t, ptn, ccstructs_dtor_self(I));
+  CCSTRUCTS_PC(ccstructs_pathname_t, ptn, S);
 
-  ccname_final(ccstructs_pathname_t)(ptn);
-  if (CCSTRUCTS_DEBUGGING) { fprintf(stderr, "%s: finalised\n", __func__); }
-}
-
-void
-ccname_iface_method(ccstructs_dtor_I, ccstructs_pathname_t, standalone, release) (ccstructs_dtor_I I)
-/* Method implementation function.   Implement the method "release"  for instances of
-   type  "ccstructs_dtor_I" as  implemented by  "ccstructs_pathname_t".  This  is for
-   standalone instances. */
-{
-  CCSTRUCTS_PC(ccstructs_pathname_t, ptn, ccstructs_dtor_self(I));
-
-  ccname_release(ccstructs_pathname_t)(ptn);
-  if (CCSTRUCTS_DEBUGGING) { fprintf(stderr, "%s: released\n", __func__); }
+  ccname_delete(ccstructs_pathname_t)(ptn);
 }
 
 

@@ -32,7 +32,7 @@
 
 
 /** --------------------------------------------------------------------
- ** Dtor interface: empty release method.
+ ** Dtor interface for embedded struct.
  ** ----------------------------------------------------------------- */
 
 typedef struct one_t	one_t;
@@ -41,35 +41,44 @@ struct one_t {
   void *	pointer;
 };
 
+void
+ccname_init(one_t) (cce_destination_t upper_L, one_t * S)
+{
+  cce_location_t	L[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    S->pointer = ccmem_std_malloc(L, 256);
+    memset(S->pointer, 123, 256);
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+ccname_final(one_t) (one_t * S)
+{
+  ccmem_free(ccmem_standard_allocator, S->pointer);
+}
+
 /* ------------------------------------------------------------------ */
 
-static void
-ccname_iface_method(ccstructs_dtor_I, one_t, release) (ccstructs_dtor_I I)
-{
-  CCSTRUCTS_PC(one_t, S, ccstructs_dtor_self(I));
-
-  fprintf(stderr, "%s: release method for %p\n", __func__, (void *)S);
-}
-
-static void
-ccname_iface_method(ccstructs_dtor_I, one_t, final) (ccstructs_dtor_I I)
-{
-  CCSTRUCTS_PC(one_t, S, ccstructs_dtor_self(I));
-
-  ccmem_free(ccmem_standard_allocator, S->pointer);
-  fprintf(stderr, "%s: final method for %p\n", __func__, (void *)S);
-}
-
-static ccname_iface_table_type(ccstructs_dtor_I) const ccname_iface_table(ccstructs_dtor_I, one_t) = {
-  .release	= ccname_iface_method(ccstructs_dtor_I, one_t, release),
-  .final	= ccname_iface_method(ccstructs_dtor_I, one_t, final)
-};
+static ccstructs_core_destructor_fun_t	one_destructor;
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_dtor_I
 ccname_iface_new(ccstructs_dtor_I, one_t) (one_t const * const S)
 {
-  return ccname_new(ccstructs_dtor_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_dtor_I, one_t));
+  return ccname_new(ccstructs_dtor_I)(ccstructs_core(S), one_destructor);
+}
+
+void
+one_destructor (ccstructs_core_t * self)
+{
+  CCSTRUCTS_PC(one_t, S, self);
+
+  ccname_final(one_t)(S);
+  if (1) { fprintf(stderr, "%s: finalised by dtor\n", __func__); }
 }
 
 /* ------------------------------------------------------------------ */
@@ -89,14 +98,14 @@ test_1_1 (cce_destination_t upper_L)
     ccstructs_dtor_I	I = ccname_iface_new(ccstructs_dtor_I, one_t)(&S);
 
     memset(S.pointer, 123, 256);
-    ccstructs_dtor_delete(I);
+    ccstructs_dtor_destroy(I);
     cce_run_body_handlers(L);
   }
 }
 
 
 /** --------------------------------------------------------------------
- ** Dtor interface: non-empty release method.
+ ** Dtor interface for standalone struct.
  ** ----------------------------------------------------------------- */
 
 typedef struct two_t	two_t;
@@ -123,36 +132,31 @@ ccname_new(two_t) (cce_destination_t upper_L)
   return S;
 }
 
+void
+ccname_delete(two_t) (two_t * S)
+{
+  ccmem_free(ccmem_standard_allocator, S->pointer);
+  ccmem_free(ccmem_standard_allocator, S);
+}
+
 /* ------------------------------------------------------------------ */
 
-static void
-ccname_iface_method(ccstructs_dtor_I, two_t, release) (ccstructs_dtor_I I)
-{
-  CCSTRUCTS_PC(two_t, S, ccstructs_dtor_self(I));
-
-  ccmem_free(ccmem_standard_allocator, S);
-  fprintf(stderr, "%s: release method for %p\n", __func__, (void *)S);
-}
-
-static void
-ccname_iface_method(ccstructs_dtor_I, two_t, final) (ccstructs_dtor_I I)
-{
-  CCSTRUCTS_PC(two_t, S, ccstructs_dtor_self(I));
-
-  ccmem_free(ccmem_standard_allocator, S->pointer);
-  fprintf(stderr, "%s: final method for %p\n", __func__, (void *)S);
-}
-
-static ccname_iface_table_type(ccstructs_dtor_I) const ccname_iface_table(ccstructs_dtor_I, two_t) = {
-  .release	= ccname_iface_method(ccstructs_dtor_I, two_t, release),
-  .final	= ccname_iface_method(ccstructs_dtor_I, two_t, final)
-};
+static ccstructs_core_destructor_fun_t	two_destructor;
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccstructs_dtor_I
 ccname_iface_new(ccstructs_dtor_I, two_t) (two_t const * const S)
 {
-  return ccname_new(ccstructs_dtor_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_dtor_I, two_t));
+  return ccname_new(ccstructs_dtor_I)(ccstructs_core(S), two_destructor);
+}
+
+void
+two_destructor (ccstructs_core_t * self)
+{
+  CCSTRUCTS_PC(two_t, S, self);
+
+  ccname_delete(two_t)(S);
+  if (1) { fprintf(stderr, "%s: deleted by dtor\n", __func__); }
 }
 
 /* ------------------------------------------------------------------ */
@@ -168,7 +172,7 @@ test_2_1 (cce_destination_t upper_L)
   } else {
     two_t *		S = ccname_new(two_t)(L);
     ccstructs_dtor_I	I = ccname_iface_new(ccstructs_dtor_I, two_t)(S);
-    ccstructs_dtor_delete(I);
+    ccstructs_dtor_destroy(I);
     cce_run_body_handlers(L);
   }
 }
@@ -179,13 +183,13 @@ main (void)
 {
   cctests_init("tests dtor interface");
   {
-    cctests_begin_group("empty release method");
+    cctests_begin_group("embedded struct");
     {
       cctests_run(test_1_1);
     }
     cctests_end_group();
 
-    cctests_begin_group("non-empty release method");
+    cctests_begin_group("standalone struct");
     {
       cctests_run(test_2_1);
     }

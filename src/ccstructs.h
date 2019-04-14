@@ -110,6 +110,7 @@ ccstructs_decl int		ccstructs_version_interface_age		(void);
  ** ----------------------------------------------------------------- */
 
 typedef struct ccstructs_core_t		ccstructs_core_t;
+typedef void ccstructs_core_destructor_fun_t (ccstructs_core_t * S);
 
 struct ccstructs_core_t;
 
@@ -125,36 +126,20 @@ ccstructs_core (void const * S)
  ** Interface: destructors.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccstructs_dtor_I					ccstructs_dtor_I;
-typedef struct ccname_iface_table_type(ccstructs_dtor_I)	ccname_iface_table_type(ccstructs_dtor_I);
+typedef struct ccstructs_dtor_I		ccstructs_dtor_I;
 
 struct ccstructs_dtor_I {
-  ccname_iface_table_type(ccstructs_dtor_I)	const * methods;
-  ccstructs_core_t				const * self;
-};
-
-/* Release all  the asynchronous  resources owned by  the fields  of the
-   struct, if any. */
-typedef void ccname_iface_method_type(ccstructs_dtor_I, final) (ccstructs_dtor_I I);
-
-/* Release the memory allocated for the struct, if needed. */
-typedef void ccname_iface_method_type(ccstructs_dtor_I, release) (ccstructs_dtor_I I);
-
-struct ccname_iface_table_type(ccstructs_dtor_I) {
-  ccname_iface_method_type(ccstructs_dtor_I, final)	* final;
-  ccname_iface_method_type(ccstructs_dtor_I, release)	* release;
+  ccstructs_core_destructor_fun_t	* destroy;
+  ccstructs_core_t const		* self;
 };
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
 static inline ccstructs_dtor_I
-ccname_new(ccstructs_dtor_I)(ccstructs_core_t const * S, ccname_iface_table_type(ccstructs_dtor_I) const * M)
+ccname_new(ccstructs_dtor_I)(ccstructs_core_t const * S, ccstructs_core_destructor_fun_t * destroy)
 {
-  ccstructs_dtor_I	I = {
-    .methods	= M,
-    .self	= S
-  };
+  ccstructs_dtor_I	I = { .destroy = destroy, .self = S };
   return I;
 }
 
@@ -167,10 +152,9 @@ ccstructs_dtor_self (ccstructs_dtor_I I)
 
 __attribute__((__always_inline__))
 static inline void
-ccstructs_dtor_delete (ccstructs_dtor_I I)
+ccstructs_dtor_destroy (ccstructs_dtor_I I)
 {
-  I.methods->final(I);
-  I.methods->release(I);
+  I.destroy(cce_resource_pointer(I.self));
 }
 
 
@@ -183,12 +167,10 @@ typedef struct ccstructs_error_handler_t	ccstructs_error_handler_t;
 
 struct ccstructs_clean_handler_t {
   cce_clean_handler_t	handler;
-  ccstructs_dtor_I	dtor;
 };
 
 struct ccstructs_error_handler_t {
   cce_error_handler_t	handler;
-  ccstructs_dtor_I	dtor;
 };
 
 /* ------------------------------------------------------------------ */

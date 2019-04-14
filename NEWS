@@ -6,6 +6,8 @@
 Revision 0.3.0-devel.0
 ----------------------
 
+The release series 0.3 is backwards incompatible with the previous one.
+
 * Upgraded dependency upon CCExceptions to version 0.9.0.
 
 * Upgraded dependency upon CCTests to version 0.4.1.
@@ -13,6 +15,8 @@ Revision 0.3.0-devel.0
 * Upgraded dependency upon CCMemory to version 0.2.2.
 
 * Adapted code to new API.
+
+* Reimplemented dtor trait for better interface with CCExceptions.
 
 
 Revision 0.2.0-devel.4

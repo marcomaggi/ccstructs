@@ -237,32 +237,20 @@ my_coords_register_error_handler_delete (cce_destination_t L, cce_error_handler_
  ** Interface "ccstructs_dtor_I": implementation for embedded "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_dtor_I, release) ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, release);
-static ccname_iface_method_type(ccstructs_dtor_I, final)   ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, final);
-
-static ccname_iface_table_type(ccstructs_dtor_I) const ccname_iface_table(ccstructs_dtor_I, my_coords_t, embedded) = {
-  .final	= ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, final),
-  .release	= ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, release)
-};
+static ccstructs_core_destructor_fun_t	my_coords_embedded_destructor;
 
 ccstructs_dtor_I
 ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded) (my_coords_t const * const self)
 {
-  return ccname_new(ccstructs_dtor_I)(ccstructs_core(self), &ccname_iface_table(ccstructs_dtor_I, my_coords_t, embedded));
+  return ccname_new(ccstructs_dtor_I)(ccstructs_core(self), my_coords_embedded_destructor);
 }
 
 /* ------------------------------------------------------------------ */
 
 void
-ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, release) (ccstructs_dtor_I I CCSTRUCTS_UNUSED)
+my_coords_embedded_destructor (ccstructs_core_t * S)
 {
-  if (1) { fprintf(stderr, "%-35s: released by dtor\n", __func__); }
-}
-
-void
-ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, final) (ccstructs_dtor_I I)
-{
-  CCSTRUCTS_PC(my_coords_t, self, ccstructs_dtor_self(I));
+  CCSTRUCTS_PC(my_coords_t, self, S);
 
   ccname_final(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: finalised by dtor\n", __func__); }
@@ -273,38 +261,23 @@ ccname_iface_method(ccstructs_dtor_I, my_coords_t, embedded, final) (ccstructs_d
  ** Interface "ccstructs_dtor_I": implementation for standalone "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_dtor_I, release) ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, release);
-static ccname_iface_method_type(ccstructs_dtor_I, final)   ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, final);
-
-static ccname_iface_table_type(ccstructs_dtor_I) const ccname_iface_table(ccstructs_dtor_I, my_coords_t, standalone) = {
-  .final	= ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, final),
-  .release	= ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, release)
-};
+static ccstructs_core_destructor_fun_t	my_coords_standalone_destructor;
 
 ccstructs_dtor_I
 ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone) (my_coords_t const * const self)
 {
-  return ccname_new(ccstructs_dtor_I)(ccstructs_core(self), &ccname_iface_table(ccstructs_dtor_I, my_coords_t, standalone));
+  return ccname_new(ccstructs_dtor_I)(ccstructs_core(self), my_coords_standalone_destructor);
 }
 
 /* ------------------------------------------------------------------ */
 
 void
-ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, release) (ccstructs_dtor_I I)
+my_coords_standalone_destructor (ccstructs_core_t * S)
 {
-  CCSTRUCTS_PC(my_coords_t, self, ccstructs_dtor_self(I));
+  CCSTRUCTS_PC(my_coords_t, self, S);
 
-  ccname_release(my_coords_t)(self);
-  if (1) { fprintf(stderr, "%-35s: released by dtor\n", __func__); }
-}
-
-void
-ccname_iface_method(ccstructs_dtor_I, my_coords_t, standalone, final) (ccstructs_dtor_I I)
-{
-  CCSTRUCTS_PC(my_coords_t, self, ccstructs_dtor_self(I));
-
-  ccname_final(my_coords_t)(self);
-  if (1) { fprintf(stderr, "%-35s: finalised by dtor\n", __func__); }
+  ccname_delete(my_coords_t)(self);
+  if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
 }
 
 
