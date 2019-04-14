@@ -39,8 +39,8 @@
 #include <string.h>
 #include <errno.h>
 
-#undef CCSTRUCTS_DEBUGGING
-#define CCSTRUCTS_DEBUGGING		1
+#undef CCSTRUCTS_PATHNAME_DEBUGGING
+#define CCSTRUCTS_PATHNAME_DEBUGGING		0
 
 
 /** --------------------------------------------------------------------
@@ -185,7 +185,7 @@ ccname_final(ccstructs_pathname_t) (ccstructs_pathname_t * ptn)
   }
   ptn->rep.ptr = NULL;
   ptn->rep.len = 0;
-  if (CCSTRUCTS_DEBUGGING) { fprintf(stderr, "%s: finalised\n", __func__); }
+  if (CCSTRUCTS_PATHNAME_DEBUGGING) { fprintf(stderr, "%s: finalised\n", __func__); }
 }
 
 /* ------------------------------------------------------------------ */
@@ -207,7 +207,7 @@ ccname_release(ccstructs_pathname_t) (ccstructs_pathname_t const * ptn)
    by CCMemory. */
 {
   ccmem_std_free((void *)ptn);
-  if (CCSTRUCTS_DEBUGGING) { fprintf(stderr, "%s: released\n", __func__); }
+  if (CCSTRUCTS_PATHNAME_DEBUGGING) { fprintf(stderr, "%s: released\n", __func__); }
 }
 
 /* ------------------------------------------------------------------ */
@@ -270,7 +270,7 @@ ccname_delete(ccstructs_pathname_t) (ccstructs_pathname_t * const ptn)
 {
   ccname_final(ccstructs_pathname_t)(ptn);
   ccname_release(ccstructs_pathname_t)(ptn);
-  if (CCSTRUCTS_DEBUGGING) { fprintf(stderr, "%s: deleted\n", __func__); }
+  if (CCSTRUCTS_PATHNAME_DEBUGGING) { fprintf(stderr, "%s: deleted\n", __func__); }
 }
 
 
