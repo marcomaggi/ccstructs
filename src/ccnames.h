@@ -123,9 +123,9 @@ extern "C" {
    "final()". */
 #define _CCNAME_FINAL(STRUCT_TYPE)		STRUCT_TYPE ## __final
 
-/* Given a  struct type name: expand  into the name of  the API function
-   "alloc()". */
-#define _CCNAME_ALLOC(STRUCT_TYPE)		STRUCT_TYPE ## __alloc
+/* Given a struct type name and a (possibly empty) variant specification: expand into
+   the name of the API function "alloc()". */
+#define _CCNAME_ALLOC(STRUCT_TYPE, VARIANT)	STRUCT_TYPE ## __ ## VARIANT ## __alloc
 
 /* Given a  struct type name: expand  into the name of  the API function
    "release()". */
@@ -191,9 +191,11 @@ extern "C" {
    "final()". */
 #define ccname_final(STRUCT_TYPE)		_CCNAME_FINAL(STRUCT_TYPE)
 
-/* Given a  struct type name: expand  into the name of  the API function
-   "alloc()". */
-#define ccname_alloc(STRUCT_TYPE)		_CCNAME_ALLOC(STRUCT_TYPE)
+/* Given a  struct type name and  an optional variant specification:  expand into the
+   name of the API function "alloc()". */
+#define ccname_alloc_1(STRUCT_TYPE)		_CCNAME_ALLOC(STRUCT_TYPE,)
+#define ccname_alloc_2(STRUCT_TYPE, VARIANT)	_CCNAME_ALLOC(STRUCT_TYPE, VARIANT)
+#define ccname_alloc(...)			_CCNAMES_VFUNC(ccname_alloc, __VA_ARGS__)
 
 /* Given a  struct type name: expand  into the name of  the API function
    "release()". */
