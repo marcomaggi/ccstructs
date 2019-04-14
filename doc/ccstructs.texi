@@ -1063,7 +1063,7 @@ if (cce_location(L)) @{
 @} else @{
   ptn   = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
   ptn_I = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
-  ccstructs_init_and_register_clean_handler(L, ptn_H,
+  ccstructs_init_and_register_handler(L, ptn_H,
     ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_I));
 
   ...
