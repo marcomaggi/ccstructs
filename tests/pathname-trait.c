@@ -1,13 +1,13 @@
 /*
   Part of: CCStructs
-  Contents: tests for the pathname interface
+  Contents: tests for the pathname trait
   Date: Tue Oct  9, 2018
 
   Abstract
 
 	This    program   tests    the   file    system   pathname    representataion
-	"ccstructs_pathname_t"  and  the   associated  interface  implementation  for
-	"ccstructs_pathname_I".
+	"ccstructs_pathname_t"   and   the   associated  trait   implementation   for
+	"ccstructs_pathname_T".
 
   Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -51,13 +51,13 @@ test_1_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccname_init(ccstructs_pathname_t, from_chars)(L, ptn, P);
-    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -84,13 +84,13 @@ test_1_2 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccname_init(ccstructs_pathname_t, from_asciiz)(L, ptn, B);
-    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -116,13 +116,13 @@ test_1_3 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccname_init(ccstructs_pathname_t, from_ascii)(L, ptn, B);
-    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -150,13 +150,13 @@ test_2_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
-    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -182,13 +182,13 @@ test_2_2 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_asciiz)(L, B);
-    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -214,13 +214,13 @@ test_2_3 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_ascii)(L, B);
-    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -231,7 +231,7 @@ test_2_3 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Pathname representation: serialise/deserialise interfaces.
+ ** Pathname representation: serialise/deserialise traits.
  ** ----------------------------------------------------------------- */
 
 void
@@ -252,11 +252,11 @@ test_3_1 (cce_destination_t upper_L)
 
     /* Build the struct to be serialised. */
     ccname_init(ccstructs_pathname_t, from_chars)(L, A, P);
-    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(A));
 
     {
-      /* Build the "serialise" interface. */
-      ccstructs_serialiser_I IS = ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t)(A);
+      /* Build the "serialise" trait. */
+      ccstructs_serialiser_T IS = ccname_trait_new(ccstructs_serialiser_T, ccstructs_pathname_t)(A);
 
       /* Allocate memory for the serialisation. */
       M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialiser_required_size(IS));
@@ -268,18 +268,18 @@ test_3_1 (cce_destination_t upper_L)
     {
       /* Build a struct to be target of deserialisation. */
       ccname_init(ccstructs_pathname_t, deserialisable)(B);
-      ccstructs_init_and_register_handler(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(B));
+      ccstructs_init_and_register_handler(L, B_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(B));
 
-      /* Build the "deserialise" interface. */
-      ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t)(B);
+      /* Build the "deserialise" trait. */
+      ccstructs_deserialiser_T ID = ccname_trait_new(ccstructs_deserialiser_T, ccstructs_pathname_t)(B);
 
       /* Deserialise the struct. */
       M_leftover = ccstructs_deserialiser_read(L, ID, M);
 
       /* Check the deserialisation results. */
       {
-	ccstructs_pathname_I	IA = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(A);
-	ccstructs_pathname_I	IB = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(B);
+	ccstructs_pathname_T	IA = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(A);
+	ccstructs_pathname_T	IB = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(B);
 	ccmem_asciiz_t		rep_A = ccstructs_pathname_asciiz(L, IA);
 	ccmem_asciiz_t		rep_B = ccstructs_pathname_asciiz(L, IB);
 
@@ -310,11 +310,11 @@ test_3_2 (cce_destination_t upper_L)
   } else {
     /* Build the struct to be serialised. */
     A = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
-    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(A));
 
     {
-      /* Build the "serialise" interface. */
-      ccstructs_serialiser_I IS = ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t)(A);
+      /* Build the "serialise" trait. */
+      ccstructs_serialiser_T IS = ccname_trait_new(ccstructs_serialiser_T, ccstructs_pathname_t)(A);
 
       /* Allocate memory for the serialisation. */
       M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialiser_required_size(IS));
@@ -326,18 +326,18 @@ test_3_2 (cce_destination_t upper_L)
     {
       /* Build a struct to be target of deserialisation. */
       B = ccname_new(ccstructs_pathname_t, deserialisable)(L);
-      ccstructs_init_and_register_handler(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(B));
+      ccstructs_init_and_register_handler(L, B_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(B));
 
-      /* Build the "deserialise" interface. */
-      ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t)(B);
+      /* Build the "deserialise" trait. */
+      ccstructs_deserialiser_T ID = ccname_trait_new(ccstructs_deserialiser_T, ccstructs_pathname_t)(B);
 
       /* Deserialise the struct. */
       M_leftover = ccstructs_deserialiser_read(L, ID, M);
 
       /* Check the deserialisation results. */
       {
-	ccstructs_pathname_I	IA = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(A);
-	ccstructs_pathname_I	IB = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(B);
+	ccstructs_pathname_T	IA = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(A);
+	ccstructs_pathname_T	IB = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(B);
 	ccmem_asciiz_t		rep_A = ccstructs_pathname_asciiz(L, IA);
 	ccmem_asciiz_t		rep_B = ccstructs_pathname_asciiz(L, IB);
 
@@ -353,12 +353,12 @@ test_3_2 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Pathname interface: constructor and dumpable interface.
+ ** Pathname trait: constructor and dumpable trait.
  ** ----------------------------------------------------------------- */
 
 void
 test_4_1 (cce_destination_t upper_L)
-/* Build a pathname interface; check the pointer and length. */
+/* Build a pathname trait; check the pointer and length. */
 {
   static char const *		P = "/path/to/file.ext";
   cce_location_t		L[1];
@@ -369,16 +369,16 @@ test_4_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
-    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_pathname_I	I = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
 
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
       cctests_assert(L, false == ccstructs_pathname_is_static(I));
       {
-	ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I)(L, I);
+	ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_T)(L, I);
 	ccstructs_dumpable_dump(L, W);
       }
     }
@@ -388,8 +388,8 @@ test_4_1 (cce_destination_t upper_L)
 
 void
 test_4_2 (cce_destination_t upper_L)
-/* Build a  pathname interface; check the  pointer and length.  Destroy  the pathname
-   instance through the interface destructor. */
+/* Build a  pathname trait; check the  pointer and length.  Destroy  the pathname
+   instance through the trait destructor. */
 {
   static char const *		P = "/path/to/file.ext";
   cce_location_t		L[1];
@@ -401,10 +401,10 @@ test_4_2 (cce_destination_t upper_L)
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
     {
-      ccstructs_pathname_I	I = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
-      ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(I));
+      ccstructs_pathname_T	I = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
+      ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_T)(I));
       {
-	ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I)(L, I);
+	ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_T)(L, I);
 	ccstructs_dumpable_dump(L, W);
       }
       {
@@ -420,7 +420,7 @@ test_4_2 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Pathname interface: serialise/deserialise interfaces.
+ ** Pathname trait: serialise/deserialise traits.
  ** ----------------------------------------------------------------- */
 
 void
@@ -430,7 +430,7 @@ test_5_1 (cce_destination_t upper_L)
   static char const *		P = "/path/to/file.ext";
   cce_location_t		L[1];
   ccstructs_pathname_t		A[1], B[1];
-  ccstructs_pathname_I		IA, IB;
+  ccstructs_pathname_T		IA, IB;
   ccstructs_clean_handler_t	A_H[1], B_H[1];
   ccmem_block_t			M, M_leftover;
   ccmem_clean_handler_t		M_H[1];
@@ -440,12 +440,12 @@ test_5_1 (cce_destination_t upper_L)
   } else {
     /* Build the struct to be serialised. */
     ccname_init(ccstructs_pathname_t, from_chars)(L, A, P);
-    IA = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(A);
-    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IA));
+    IA = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(A);
+    ccstructs_init_and_register_handler(L, A_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_T)(IA));
 
     {
-      /* Build the "serialise" interface. */
-      ccstructs_serialiser_I IS = ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_I)(L, IA);
+      /* Build the "serialise" trait. */
+      ccstructs_serialiser_T IS = ccname_trait_new(ccstructs_serialiser_T, ccstructs_pathname_T)(L, IA);
 
       /* Allocate memory for the serialisation. */
       M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialiser_required_size(IS));
@@ -457,11 +457,11 @@ test_5_1 (cce_destination_t upper_L)
     {
       /* Build a struct to be target of deserialisation. */
       ccname_init(ccstructs_pathname_t, deserialisable)(B);
-      IB = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(B);
-      ccstructs_init_and_register_handler(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IB));
+      IB = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(B);
+      ccstructs_init_and_register_handler(L, B_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_T)(IB));
 
-      /* Build the "deserialise" interface. */
-      ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I)(L, IB);
+      /* Build the "deserialise" trait. */
+      ccstructs_deserialiser_T ID = ccname_trait_new(ccstructs_deserialiser_T, ccstructs_pathname_T)(L, IB);
 
       /* Deserialise the struct. */
       M_leftover = ccstructs_deserialiser_read(L, ID, M);
@@ -489,7 +489,7 @@ test_5_2 (cce_destination_t upper_L)
   cce_location_t		L[1];
   ccstructs_pathname_t const	*A;
   ccstructs_pathname_t		*B;
-  ccstructs_pathname_I		IA, IB;
+  ccstructs_pathname_T		IA, IB;
   ccstructs_clean_handler_t	A_H[1], B_H[1];
   ccmem_block_t			M, M_leftover;
   ccmem_clean_handler_t		M_H[1];
@@ -499,12 +499,12 @@ test_5_2 (cce_destination_t upper_L)
   } else {
     /* Build the struct to be serialised. */
     A  = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
-    IA = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(A);
-    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IA));
+    IA = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(A);
+    ccstructs_init_and_register_handler(L, A_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_T)(IA));
 
     {
-      /* Build the "serialise" interface. */
-      ccstructs_serialiser_I IS = ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_I)(L, IA);
+      /* Build the "serialise" trait. */
+      ccstructs_serialiser_T IS = ccname_trait_new(ccstructs_serialiser_T, ccstructs_pathname_T)(L, IA);
 
       /* Allocate memory for the serialisation. */
       M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialiser_required_size(IS));
@@ -516,11 +516,11 @@ test_5_2 (cce_destination_t upper_L)
     {
       /* Build a struct to be target of deserialisation. */
       B  = ccname_new(ccstructs_pathname_t, deserialisable)(L);
-      IB = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(B);
-      ccstructs_init_and_register_handler(L, B_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(IB));
+      IB = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(B);
+      ccstructs_init_and_register_handler(L, B_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_T)(IB));
 
-      /* Build the "deserialise" interface. */
-      ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I)(L, IB);
+      /* Build the "deserialise" trait. */
+      ccstructs_deserialiser_T ID = ccname_trait_new(ccstructs_deserialiser_T, ccstructs_pathname_T)(L, IB);
 
       /* Deserialise the struct. */
       M_leftover = ccstructs_deserialiser_read(L, ID, M);
@@ -542,36 +542,36 @@ test_5_2 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Pathname interface: predicates.
+ ** Pathname trait: predicates.
  ** ----------------------------------------------------------------- */
 
 void
 test_6_1 (cce_destination_t upper_L)
-/* Build a pathname interface; check the results of the implemented predicates. */
+/* Build a pathname trait; check the results of the implemented predicates. */
 {
   static char const *		P = "/path/to/file.ext";
   cce_location_t		L[1];
   ccstructs_pathname_t const *	ptn;
-  ccstructs_pathname_I		ptn_IP;
+  ccstructs_pathname_T		ptn_TP;
   ccstructs_clean_handler_t	ptn_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ptn    = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
-    ptn_IP = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
-    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_IP));
+    ptn_TP = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_T)(ptn_TP));
 
-    cctests_assert(L, false == ccstructs_pathname_is_static(ptn_IP));
-    cctests_assert(L, true  == ccstructs_pathname_is_absolute(L, ptn_IP));
-    cctests_assert(L, false == ccstructs_pathname_is_relative(L, ptn_IP));
+    cctests_assert(L, false == ccstructs_pathname_is_static(ptn_TP));
+    cctests_assert(L, true  == ccstructs_pathname_is_absolute(L, ptn_TP));
+    cctests_assert(L, false == ccstructs_pathname_is_relative(L, ptn_TP));
     cce_run_body_handlers(L);
   }
 }
 
 void
 test_6_2 (cce_destination_t upper_L)
-/* Build  a pathname  interface; check  the results  of the  unimplemented predicate:
+/* Build  a pathname  trait; check  the results  of the  unimplemented predicate:
    is_normalised. */
 {
   cce_location_t	L[1];
@@ -584,7 +584,7 @@ test_6_2 (cce_destination_t upper_L)
       static char const *		P = "/path/to/file.ext";
       cce_location_t			lower_L[1];
       ccstructs_pathname_t const *	ptn;
-      ccstructs_pathname_I		ptn_IP;
+      ccstructs_pathname_T		ptn_TP;
       ccstructs_clean_handler_t		ptn_H[1];
 
       if (cce_location(lower_L)) {
@@ -596,10 +596,10 @@ test_6_2 (cce_destination_t upper_L)
 	}
       } else {
 	ptn    = ccname_new(ccstructs_pathname_t, from_chars)(lower_L, P);
-	ptn_IP = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
-	ccstructs_init_and_register_handler(lower_L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_IP));
+	ptn_TP = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
+	ccstructs_init_and_register_handler(lower_L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_T)(ptn_TP));
 
-	cctests_assert(lower_L, ccstructs_pathname_is_normalised(lower_L, ptn_IP));
+	cctests_assert(lower_L, ccstructs_pathname_is_normalised(lower_L, ptn_TP));
 	cce_run_body_handlers(lower_L);
       }
     }
@@ -610,7 +610,7 @@ test_6_2 (cce_destination_t upper_L)
 
 void
 test_6_3 (cce_destination_t upper_L)
-/* Build  a pathname  interface; check  the results  of the  unimplemented predicate:
+/* Build  a pathname  trait; check  the results  of the  unimplemented predicate:
    is_realpath. */
 {
   cce_location_t	L[1];
@@ -623,7 +623,7 @@ test_6_3 (cce_destination_t upper_L)
       static char const *		P = "/path/to/file.ext";
       cce_location_t			lower_L[1];
       ccstructs_pathname_t const *	ptn;
-      ccstructs_pathname_I		ptn_IP;
+      ccstructs_pathname_T		ptn_TP;
       ccstructs_clean_handler_t		ptn_H[1];
 
       if (cce_location(lower_L)) {
@@ -635,10 +635,10 @@ test_6_3 (cce_destination_t upper_L)
 	}
       } else {
 	ptn    = ccname_new(ccstructs_pathname_t, from_chars)(lower_L, P);
-	ptn_IP = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
-	ccstructs_init_and_register_handler(lower_L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_IP));
+	ptn_TP = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
+	ccstructs_init_and_register_handler(lower_L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_T)(ptn_TP));
 
-	cctests_assert(lower_L, ccstructs_pathname_is_realpath(lower_L, ptn_IP));
+	cctests_assert(lower_L, ccstructs_pathname_is_realpath(lower_L, ptn_TP));
 	cce_run_body_handlers(lower_L);
       }
     }
@@ -651,7 +651,7 @@ test_6_3 (cce_destination_t upper_L)
 int
 main (void)
 {
-  cctests_init("tests pathname interface");
+  cctests_init("tests pathname trait");
   {
     cctests_begin_group("pathname representation embedded constructors");
     {
@@ -669,28 +669,28 @@ main (void)
     }
     cctests_end_group();
 
-    cctests_begin_group("pathname representation, serialiser/deserialiser interfaces");
+    cctests_begin_group("pathname representation, serialiser/deserialiser traits");
     {
       cctests_run(test_3_1);
       cctests_run(test_3_2);
     }
     cctests_end_group();
 
-    cctests_begin_group("pathname representation, pathname interface: constructor, destructor and dumpable interface");
+    cctests_begin_group("pathname representation, pathname trait: constructor, destructor and dumpable trait");
     {
       cctests_run(test_4_1);
       cctests_run(test_4_2);
     }
     cctests_end_group();
 
-    cctests_begin_group("pathname representation, pathname interface: serialiser/deserialiser interfaces");
+    cctests_begin_group("pathname representation, pathname trait: serialiser/deserialiser traits");
     {
       cctests_run(test_5_1);
       cctests_run(test_5_2);
     }
     cctests_end_group();
 
-    cctests_begin_group("pathname representation, pathname interface: predicates");
+    cctests_begin_group("pathname representation, pathname trait: predicates");
     {
       cctests_run(test_6_1);
       cctests_run(test_6_2);

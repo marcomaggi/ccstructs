@@ -1,6 +1,6 @@
 /*
   Part of: CCStructs
-  Contents: tests for the dtor interface
+  Contents: tests for the dtor trait
   Date: Sep 24, 2018
 
   Abstract
@@ -32,7 +32,7 @@
 
 
 /** --------------------------------------------------------------------
- ** Dtor interface for embedded struct.
+ ** Dtor trait for embedded struct.
  ** ----------------------------------------------------------------- */
 
 typedef struct one_t	one_t;
@@ -66,10 +66,10 @@ ccname_final(one_t) (one_t * S)
 static ccstructs_core_destructor_fun_t	one_destructor;
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccstructs_dtor_I
-ccname_iface_new(ccstructs_dtor_I, one_t) (one_t const * const S)
+static inline ccstructs_dtor_T
+ccname_trait_new(ccstructs_dtor_T, one_t) (one_t const * const S)
 {
-  return ccname_new(ccstructs_dtor_I)(ccstructs_core(S), one_destructor);
+  return ccname_new(ccstructs_dtor_T)(ccstructs_core(S), one_destructor);
 }
 
 void
@@ -95,7 +95,7 @@ test_1_1 (cce_destination_t upper_L)
     one_t	S = {
       .pointer	= ccmem_malloc(L, ccmem_standard_allocator, 256)
     };
-    ccstructs_dtor_I	I = ccname_iface_new(ccstructs_dtor_I, one_t)(&S);
+    ccstructs_dtor_T	I = ccname_trait_new(ccstructs_dtor_T, one_t)(&S);
 
     memset(S.pointer, 123, 256);
     ccstructs_dtor_destroy(I);
@@ -105,7 +105,7 @@ test_1_1 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Dtor interface for standalone struct.
+ ** Dtor trait for standalone struct.
  ** ----------------------------------------------------------------- */
 
 typedef struct two_t	two_t;
@@ -144,10 +144,10 @@ ccname_delete(two_t) (two_t * S)
 static ccstructs_core_destructor_fun_t	two_destructor;
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccstructs_dtor_I
-ccname_iface_new(ccstructs_dtor_I, two_t) (two_t const * const S)
+static inline ccstructs_dtor_T
+ccname_trait_new(ccstructs_dtor_T, two_t) (two_t const * const S)
 {
-  return ccname_new(ccstructs_dtor_I)(ccstructs_core(S), two_destructor);
+  return ccname_new(ccstructs_dtor_T)(ccstructs_core(S), two_destructor);
 }
 
 void
@@ -171,7 +171,7 @@ test_2_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     two_t *		S = ccname_new(two_t)(L);
-    ccstructs_dtor_I	I = ccname_iface_new(ccstructs_dtor_I, two_t)(S);
+    ccstructs_dtor_T	I = ccname_trait_new(ccstructs_dtor_T, two_t)(S);
     ccstructs_dtor_destroy(I);
     cce_run_body_handlers(L);
   }
@@ -181,7 +181,7 @@ test_2_1 (cce_destination_t upper_L)
 int
 main (void)
 {
-  cctests_init("tests dtor interface");
+  cctests_init("tests dtor trait");
   {
     cctests_begin_group("embedded struct");
     {

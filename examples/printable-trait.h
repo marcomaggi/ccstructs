@@ -1,11 +1,11 @@
 /*
   Part of: CCStructs
-  Contents: header file for printable interface
+  Contents: header file for printable trait
   Date: Jan 11, 2019
 
   Abstract
 
-	This header  file defines the interface  "my_printable_I", to be used  by the
+	This  header file  defines  the trait  "my_printable_T", to  be  used by  the
 	example programs.
 
 
@@ -33,8 +33,8 @@
 
 */
 
-#ifndef PRINTABLE_INTERFACE_H
-#define PRINTABLE_INTERFACE_H 1
+#ifndef PRINTABLE_TNTERFACE_H
+#define PRINTABLE_TNTERFACE_H 1
 
 
 /** --------------------------------------------------------------------
@@ -49,31 +49,31 @@
 
 
 /** --------------------------------------------------------------------
- ** Interface "my_printable_I": definition.
+ ** Trait "my_printable_T": definition.
  ** ----------------------------------------------------------------- */
 
-typedef struct my_printable_I				my_printable_I;
-typedef struct ccname_iface_table_type(my_printable_I)	ccname_iface_table_type(my_printable_I);
+typedef struct my_printable_T				my_printable_T;
+typedef struct ccname_trait_table_type(my_printable_T)	ccname_trait_table_type(my_printable_T);
 
-struct my_printable_I {
-  ccname_iface_table_type(my_printable_I)	const * methods;
+struct my_printable_T {
+  ccname_trait_table_type(my_printable_T)	const * methods;
   ccstructs_core_t				const * self;
 };
 
-typedef void ccname_iface_method_type(my_printable_I, print) (cce_destination_t L, my_printable_I I, FILE * stream);
+typedef void ccname_trait_method_type(my_printable_T, print) (cce_destination_t L, my_printable_T I, FILE * stream);
 
-struct ccname_iface_table_type(my_printable_I) {
-  ccname_iface_method_type(my_printable_I, print) *	print_rec;
-  ccname_iface_method_type(my_printable_I, print) *	print_pol;
+struct ccname_trait_table_type(my_printable_T) {
+  ccname_trait_method_type(my_printable_T, print) *	print_rec;
+  ccname_trait_method_type(my_printable_T, print) *	print_pol;
 };
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
-static inline my_printable_I
-ccname_new(my_printable_I) (ccstructs_core_t const * S, ccname_iface_table_type(my_printable_I) const * M)
+static inline my_printable_T
+ccname_new(my_printable_T) (ccstructs_core_t const * S, ccname_trait_table_type(my_printable_T) const * M)
 {
-  my_printable_I	I = {
+  my_printable_T	I = {
     .methods	= M,
     .self	= S
   };
@@ -82,21 +82,21 @@ ccname_new(my_printable_I) (ccstructs_core_t const * S, ccname_iface_table_type(
 
 __attribute__((__always_inline__,__returns_nonnull__))
 static inline ccstructs_core_t const *
-my_printable_self (my_printable_I I)
+my_printable_self (my_printable_T I)
 {
   return I.self;
 }
 
 __attribute__((__always_inline__,__nonnull__(1,3)))
 static inline void
-my_printable_print_rec (cce_destination_t L, my_printable_I I, FILE * stream)
+my_printable_print_rec (cce_destination_t L, my_printable_T I, FILE * stream)
 {
   I.methods->print_rec(L, I, stream);
 }
 
 __attribute__((__always_inline__,__nonnull__(1,3)))
 static inline void
-my_printable_print_pol (cce_destination_t L, my_printable_I I, FILE * stream)
+my_printable_print_pol (cce_destination_t L, my_printable_T I, FILE * stream)
 {
   I.methods->print_pol(L, I, stream);
 }

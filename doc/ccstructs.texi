@@ -53,7 +53,7 @@
 @set PackageApiPrefixUpper              CCSTRUCTS_
 
 @set PackageHeader                      ccstructs.h
-@set PackageHeaderFile                 @file{@value{PackageHeader}}
+@set PackageHeaderFile                  @file{@value{PackageHeader}}
 
 @set GithubUrl                 @url{https://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
 @set BitbucketUrl              @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}}
@@ -67,7 +67,7 @@
 
 @copying
 This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library
-implementing common programming interfaces for C data structures.
+implementing common programming traits for C data structures.
 
 This package supports @posix{} platforms.  This package depends on the external packages:
 CCExceptions, at least version @value{CCExceptionsVersion}; CCMemory, at least version
@@ -121,7 +121,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 @ifinfo
 @dircategory Development
 @direntry
-* ccstructs: (ccstructs).       Common interfaces for C structs.
+* ccstructs: (ccstructs).       Common traits for C structs.
 @end direntry
 @end ifinfo
 
@@ -144,11 +144,11 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * overview::                    Overview of the package.
 * version::                     Version functions.
 * core::                        Core type definitions.
-* dtor::                        The @iface{dtor} interface.
-* dumpable::                    The @iface{dumpable} interface.
-* serialiser::                  The @iface{serialiser} interface.
-* deserialiser::                The @iface{deserialiser} interface.
-* pathname::                    The @iface{pathname} interface.
+* dtor::                        The @trait{dtor} trait.
+* dumpable::                    The @trait{dumpable} trait.
+* serialiser::                  The @trait{serialiser} trait.
+* deserialiser::                The @trait{deserialiser} trait.
+* pathname::                    The @trait{pathname} trait.
 * utils::                       Utility definitions.
 
 Appendices
@@ -173,7 +173,7 @@ Indexes
 
 
 This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library
-implementing common programming interfaces for C data structures.
+implementing common programming traits for C data structures.
 
 This package supports @posix{} platforms.  This package depends on the packages: CCExceptions, at
 least version @value{CCExceptionsVersion}; CCMemory, at least version @value{CCMemoryVersion}.  To
@@ -210,7 +210,7 @@ are prefixed with @code{ccname_}; all the preprocessor symbol names are prefixed
 
 
 The source distribution comes with some implementation examples under the directory @file{examples}.
-That code is meant to be a starting point when implementing the interfaces defined by
+That code is meant to be a starting point when implementing the traits defined by
 @value{PACKAGE}: we should copy it and adapt it to our needs.  Really!
 
 @c page
@@ -260,15 +260,14 @@ declaration: there is no actual declaration of this type.
 
 
 When using this type we need to explicitly cast a pointer to client @struct{} values to a pointer to
-@objtype{ccstruct_core_t}.  For example, when defining a constructor for the @iface{dumpable}
-interface:
+@objtype{ccstruct_core_t}.  For example, when defining a constructor for the @trait{dumpable} trait:
 
 @example
-ccstructs_dumpable_I
-ccname_iface_new(ccstructs_dumpable_I, spiffy_t) (spiffy_t * S)
+ccstructs_dumpable_T
+ccname_trait_new(ccstructs_dumpable_T, spiffy_t) (spiffy_t * S)
 @{
-  return ccname_new(ccstructs_dumpable_I)(ccstructs_core(S),
-    &ccname_iface_table(ccstructs_dumpable_I, spiffy_t));
+  return ccname_new(ccstructs_dumpable_T)(ccstructs_core(S),
+    &ccname_trait_table(ccstructs_dumpable_T, spiffy_t));
 @}
 @end example
 
@@ -285,46 +284,46 @@ always return to their caller, never raising an exception.
 
 @c page
 @node dtor
-@chapter The @iface{dtor} interface
+@chapter The @trait{dtor} trait
 
 
-The @iface{dtor} interface provides a uniform way to call the destructors of a @struct{} type.
-The best way to use the @iface{dtor} interface is through the exception handlers @api{},
-@ref{dtor handlers, Exception handlers}.
+The @trait{dtor} trait provides a uniform way to call the destructors of a @struct{} type.  The best
+way to use the @trait{dtor} trait is through the exception handlers @api{}, @ref{dtor handlers,
+Exception handlers}.
 
 @menu
-* dtor typedefs::               @iface{dtor} interface: type definitions.
-* dtor operations::             @iface{dtor} interface: operations.
+* dtor typedefs::               @trait{dtor} trait: type definitions.
+* dtor operations::             @trait{dtor} trait: operations.
 * dtor handlers::               Exception handlers.
 @end menu
 
 @c page
 @node dtor typedefs
-@section @iface{dtor} interface: type definitions
+@section @trait{dtor} trait: type definitions
 
 
-@deftp {Struct Typedef} ccstructs_dtor_I
-Type of the @iface{dtor} interface @struct{}.  Instances of this type are meant to be handed
-by value to function calls.
+@deftp {Struct Typedef} ccstructs_dtor_T
+Type of the @trait{dtor} trait @struct{}.  Instances of this type are meant to be handed by value to
+function calls.
 @end deftp
 
 @c page
 @node dtor operations
-@section @iface{dtor} interface: operations
+@section @trait{dtor} trait: operations
 
 
-@deftypefun ccstructs_dtor_I {ccname_new(ccstructs_dtor_I)} (ccstructs_core_t const * @var{S}, ccstructs_core_destructor_fun_t * @var{destructor})
-Build and return a new @iface{dtor} interface instance as implemented for the @struct{} type
-of @var{S}.  @var{destroy} must be a pointer to the destructor function.
+@deftypefun ccstructs_dtor_T {ccname_new(ccstructs_dtor_T)} (ccstructs_core_t const * @var{S}, ccstructs_core_destructor_fun_t * @var{destructor})
+Build and return a new @trait{dtor} trait instance as implemented for the @struct{} type of @var{S}.
+@var{destroy} must be a pointer to the destructor function.
 @end deftypefun
 
 
-@deftypefun {ccstructs_core_t const *} ccstructs_dtor_self (ccstructs_dtor_I @var{I})
-Return a pointer to the subject @struct{} to which the interface belongs.
+@deftypefun {ccstructs_core_t const *} ccstructs_dtor_self (ccstructs_dtor_T @var{I})
+Return a pointer to the subject @struct{} to which the trait belongs.
 @end deftypefun
 
 
-@deftypefun void ccstructs_dtor_destroy (ccstructs_dtor_I @var{I})
+@deftypefun void ccstructs_dtor_destroy (ccstructs_dtor_T @var{I})
 Destroy the referenced @struct{} instance using the referenced destructor function.
 @end deftypefun
 
@@ -333,7 +332,7 @@ Destroy the referenced @struct{} instance using the referenced destructor functi
 @section Exception handlers
 
 
-The best way to use the @iface{dtor} interface is through the exception handlers @api{}.
+The best way to use the @trait{dtor} trait is through the exception handlers @api{}.
 
 
 @deftp {Struct Typedef} ccstructs_clean_handler_t
@@ -346,19 +345,19 @@ Type of @struct{} usable has error handler with the facilities of the CCExceptio
 @end deftp
 
 
-@deftypefun void ccstructs_init_and_register_clean_handler (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, ccstructs_dtor_I @var{I})
+@deftypefun void ccstructs_init_and_register_clean_handler (cce_destination_t @var{L}, ccstructs_clean_handler_t * @var{H}, ccstructs_dtor_T @var{I})
 Initialise the exception handler @var{H} to apply the destructor to a @struct{} instance as defined
 by @var{I}, in the context of the location @var{L}.
 @end deftypefun
 
 
-@deftypefun void ccstructs_init_and_register_error_handler (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccstructs_dtor_I @var{I})
+@deftypefun void ccstructs_init_and_register_error_handler (cce_destination_t @var{L}, ccstructs_error_handler_t * @var{H}, ccstructs_dtor_T @var{I})
 Initialise the exception handler @var{H} to apply the destructor to a @struct{} instance as defined
 by @var{I}, in the context of the location @var{L}.
 @end deftypefun
 
 
-@deftypefn {Preprocessor Macro} void ccstructs_init_and_register_handler (cce_destination_t @var{L}, @var{H}, ccstructs_dtor_I @var{I})
+@deftypefn {Preprocessor Macro} void ccstructs_init_and_register_handler (cce_destination_t @var{L}, @var{H}, ccstructs_dtor_T @var{I})
 Initialise the exception handler @var{H} to apply the destructor to a @struct{} instance as defined
 by @var{I}, in the context of the location @var{L}.  If @var{H} is a pointer of type:
 
@@ -373,42 +372,42 @@ The macro use expands into a call to @cfunc{ccstructs_init_and_register_error_ha
 
 @c page
 @node dumpable
-@chapter The @iface{dumpable} interface
+@chapter The @trait{dumpable} trait
 
 
-The @iface{dumpable} interface, represented by the type @objtype{ccstructs_dumpable_I}, is meant to
-write an object to some output channel, mostly for inspection and debugging purposes; this interface
+The @trait{dumpable} trait, represented by the type @objtype{ccstructs_dumpable_T}, is meant to
+write an object to some output channel, mostly for inspection and debugging purposes; this trait
 is neither for presentation to the end user of a program, nor for memorisation on a storage device.
 
 @menu
-* dumpable typedefs::           @iface{dumpable} interface: type definitions.
-* dumpable operations::         @iface{dumpable} interface: operations.
-* dumpable sample::             Example of @iface{dumpable} interface
+* dumpable typedefs::           @trait{dumpable} trait: type definitions.
+* dumpable operations::         @trait{dumpable} trait: operations.
+* dumpable sample::             Example of @trait{dumpable} trait
                                 implementation
 @end menu
 
 @c page
 @node dumpable typedefs
-@section @iface{dumpable} interface: type definitions
+@section @trait{dumpable} trait: type definitions
 
 
-@deftp {Struct Typedef} ccstructs_dumpable_I
-Type of the @iface{dumpable} interface.  Instances of this type are meant to be handed by value to
+@deftp {Struct Typedef} ccstructs_dumpable_T
+Type of the @trait{dumpable} trait.  Instances of this type are meant to be handed by value to
 function calls.
 @end deftp
 
 
-@deftp {Struct Typedef} {ccname_iface_table_type(ccstructs_dumpable_I)}
-Type of methods table for the @iface{dumpable} interface.  It has the following fields:
+@deftp {Struct Typedef} {ccname_trait_table_type(ccstructs_dumpable_T)}
+Type of methods table for the @trait{dumpable} trait.  It has the following fields:
 
 @table @code
-@item ccname_iface_method_type(ccstructs_dumpable_I, dump) * dump
+@item ccname_trait_method_type(ccstructs_dumpable_T, dump) * dump
 Pointer to function implementing the @method{dump} method.
 @end table
 @end deftp
 
 
-@deftypefn {Function Prototype} void {ccname_iface_method_type(ccstructs_dumpable_I, dump)} (cce_destination_t @var{L}, ccstructs_dumpable_I @var{I})
+@deftypefn {Function Prototype} void {ccname_trait_method_type(ccstructs_dumpable_T, dump)} (cce_destination_t @var{L}, ccstructs_dumpable_T @var{I})
 Type of functions implementing the @method{dump} method.  Functions of this type write a
 representation of the object to an output channel (for example @stderr{}); it is responsibility of
 this method to select which output channel to use.  If an error occurs: raise an exception by
@@ -417,28 +416,28 @@ performing a non--local exit to @var{L}.
 
 @c page
 @node dumpable operations
-@section @iface{dumpable} interface: operations
+@section @trait{dumpable} trait: operations
 
 
-@deftypefun ccstructs_dumpable_I {ccname_new(ccstructs_dumpable_I)} (ccstructs_core_t const * @var{S}, ccname_iface_table_type(ccstructs_dumpable_I) const * @var{M})
-Interface constructor.  Return a new interface @struct{} given a pointer to the source @struct{} and
-a pointer to the interface methods.
+@deftypefun ccstructs_dumpable_T {ccname_new(ccstructs_dumpable_T)} (ccstructs_core_t const * @var{S}, ccname_trait_table_type(ccstructs_dumpable_T) const * @var{M})
+Trait constructor.  Return a new trait @struct{} given a pointer to the source @struct{} and
+a pointer to the trait methods.
 @end deftypefun
 
 
-@deftypefun {ccstructs_core_t const *} ccstructs_dumpable_self (ccstructs_dumpable_I @var{I})
-Return a pointer to the @struct{} to which the interface belongs.
+@deftypefun {ccstructs_core_t const *} ccstructs_dumpable_self (ccstructs_dumpable_T @var{I})
+Return a pointer to the @struct{} to which the trait belongs.
 @end deftypefun
 
 
-@deftypefun void ccstructs_dumpable_dump (cce_destination_t @var{L}, ccstructs_dumpable_I @var{I})
+@deftypefun void ccstructs_dumpable_dump (cce_destination_t @var{L}, ccstructs_dumpable_T @var{I})
 Apply the method @method{dump} to the @struct{}.  If an error occurs: raise an exception by
 performing a non--local exit to @var{L}.
 @end deftypefun
 
 @c page
 @node dumpable sample
-@section Example of @iface{dumpable} interface implementation
+@section Example of @trait{dumpable} trait implementation
 
 
 Let's say we have this @struct{} definition:
@@ -453,12 +452,12 @@ struct spiffy_t @{
 @end example
 
 @noindent
-we can implement a @iface{dumpable} interface as follows:
+we can implement a @trait{dumpable} trait as follows:
 
 @smallexample
 static void
-ccname_iface_method(ccstructs_dumpable_I, spiffy_t, dump)
-  (cce_destination_t L, ccstructs_dumpable_I I)
+ccname_trait_method(ccstructs_dumpable_T, spiffy_t, dump)
+  (cce_destination_t L, ccstructs_dumpable_T I)
 @{
   CCSTRUCTS_PC(spiffy_t, S, I.self);
   int   rv;
@@ -470,21 +469,21 @@ ccname_iface_method(ccstructs_dumpable_I, spiffy_t, dump)
   @}
 @}
 
-static ccname_iface_table_type(ccstructs_dumpable_I) const
-    ccname_iface_table(ccstructs_dumpable_I, spiffy_t) = @{
-  .dump = ccname_iface_method(ccstructs_dumpable_I, spiffy_t, dump)
+static ccname_trait_table_type(ccstructs_dumpable_T) const
+    ccname_trait_table(ccstructs_dumpable_T, spiffy_t) = @{
+  .dump = ccname_trait_method(ccstructs_dumpable_T, spiffy_t, dump)
 @};
 
-ccstructs_dumpable_I
-ccname_iface_new(ccstructs_dumpable_I, spiffy_t) (spiffy_t * S)
+ccstructs_dumpable_T
+ccname_trait_new(ccstructs_dumpable_T, spiffy_t) (spiffy_t * S)
 @{
-  return ccname_iface_new(ccstructs_dumpable_I)(ccstructs_core(S),
-    &ccname_iface_table(ccstructs_dumpable_I, spiffy_t));
+  return ccname_trait_new(ccstructs_dumpable_T)(ccstructs_core(S),
+    &ccname_trait_table(ccstructs_dumpable_T, spiffy_t));
 @}
 @end smallexample
 
 @noindent
-then we can use the interface as follows:
+then we can use the trait as follows:
 
 @smallexample
 cce_location_t        L[1];
@@ -496,7 +495,7 @@ if (cce_location(L)) @{
     .alpha    = 1,
     .beta     = 2
   @};
-  ccstructs_dumpable_I  I = ccname_iface_new(ccstructs_dumpable_I, spiffy_t)(&S);
+  ccstructs_dumpable_T  I = ccname_trait_new(ccstructs_dumpable_T, spiffy_t)(&S);
 
   ccstructs_dumpable_dump(L, I);
   cce_run_body_handlers(L);
@@ -505,46 +504,46 @@ if (cce_location(L)) @{
 
 @c page
 @node serialiser
-@chapter The @iface{serialiser} interface
+@chapter The @trait{serialiser} trait
 
 
-The @iface{serialiser} interface, represented by the type @objtype{ccstructs_serialiser_I}, allows
-us to serialise a @struct{} into a destination storage.  The use of this interface is suggested to
+The @trait{serialiser} trait, represented by the type @objtype{ccstructs_serialiser_T}, allows
+us to serialise a @struct{} into a destination storage.  The use of this trait is suggested to
 serialise ``small'' data structures that can be written to storage with a single operation (that is:
 it may be @strong{not} good if the serialisation is an @acronym{XML} document gigabytes in size).
 
 For implementation examples we should look in the source distribution of @value{PACKAGE}.
 
 @menu
-* serialiser typedefs::         @iface{serialiser} interface: type definitions.
-* serialiser operations::       @iface{serialiser} interface: operations.
+* serialiser typedefs::         @trait{serialiser} trait: type definitions.
+* serialiser operations::       @trait{serialiser} trait: operations.
 @end menu
 
 @c page
 @node serialiser typedefs
-@section @iface{serialiser} interface: type definitions
+@section @trait{serialiser} trait: type definitions
 
 
-@deftp {Struct Typedef} ccstructs_serialiser_I
-Type of the @iface{serialiser} interface.  Instances of this type are meant to be handed by value
+@deftp {Struct Typedef} ccstructs_serialiser_T
+Type of the @trait{serialiser} trait.  Instances of this type are meant to be handed by value
 to function calls.
 @end deftp
 
 
-@deftp {Struct Typedef} {ccname_iface_table_type(ccstructs_serialiser_I)}
-Type of methods table for the @iface{serialiser} interface.  It has the following fields:
+@deftp {Struct Typedef} {ccname_trait_table_type(ccstructs_serialiser_T)}
+Type of methods table for the @trait{serialiser} trait.  It has the following fields:
 
 @table @code
-@item ccname_iface_method_type(ccstructs_serialiser_I, required_size) * required_size
+@item ccname_trait_method_type(ccstructs_serialiser_T, required_size) * required_size
 Pointer to function implementing the @method{required_size} method.
 
-@item ccname_iface_method_type(ccstructs_serialiser_I, write) * write
+@item ccname_trait_method_type(ccstructs_serialiser_T, write) * write
 Pointer to function implementing the @method{write} method.
 @end table
 @end deftp
 
 
-@deftypefn {Function Prototype} size_t {ccname_iface_method_type(ccstructs_serialiser_I, required_size)} (ccstructs_serialiser_I const @var{I})
+@deftypefn {Function Prototype} size_t {ccname_trait_method_type(ccstructs_serialiser_T, required_size)} (ccstructs_serialiser_T const @var{I})
 Type of functions implementing the @method{required_size} method.  Return the minimum number of
 bytes needed to hold the serialisation of the source @struct{}; we should use the returned number to
 allocate a block of memory for the serialisation operation; it is possible that the actual
@@ -552,7 +551,7 @@ serialisation will consume less memory.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} ccmem_block_t {ccname_iface_method_type(ccstructs_serialiser_I, write)} (cce_destination_t @var{L}, ccstructs_serialiser_I const @var{I}, ccmem_block_t @var{B})
+@deftypefn {Function Prototype} ccmem_block_t {ccname_trait_method_type(ccstructs_serialiser_T, write)} (cce_destination_t @var{L}, ccstructs_serialiser_T const @var{I}, ccmem_block_t @var{B})
 Type of functions implementing the @method{write} method.  Serialise the @struct{} to the block of
 memory referenced by @var{B}, which must be big enough to hold the number of bytes returned by the
 method @method{required_size}.
@@ -572,37 +571,37 @@ case there is no way to know the state of the data written on the output block @
 
 @c page
 @node serialiser operations
-@section @iface{serialiser} interface: operations
+@section @trait{serialiser} trait: operations
 
 
-@deftypefun ccstructs_serialiser_I {ccname_new(ccstructs_serialiser_I)} (ccstructs_core_t const * @var{S}, ccname_iface_table_type(ccstructs_serialiser_I) const * @var{M})
-Interface constructor.  Return a new interface @struct{} given a pointer to the source @struct{} and
-a pointer to the interface methods.
+@deftypefun ccstructs_serialiser_T {ccname_new(ccstructs_serialiser_T)} (ccstructs_core_t const * @var{S}, ccname_trait_table_type(ccstructs_serialiser_T) const * @var{M})
+Trait constructor.  Return a new trait @struct{} given a pointer to the source @struct{} and
+a pointer to the trait methods.
 @end deftypefun
 
 
-@deftypefun {ccstructs_core_t const *} ccstructs_serialiser_self (ccstructs_serialiser_I @var{I})
-Return a pointer to the @struct{} to which the interface belongs.
+@deftypefun {ccstructs_core_t const *} ccstructs_serialiser_self (ccstructs_serialiser_T @var{I})
+Return a pointer to the @struct{} to which the trait belongs.
 @end deftypefun
 
 
-@deftypefun size_t ccstructs_serialiser_required_size (ccstructs_serialiser_I @var{I})
+@deftypefun size_t ccstructs_serialiser_required_size (ccstructs_serialiser_T @var{I})
 Apply the method @method{required_size} to the given argument.
 @end deftypefun
 
 
-@deftypefun ccmem_block_t ccstructs_serialiser_write (cce_destination_t @var{L}, ccstructs_serialiser_I @var{I}, ccmem_block_t @var{B})
+@deftypefun ccmem_block_t ccstructs_serialiser_write (cce_destination_t @var{L}, ccstructs_serialiser_T @var{I}, ccmem_block_t @var{B})
 Apply the method @method{write} to the given arguments.  If an error occurs: raise an exception by
 performing a non--local exit to @var{L}.
 @end deftypefun
 
 @c page
 @node deserialiser
-@chapter The @iface{deserialiser} interface
+@chapter The @trait{deserialiser} trait
 
 
-The @iface{deserialiser} interface, represented by the type @objtype{ccstructs_deserialiser_I},
-allows us to deserialise a @struct{} from a source storage.  The use of this interface is suggested
+The @trait{deserialiser} trait, represented by the type @objtype{ccstructs_deserialiser_T},
+allows us to deserialise a @struct{} from a source storage.  The use of this trait is suggested
 to deserialise ``small'' data structures that can be read from storage with a single operation (that
 is: it may be @strong{not} good if the serialisation is an @acronym{XML} document gigabytes in
 size).
@@ -610,35 +609,35 @@ size).
 For implementation examples we should look in the source distribution of @value{PACKAGE}.
 
 @menu
-* deserialiser typedefs::       @iface{deserialiser} interface: type definitions.
-* deserialiser operations::     @iface{deserialiser} interface: operations.
+* deserialiser typedefs::       @trait{deserialiser} trait: type definitions.
+* deserialiser operations::     @trait{deserialiser} trait: operations.
 @end menu
 
 @c page
 @node deserialiser typedefs
-@section @iface{deserialiser} interface: type definitions
+@section @trait{deserialiser} trait: type definitions
 
 
-@deftp {Struct Typedef} ccstructs_deserialiser_I
-Type of the @iface{deserialiser} interface.  Instances of this type are meant to be handed by value
+@deftp {Struct Typedef} ccstructs_deserialiser_T
+Type of the @trait{deserialiser} trait.  Instances of this type are meant to be handed by value
 to function calls.
 @end deftp
 
 
-@deftp {Struct Typedef} {ccname_iface_table_type(ccstructs_deserialiser_I)}
-Type of methods table for the @iface{deserialiser} interface.  It has the following fields:
+@deftp {Struct Typedef} {ccname_trait_table_type(ccstructs_deserialiser_T)}
+Type of methods table for the @trait{deserialiser} trait.  It has the following fields:
 
 @table @code
-@item ccname_iface_method_type(ccstructs_deserialiser_I, required_size) * required_size
+@item ccname_trait_method_type(ccstructs_deserialiser_T, required_size) * required_size
 Pointer to function implementing the @method{required_size} method.
 
-@item ccname_iface_method_type(ccstructs_deserialiser_I, read) * read
+@item ccname_trait_method_type(ccstructs_deserialiser_T, read) * read
 Pointer to function implementing the @method{read} method.
 @end table
 @end deftp
 
 
-@deftypefn {Function Prototype} size_t {ccname_iface_method_type(ccstructs_deserialiser_I, required_size)} (ccstructs_deserialiser_I const @var{I})
+@deftypefn {Function Prototype} size_t {ccname_trait_method_type(ccstructs_deserialiser_T, required_size)} (ccstructs_deserialiser_T const @var{I})
 Type of functions implementing the @method{required_size} method.  Return the minimum number of
 bytes needed to hold the serialisation of the source @struct{}; it is possible that the actual
 serialisation has consumed less memory.
@@ -648,7 +647,7 @@ read from the file to be sure to have it all?  This function answers this questi
 @end deftypefn
 
 
-@deftypefn {Function Prototype} ccmem_block_t {ccname_iface_method_type(ccstructs_deserialiser_I, read)} (cce_destination_t @var{L}, ccstructs_deserialiser_I const @var{I}, ccmem_block_t @var{B})
+@deftypefn {Function Prototype} ccmem_block_t {ccname_trait_method_type(ccstructs_deserialiser_T, read)} (cce_destination_t @var{L}, ccstructs_deserialiser_T const @var{I}, ccmem_block_t @var{B})
 Type of functions implementing the @method{read} method. Deserialise the @struct{} from the block of
 memory referenced by @var{B}, which must be big enough to hold the number of bytes returned by the
 method @method{required_size}.  Return a new block referencing the memory right after the
@@ -658,101 +657,101 @@ to @var{L}.
 
 @c page
 @node deserialiser operations
-@section @iface{deserialiser} interface: operations
+@section @trait{deserialiser} trait: operations
 
 
-@deftypefun ccstructs_deserialiser_I {ccname_new(ccstructs_deserialiser_I)} (ccstructs_core_t const * @var{S}, ccname_iface_table_type(ccstructs_deserialiser_I) const * @var{M})
-Interface constructor.  Return a new interface @struct{} given a pointer to the source @struct{} and
-a pointer to the interface methods.
+@deftypefun ccstructs_deserialiser_T {ccname_new(ccstructs_deserialiser_T)} (ccstructs_core_t const * @var{S}, ccname_trait_table_type(ccstructs_deserialiser_T) const * @var{M})
+Trait constructor.  Return a new trait @struct{} given a pointer to the source @struct{} and
+a pointer to the trait methods.
 @end deftypefun
 
 
-@deftypefun {ccstructs_core_t const *} ccstructs_deserialiser_self (ccstructs_deserialiser_I @var{I})
-Return a pointer to the @struct{} to which the interface belongs.
+@deftypefun {ccstructs_core_t const *} ccstructs_deserialiser_self (ccstructs_deserialiser_T @var{I})
+Return a pointer to the @struct{} to which the trait belongs.
 @end deftypefun
 
 
-@deftypefun size_t ccstructs_deserialiser_required_size (ccstructs_deserialiser_I @var{I})
+@deftypefun size_t ccstructs_deserialiser_required_size (ccstructs_deserialiser_T @var{I})
 Apply the method @method{required_size} to the given argument.
 @end deftypefun
 
 
-@deftypefun ccmem_block_t ccstructs_deserialiser_read (cce_destination_t @var{L}, ccstructs_deserialiser_I @var{I}, ccmem_block_t @var{B})
+@deftypefun ccmem_block_t ccstructs_deserialiser_read (cce_destination_t @var{L}, ccstructs_deserialiser_T @var{I}, ccmem_block_t @var{B})
 Apply the method @method{read} to the given arguments.  If an error occurs: raise an exception
 by performing a non--local exit to @var{L}.
 @end deftypefun
 
 @c page
 @node pathname
-@chapter The @iface{pathname} interface
+@chapter The @trait{pathname} trait
 
 
-The @iface{pathname} interface, represented by the type @objtype{ccstructs_pathname_I}, is meant to
+The @trait{pathname} trait, represented by the type @objtype{ccstructs_pathname_T}, is meant to
 be used in algorithms that need to operate on @posix{} pathname specifications without being tied to
 a specific pathname internal representation.
 
 @menu
 * pathname typedefs::           Type definitions.
-* pathname api::                Programming interface.
+* pathname api::                Programming trait.
 * pathname simple::             Simple implementations.
 @end menu
 
 @c page
 @node pathname typedefs
-@section Type definitions for the @iface{pathname} interface
+@section Type definitions for the @trait{pathname} trait
 
 
-@deftp {Struct Typedef} ccstructs_pathname_I
-Type of the @iface{pathname} interface.  Instances of this type are meant to be handed by value to
+@deftp {Struct Typedef} ccstructs_pathname_T
+Type of the @trait{pathname} trait.  Instances of this type are meant to be handed by value to
 function calls.
 @end deftp
 
 
-@deftp {Struct Typedef} ccstructs_pathname_I_methods_t
-Type of methods table for the @iface{pathname} interface.  It has the following fields:
+@deftp {Struct Typedef} ccstructs_pathname_T_methods_t
+Type of methods table for the @trait{pathname} trait.  It has the following fields:
 
 @table @code
-@item ccname_iface_method_type(ccstructs_pathname_I, asciiz) * asciiz
+@item ccname_trait_method_type(ccstructs_pathname_T, asciiz) * asciiz
 Pointer to function implementing the @method{asciiz} method.
 
-@item ccname_iface_method_type(ccstructs_pathname_I, is_static) * is_static
+@item ccname_trait_method_type(ccstructs_pathname_T, is_static) * is_static
 Pointer to function implementing the @method{is_static} method.
 
-@item ccname_iface_method_type(ccstructs_pathname_I, is_absolute) * is_absolute
+@item ccname_trait_method_type(ccstructs_pathname_T, is_absolute) * is_absolute
 Pointer to function implementing the @method{is_absolute} method.
 
-@item ccname_iface_method_type(ccstructs_pathname_I, is_relative) * is_relative
+@item ccname_trait_method_type(ccstructs_pathname_T, is_relative) * is_relative
 Pointer to function implementing the @method{is_relative} method.
 
-@item ccname_iface_method_type(ccstructs_pathname_I, is_normalised) * is_normalised
+@item ccname_trait_method_type(ccstructs_pathname_T, is_normalised) * is_normalised
 Pointer to function implementing the @method{is_normalised} method.
 
-@item ccname_iface_method_type(ccstructs_pathname_I, is_realpath) * is_realpath
+@item ccname_trait_method_type(ccstructs_pathname_T, is_realpath) * is_realpath
 Pointer to function implementing the @method{is_realpath} method.
 
-@item ccname_iface_method_type(ccstructs_pathname_I, dtor) * dtor
+@item ccname_trait_method_type(ccstructs_pathname_T, dtor) * dtor
 Pointer to function implementing the @method{dtor} method.
 
-@item ccname_iface_method_type(ccstructs_pathname_I, dumpable) * dumpable
+@item ccname_trait_method_type(ccstructs_pathname_T, dumpable) * dumpable
 Pointer to function implementing the @method{dumpable} method.
 
-@item ccname_iface_method_type(ccstructs_pathname_I, serialiser) * serialiser
+@item ccname_trait_method_type(ccstructs_pathname_T, serialiser) * serialiser
 Pointer to function implementing the @method{serialiser} method.
 
-@item ccname_iface_method_type(ccstructs_pathname_I, deserialiser) * deserialiser
+@item ccname_trait_method_type(ccstructs_pathname_T, deserialiser) * deserialiser
 Pointer to function implementing the @method{deserialiser} method.
 @end table
 @end deftp
 
 
-@deftypefn {Function Prototype} ccmem_asciiz_t {ccname_iface_method_type(ccstructs_pathname_I, asciiz)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+@deftypefn {Function Prototype} ccmem_asciiz_t {ccname_trait_method_type(ccstructs_pathname_T, asciiz)} (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
 Type of functions implementing the @method{asciiz} method.  Return an instance of
 @objtype{ccmem_asciiz_t} holding an @asciiz{} representation of the pathname.  If an error occurs
 generating the representation: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} bool {ccname_iface_method_type(ccstructs_pathname_I, is_static)} (ccstructs_pathname_I @var{I})
+@deftypefn {Function Prototype} bool {ccname_trait_method_type(ccstructs_pathname_T, is_static)} (ccstructs_pathname_T @var{I})
 Type of functions implementing the @method{is_static} method.  In general, the user of @var{I}
 should make a copy of the @asciiz{} pathname representation, returned by the @method{asciiz} method,
 if it needs to keep it independently from the extent (the lifetime) of @var{I}; but if this function
@@ -760,21 +759,21 @@ returns @ctrue{}: it can rely on the existence of the representation for the tim
 @end deftypefn
 
 
-@deftypefn {Function Prototype} bool {ccname_iface_method_type(ccstructs_pathname_I, is_absolute)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+@deftypefn {Function Prototype} bool {ccname_trait_method_type(ccstructs_pathname_T, is_absolute)} (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
 Type of functions implementing the @method{is_absolute} method.  When successful: return @ctrue{} is
 the pathname is absolute; otherwise return @cfalse{}.  If an error occurs (for example: because this
 method is not implemented): raise an exception by performing a non--local exit to @var{L}.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} bool {ccname_iface_method_type(ccstructs_pathname_I, is_relative)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+@deftypefn {Function Prototype} bool {ccname_trait_method_type(ccstructs_pathname_T, is_relative)} (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
 Type of functions implementing the @method{is_relative} method.  When successful: return @ctrue{} is
 the pathname is relative; otherwise return @cfalse{}.  If an error occurs (for example: because this
 method is not implemented): raise an exception by performing a non--local exit to @var{L}.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} bool {ccname_iface_method_type(ccstructs_pathname_I, is_normalised)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+@deftypefn {Function Prototype} bool {ccname_trait_method_type(ccstructs_pathname_T, is_normalised)} (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
 Type of functions implementing the @method{is_normalised} method.  When successful: return @ctrue{}
 is the pathname has been normalised with a procedure not involving access to the file system;
 otherwise return @cfalse{}.  If an error occurs (for example: because this method is not
@@ -785,7 +784,7 @@ double--dots; removal of double--slashes.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} bool {ccname_iface_method_type(ccstructs_pathname_I, is_realpath)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+@deftypefn {Function Prototype} bool {ccname_trait_method_type(ccstructs_pathname_T, is_realpath)} (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
 Type of functions implementing the @method{is_realpath} method.  When successful: return @ctrue{} is
 the pathname has been normalised with a function like the standard @cfunc{realpath}; otherwise
 return @cfalse{}.  If an error occurs (for example: because this method is not implemented): raise
@@ -793,137 +792,137 @@ an exception by performing a non--local exit to @var{L}.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} ccstructs_dtor_I {ccname_iface_method_type(ccstructs_pathname_I, dtor)} (ccstructs_pathname_I @var{I})
+@deftypefn {Function Prototype} ccstructs_dtor_T {ccname_trait_method_type(ccstructs_pathname_T, dtor)} (ccstructs_pathname_T @var{I})
 Type of functions implementing the @method{dtor} method.  Return an instance of the
-@objtype{ccstructs_dtor_I} interface that destroys the underlying pathname representation;
-@ref{dtor, The @iface{dtor} interface}.
+@objtype{ccstructs_dtor_T} trait that destroys the underlying pathname representation;
+@ref{dtor, The @trait{dtor} trait}.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} ccstructs_dumpable_I {ccname_iface_method_type(ccstructs_pathname_I, dumpable)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+@deftypefn {Function Prototype} ccstructs_dumpable_T {ccname_trait_method_type(ccstructs_pathname_T, dumpable)} (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
 Type of functions implementing the @method{dumpable} method.  Return an instance of the
-@objtype{ccstructs_dumpable_I} that prints the underlying pathname representation; @ref{dumpable,
-The @iface{dumpable} interface}.  If an error occurs creating the interface (for example: because
-the interface is not implemented): raise an exception by performing a non--local exit to @var{L}.
+@objtype{ccstructs_dumpable_T} that prints the underlying pathname representation; @ref{dumpable,
+The @trait{dumpable} trait}.  If an error occurs creating the trait (for example: because
+the trait is not implemented): raise an exception by performing a non--local exit to @var{L}.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} ccstructs_serialiser_I {ccname_iface_method_type(ccstructs_pathname_I, serialiser)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+@deftypefn {Function Prototype} ccstructs_serialiser_T {ccname_trait_method_type(ccstructs_pathname_T, serialiser)} (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
 Type of functions implementing the @method{serialiser} method.  Return an instance of the
-@objtype{ccstructs_serialiser_I} that serialises the underlying pathname representation;
-@ref{serialiser, The @iface{serialiser} interface}.  If an error occurs creating the interface (for
-example: because the interface is not implemented): raise an exception by performing a non--local
+@objtype{ccstructs_serialiser_T} that serialises the underlying pathname representation;
+@ref{serialiser, The @trait{serialiser} trait}.  If an error occurs creating the trait (for
+example: because the trait is not implemented): raise an exception by performing a non--local
 exit to @var{L}.
 @end deftypefn
 
 
-@deftypefn {Function Prototype} ccstructs_deserialiser_I {ccname_iface_method_type(ccstructs_pathname_I, deserialiser)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
+@deftypefn {Function Prototype} ccstructs_deserialiser_T {ccname_trait_method_type(ccstructs_pathname_T, deserialiser)} (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
 Type of functions implementing the @method{deserialiser} method.  Return an instance of the
-@objtype{ccstructs_deserialiser_I} that deserialises the underlying pathname representation;
-@ref{deserialiser, The @iface{deserialiser} interface}.  If an error occurs creating the interface
-(for example: because the interface is not implemented): raise an exception by performing a
+@objtype{ccstructs_deserialiser_T} that deserialises the underlying pathname representation;
+@ref{deserialiser, The @trait{deserialiser} trait}.  If an error occurs creating the trait
+(for example: because the trait is not implemented): raise an exception by performing a
 non--local exit to @var{L}.
 @end deftypefn
 
 @c page
 @node pathname api
-@section Programming interface for the @iface{pathname} interface
+@section Programming trait for the @trait{pathname} trait
 
 
-@deftypefun ccstructs_pathname_I {ccname_new(ccstructs_pathname_I)} (ccstructs_core_t const * @var{S}, ccname_iface_table_type(ccstructs_pathname_I) const * @var{M})
-Interface constructor.  Return a new interface @struct{} given a pointer to the source @struct{} and
-a pointer to the interface methods.
+@deftypefun ccstructs_pathname_T {ccname_new(ccstructs_pathname_T)} (ccstructs_core_t const * @var{S}, ccname_trait_table_type(ccstructs_pathname_T) const * @var{M})
+Trait constructor.  Return a new trait @struct{} given a pointer to the source @struct{} and
+a pointer to the trait methods.
 @end deftypefun
 
 
-@deftypefun {ccstructs_core_t const *} ccstructs_pathname_self (ccstructs_pathname_I @var{I})
-Return a pointer to the @struct{} to which the interface belongs.
+@deftypefun {ccstructs_core_t const *} ccstructs_pathname_self (ccstructs_pathname_T @var{I})
+Return a pointer to the @struct{} to which the trait belongs.
 @end deftypefun
 
 
-@deftypefun ccmem_asciiz_t ccstructs_pathname_asciiz (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
-Apply the method @method{asciiz} to the interface instance.  Return an instance of
+@deftypefun ccmem_asciiz_t ccstructs_pathname_asciiz (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
+Apply the method @method{asciiz} to the trait instance.  Return an instance of
 @objtype{ccmem_asciiz_t} holding an @asciiz{} representation of the pathname.  If an error occurs
 generating the representation: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun bool ccstructs_pathname_is_static (ccstructs_pathname_I @var{I})
-Apply the method @method{is_static} to the interface instance.
+@deftypefun bool ccstructs_pathname_is_static (ccstructs_pathname_T @var{I})
+Apply the method @method{is_static} to the trait instance.
 @end deftypefun
 
 
-@deftypefun bool ccstructs_pathname_is_absolute (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
-Apply the method @method{is_absolute} to the interface instance.  If an error occurs: raise an
+@deftypefun bool ccstructs_pathname_is_absolute (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
+Apply the method @method{is_absolute} to the trait instance.  If an error occurs: raise an
 exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun bool ccstructs_pathname_is_relative (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
-Apply the method @method{is_relative} to the interface instance.  If an error occurs: raise an
+@deftypefun bool ccstructs_pathname_is_relative (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
+Apply the method @method{is_relative} to the trait instance.  If an error occurs: raise an
 exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun bool ccstructs_pathname_is_normalised (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
-Apply the method @method{is_normalised} to the interface instance.  If an error occurs: raise an
+@deftypefun bool ccstructs_pathname_is_normalised (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
+Apply the method @method{is_normalised} to the trait instance.  If an error occurs: raise an
 exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun bool ccstructs_pathname_is_realpath (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
-Apply the method @method{is_realpath} to the interface instance.  If an error occurs: raise an
+@deftypefun bool ccstructs_pathname_is_realpath (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
+Apply the method @method{is_realpath} to the trait instance.  If an error occurs: raise an
 exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun ccstructs_dtor_I {ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)} (ccstructs_pathname_I @var{I})
-Apply the method @method{dtor} to the interface instance.  Build and return an instance of the
-interface @objtype{ccstructs_dtor_I} that we can use to destroy the underlying pathname
-representation; @ref{dtor, The @iface{dtor} interface}.
+@deftypefun ccstructs_dtor_T {ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_T)} (ccstructs_pathname_T @var{I})
+Apply the method @method{dtor} to the trait instance.  Build and return an instance of the
+trait @objtype{ccstructs_dtor_T} that we can use to destroy the underlying pathname
+representation; @ref{dtor, The @trait{dtor} trait}.
 @end deftypefun
 
 
-@deftypefun ccstructs_dumpable_I {ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
-Apply the method @method{dumpable} to the interface instance.  Build and return an instance of the
-interface @objtype{ccstructs_dumpable_I} acting upon the underlying pathname representation;
-@ref{dumpable, The @iface{dtor} interface}.  If an error occurs creating the interface (for
-example: because the interface is not implemented): raise an exception by performing a non--local
+@deftypefun ccstructs_dumpable_T {ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_T)} (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
+Apply the method @method{dumpable} to the trait instance.  Build and return an instance of the
+trait @objtype{ccstructs_dumpable_T} acting upon the underlying pathname representation;
+@ref{dumpable, The @trait{dtor} trait}.  If an error occurs creating the trait (for
+example: because the trait is not implemented): raise an exception by performing a non--local
 exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun ccstructs_serialiser_I {ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_I)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
-Apply the method @method{serialiser} to the interface instance.  Build and return an instance of the
-interface @objtype{ccstructs_serialiser_I} acting upon the underlying pathname representation;
-@ref{serialiser, The @iface{dtor} interface}.  If an error occurs creating the interface (for
-example: because the interface is not implemented): raise an exception by performing a non--local
+@deftypefun ccstructs_serialiser_T {ccname_trait_new(ccstructs_serialiser_T, ccstructs_pathname_T)} (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
+Apply the method @method{serialiser} to the trait instance.  Build and return an instance of the
+trait @objtype{ccstructs_serialiser_T} acting upon the underlying pathname representation;
+@ref{serialiser, The @trait{dtor} trait}.  If an error occurs creating the trait (for
+example: because the trait is not implemented): raise an exception by performing a non--local
 exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun ccstructs_deserialiser_I {ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_I)} (cce_destination_t @var{L}, ccstructs_pathname_I @var{I})
-Apply the method @method{deserialiser} to the interface instance.  Build and return an instance of
-the interface @objtype{ccstructs_deserialiser_I} acting upon the underlying pathname representation;
-@ref{deserialiser, The @iface{dtor} interface}.  If an error occurs creating the interface
-(for example: because the interface is not implemented): raise an exception by performing a
+@deftypefun ccstructs_deserialiser_T {ccname_trait_new(ccstructs_deserialiser_T, ccstructs_pathname_T)} (cce_destination_t @var{L}, ccstructs_pathname_T @var{I})
+Apply the method @method{deserialiser} to the trait instance.  Build and return an instance of
+the trait @objtype{ccstructs_deserialiser_T} acting upon the underlying pathname representation;
+@ref{deserialiser, The @trait{dtor} trait}.  If an error occurs creating the trait
+(for example: because the trait is not implemented): raise an exception by performing a
 non--local exit to @var{L}.
 @end deftypefun
 
 @c page
 @node pathname simple
-@section Simple implementations of a @iface{pathname} interface
+@section Simple implementations of a @trait{pathname} trait
 
 
 The @value{PACKAGE} library implements a very simple and incomplete file system pathname
-representation, which supports the @objtype{ccstructs_pathname_I} interface.  Most of the methods
+representation, which supports the @objtype{ccstructs_pathname_T} trait.  Most of the methods
 will just raise an exception of type @objtype{cce_condition_unimplemented_t}.
 
 @menu
 * pathname simple typedefs::    Simple pathname: type definitions.
 * pathname simple ctors::       Simple pathname: constructors.
 * pathname simple gctors::      Simple pathname: guarded constructors.
-* pathname simple ifaces::      Simple pathname: implemented interfaces.
+* pathname simple traits::      Simple pathname: implemented traits.
 * pathname simple samples::     Simple pathname: usage examples.
 @end menu
 
@@ -1145,41 +1144,41 @@ finalisation with the handler @var{H}.
 @end deftypefun
 
 @c page
-@node pathname simple ifaces
-@subsection Simple pathname: implemented interfaces
+@node pathname simple traits
+@subsection Simple pathname: implemented traits
 
 
-@deftypefun ccstructs_dtor_I {ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
-Interface constructor for @objtype{ccstructs_dtor_I} as implemented by
-@objtype{ccstructs_pathname_t}; @ref{dtor, The @iface{dtor} interface}.  The returned destructor
-interface will work for both embedded and standalone instances of @objtype{ccstructs_pathname_t}.
+@deftypefun ccstructs_dtor_T {ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
+Trait constructor for @objtype{ccstructs_dtor_T} as implemented by
+@objtype{ccstructs_pathname_t}; @ref{dtor, The @trait{dtor} trait}.  The returned destructor
+trait will work for both embedded and standalone instances of @objtype{ccstructs_pathname_t}.
 @end deftypefun
 
 
-@deftypefun ccstructs_pathname_I {ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
-Interface constructor for @objtype{ccstructs_pathname_I} as implemented by
-@objtype{ccstructs_pathname_t}; @ref{pathname, The @iface{pathname} interface}.
+@deftypefun ccstructs_pathname_T {ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
+Trait constructor for @objtype{ccstructs_pathname_T} as implemented by
+@objtype{ccstructs_pathname_t}; @ref{pathname, The @trait{pathname} trait}.
 @end deftypefun
 
 
-@deftypefun ccstructs_serialiser_I {ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
-Constructor for a @objtype{ccstructs_serialiser_I} interface that serialises an instance of
-@objtype{ccstructs_pathname_t} into a memory block; @ref{serialiser, The @iface{serialiser}
-interface}.
+@deftypefun ccstructs_serialiser_T {ccname_trait_new(ccstructs_serialiser_T, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
+Constructor for a @objtype{ccstructs_serialiser_T} trait that serialises an instance of
+@objtype{ccstructs_pathname_t} into a memory block; @ref{serialiser, The @trait{serialiser}
+trait}.
 @end deftypefun
 
 
-@deftypefun ccstructs_deserialiser_I {ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t)} (ccstructs_pathname_t * @var{ptn})
-Constructor for a @objtype{ccstructs_deserialiser_I} interface that deserialises an instance of
-@objtype{ccstructs_pathname_t} from a memory block; @ref{deserialiser, The @iface{deserialiser}
-interface}.
+@deftypefun ccstructs_deserialiser_T {ccname_trait_new(ccstructs_deserialiser_T, ccstructs_pathname_t)} (ccstructs_pathname_t * @var{ptn})
+Constructor for a @objtype{ccstructs_deserialiser_T} trait that deserialises an instance of
+@objtype{ccstructs_pathname_t} from a memory block; @ref{deserialiser, The @trait{deserialiser}
+trait}.
 @end deftypefun
 
 
-@deftypefun ccstructs_dumpable_I {ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
-Constructor for a @objtype{ccstructs_dumpable_I} interface that prints the a representation of the
+@deftypefun ccstructs_dumpable_T {ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)} (ccstructs_pathname_t const * @var{ptn})
+Constructor for a @objtype{ccstructs_dumpable_T} trait that prints the a representation of the
 underlying @objtype{ccstructs_pathname_t} on the @stderr{} stream; @ref{dumpable, The
-@iface{dumpable} interface}.
+@trait{dumpable} trait}.
 @end deftypefun
 
 @c page
@@ -1188,22 +1187,22 @@ underlying @objtype{ccstructs_pathname_t} on the @stderr{} stream; @ref{dumpable
 
 
 Let's see how we can build a standalone instance of @objtype{ccstructs_pathname_t} and use it
-through the interface @objtype{ccstructs_pathname_I}:
+through the trait @objtype{ccstructs_pathname_T}:
 
 @smallexample
 char const *                  P = "/path/to/file.ext";
 cce_location_t                L[1];
 ccstructs_pathname_t const *  ptn;
-ccstructs_pathname_I          ptn_I;
+ccstructs_pathname_T          ptn_T;
 ccstructs_clean_handler_t     ptn_H[1];
 
 if (cce_location(L)) @{
   cce_run_catch_handlers_final(L);
 @} else @{
   ptn   = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
-  ptn_I = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+  ptn_T = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
   ccstructs_init_and_register_handler(L, ptn_H,
-    ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_I)(ptn_I));
+    ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_T)(ptn_T));
 
   ...
   cce_run_body_handlers(L);
@@ -1213,8 +1212,8 @@ if (cce_location(L)) @{
 We can dump to @stderr{} a string representation of the instance with:
 
 @smallexample
-ccstructs_dumpable_I  W =
-  ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_I)(L, ptn_I);
+ccstructs_dumpable_T  W =
+  ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_T)(L, ptn_T);
 
 ccstructs_dumpable_dump(L, W);
 @end smallexample
@@ -1228,8 +1227,8 @@ ccmem_asciiz_t  rep = ccstructs_pathname_asciiz(L, I);
 We can serialise the pathname with:
 
 @smallexample
-ccstructs_serialiser_I  S =
-  ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_I)(L, ptn_I);
+ccstructs_serialiser_T  S =
+  ccname_trait_new(ccstructs_serialiser_T, ccstructs_pathname_T)(L, ptn_T);
 
 /* Allocate memory for the serialisation. */
 ccmem_clean_handler_t  M_H[1];
@@ -1248,14 +1247,14 @@ and we can deserialise a pathname instance from a memory block @code{M} with:
 ccmem_block_t            M = ...
 ccmem_block_t            M_leftover;
 ccstructs_pathname_t *   other;
-ccstructs_pathname_I     other_I;
-ccstructs_deserialiser_I other_D;
+ccstructs_pathname_T     other_T;
+ccstructs_deserialiser_T other_D;
 
 other   = ccname_new(ccstructs_pathname_t, deserialisable)(L);
-other_I = ccname_iface_new(ccstructs_pathname_I,
+other_T = ccname_trait_new(ccstructs_pathname_T,
                            ccstructs_pathname_t)(other);
-other_D = ccname_iface_new(ccstructs_deserialiser_I,
-                           ccstructs_pathname_I)(L, other_I);
+other_D = ccname_trait_new(ccstructs_deserialiser_T,
+                           ccstructs_pathname_T)(L, other_T);
 
 M_leftover = ccstructs_deserialiser_read(L, other_D, M);
 @end smallexample
@@ -1313,7 +1312,7 @@ CCLibraries projects.
 @menu
 * ccnames struct common::       Well known functions for @struct{} types.
 * ccnames struct table::        Tables of methods for @struct{} types.
-* ccnames iface::               Well known names for interface types.
+* ccnames trait::               Well known names for trait types.
 @end menu
 
 @c page
@@ -1578,60 +1577,60 @@ ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
 @end smallexample
 
 @c page
-@node ccnames iface
-@appendixsec Well known names for interface types.
+@node ccnames trait
+@appendixsec Well known names for trait types.
 
 
-The macros for ``well known interface functions'' define an @api{} to implement interface @struct{}
-types; an interface is a set of operations we can apply to a data @struct{}; multiple data @struct{}
-types can implement multiple interfaces.  The following macros are defined in the header file
+The macros for ``well known trait functions'' define an @api{} to implement trait @struct{}
+types; an trait is a set of operations we can apply to a data @struct{}; multiple data @struct{}
+types can implement multiple traits.  The following macros are defined in the header file
 @file{ccnames.h}.
 
 
-@defmac ccname_iface_new_type (@var{IFACE_TYPE})
-@defmacx ccname_iface_new_type (@var{IFACE_TYPE}, @var{STRUCT_TYPE})
-@defmacx ccname_iface_new_type (@var{IFACE_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
-Given an interface type name, an optional struct name and an optional variant specification: expand
-into the function type name of interface implementation constructors.  Constructors of such type
-must build instances of @var{IFACE_TYPE} as implemented by @var{STRUCT_TYPE}, as specified for the
+@defmac ccname_trait_new_type (@var{TRAIT_TYPE})
+@defmacx ccname_trait_new_type (@var{TRAIT_TYPE}, @var{STRUCT_TYPE})
+@defmacx ccname_trait_new_type (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
+Given an trait type name, an optional struct name and an optional variant specification: expand
+into the function type name of trait implementation constructors.  Constructors of such type
+must build instances of @var{TRAIT_TYPE} as implemented by @var{STRUCT_TYPE}, as specified for the
 variant @var{VARIANT}.
 @end defmac
 
 
-@defmac ccname_iface_new (@var{IFACE_TYPE}, @var{STRUCT_TYPE})
-@defmacx ccname_iface_new (@var{IFACE_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
-Given an interface type name, a struct type name, an optional variant specification: expand into the
-name of the @api{} function @cfunc{new} that instantiates that variant of the interface for the
+@defmac ccname_trait_new (@var{TRAIT_TYPE}, @var{STRUCT_TYPE})
+@defmacx ccname_trait_new (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
+Given an trait type name, a struct type name, an optional variant specification: expand into the
+name of the @api{} function @cfunc{new} that instantiates that variant of the trait for the
 @struct{}.
 @end defmac
 
 
-@defmac ccname_iface_table_type (@var{IFACE_TYPE})
-@defmacx ccname_iface_table_type (@var{IFACE_TYPE}, @var{VARIANT})
-Given an interface type name and an optional variant specification: expand into the name of the
-methods table type for the interface type.
+@defmac ccname_trait_table_type (@var{TRAIT_TYPE})
+@defmacx ccname_trait_table_type (@var{TRAIT_TYPE}, @var{VARIANT})
+Given an trait type name and an optional variant specification: expand into the name of the
+methods table type for the trait type.
 @end defmac
 
 
-@defmac ccname_iface_table (@var{IFACE_TYPE}, @var{STRUCT_TYPE})
-@defmacx ccname_iface_table (@var{IFACE_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
-Given an interface type name, a struct type name, and an optional variant specification: expand into
-the name of the methods table for that variant of the interface implementation for the @struct{}
+@defmac ccname_trait_table (@var{TRAIT_TYPE}, @var{STRUCT_TYPE})
+@defmacx ccname_trait_table (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT})
+Given an trait type name, a struct type name, and an optional variant specification: expand into
+the name of the methods table for that variant of the trait implementation for the @struct{}
 type.
 @end defmac
 
 
-@defmac ccname_iface_method_type (@var{IFACE_TYPE}, @var{METHOD_NAME})
-@defmacx ccname_iface_method_type (@var{IFACE_TYPE}, @var{VARIANT}, @var{METHOD_NAME})
-Given an interface type name, an optional variant specification, and a method name: expand into the
-type name of the method function for that variant of the interface implementation.
+@defmac ccname_trait_method_type (@var{TRAIT_TYPE}, @var{METHOD_NAME})
+@defmacx ccname_trait_method_type (@var{TRAIT_TYPE}, @var{VARIANT}, @var{METHOD_NAME})
+Given an trait type name, an optional variant specification, and a method name: expand into the
+type name of the method function for that variant of the trait implementation.
 @end defmac
 
 
-@defmac ccname_iface_method (@var{IFACE_TYPE}, @var{STRUCT_TYPE}, @var{METHOD_NAME})
-@defmacx ccname_iface_method (@var{IFACE_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT}, @var{METHOD_NAME})
-Given an interface type name, a struct type name, an optional variant specification, and a method
-name: expand into the name of the method function for that variant of the interface implementation
+@defmac ccname_trait_method (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{METHOD_NAME})
+@defmacx ccname_trait_method (@var{TRAIT_TYPE}, @var{STRUCT_TYPE}, @var{VARIANT}, @var{METHOD_NAME})
+Given an trait type name, a struct type name, an optional variant specification, and a method
+name: expand into the name of the method function for that variant of the trait implementation
 for the struct type.
 @end defmac
 
@@ -1648,43 +1647,43 @@ struct my_coords_t @{
 @end smallexample
 
 @noindent
-and we want to define an interface type @objtype{my_printable_I} to print the @struct{} on a
+and we want to define an trait type @objtype{my_printable_T} to print the @struct{} on a
 standard stream, both in rectangular and polar forms.
 
-Every interface must have a @struct{} acting as table of pointers to functions, whose functions
-implements the interface methods.  The interface @struct{} type is unique, the methods table
-@struct{} type is unique; for every data @struct{} that implements the interface: we need a methods
-table and an interface constructor.
+Every trait must have a @struct{} acting as table of pointers to functions, whose functions
+implements the trait methods.  The trait @struct{} type is unique, the methods table
+@struct{} type is unique; for every data @struct{} that implements the trait: we need a methods
+table and an trait constructor.
 
-The interface @struct{} type and the methods table @struct{} type are defined as follows:
+The trait @struct{} type and the methods table @struct{} type are defined as follows:
 
 @smallexample
-typedef struct my_printable_I   my_printable_I;
-typedef struct ccname_iface_table_type(my_printable_I) \
-  ccname_iface_table_type(my_printable_I);
+typedef struct my_printable_T   my_printable_T;
+typedef struct ccname_trait_table_type(my_printable_T) \
+  ccname_trait_table_type(my_printable_T);
 
-struct my_printable_I @{
-  ccname_iface_table_type(my_printable_I)  const * methods;
+struct my_printable_T @{
+  ccname_trait_table_type(my_printable_T)  const * methods;
   ccstructs_core_t                         const * self;
 @};
 
-typedef void ccname_iface_method_type(my_printable_I, print) \
-  (my_printable_I I, FILE * stream);
+typedef void ccname_trait_method_type(my_printable_T, print) \
+  (my_printable_T I, FILE * stream);
 
-struct ccname_iface_table_type(my_printable_I) @{
-  ccname_iface_method_type(my_printable_I, print) * print_rec;
-  ccname_iface_method_type(my_printable_I, print) * print_pol;
+struct ccname_trait_table_type(my_printable_T) @{
+  ccname_trait_method_type(my_printable_T, print) * print_rec;
+  ccname_trait_method_type(my_printable_T, print) * print_pol;
 @};
 @end smallexample
 
-The @objtype{my_printable_I} interface @api{} is defined as follows:
+The @objtype{my_printable_T} trait @api{} is defined as follows:
 
 @smallexample
-my_printable_I
+my_printable_T
 my_printable_new (ccstructs_core_t const * S,
-                  ccname_iface_table_type(my_printable_I) const * M)
+                  ccname_trait_table_type(my_printable_T) const * M)
 @{
-  my_printable_I        I = @{
+  my_printable_T        I = @{
     .methods    = M,
     .self       = S
   @};
@@ -1692,30 +1691,30 @@ my_printable_new (ccstructs_core_t const * S,
 @}
 
 ccstructs_core_t const *
-my_printable_self (my_printable_I I)
+my_printable_self (my_printable_T I)
 @{
   return I.self;
 @}
 
 void
-my_printable_print_rec (my_printable_I I, FILE * stream)
+my_printable_print_rec (my_printable_T I, FILE * stream)
 @{
   I.methods->print_rec(I, stream);
 @}
 
 void
-my_printable_print_pol (my_printable_I I, FILE * stream)
+my_printable_print_pol (my_printable_T I, FILE * stream)
 @{
   I.methods->print_pol(I, stream);
 @}
 @end smallexample
 
-The implementation of @objtype{my_printable_I} for the data @struct{} @objtype{my_coords_t} is
+The implementation of @objtype{my_printable_T} for the data @struct{} @objtype{my_coords_t} is
 defined as follows:
 
 @smallexample
 static void
-ccname_iface_method(my_printable_I, my_coords_t, print_rec) (my_printable_I I, FILE * stream)
+ccname_trait_method(my_printable_T, my_coords_t, print_rec) (my_printable_T I, FILE * stream)
 @{
   CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
 
@@ -1723,7 +1722,7 @@ ccname_iface_method(my_printable_I, my_coords_t, print_rec) (my_printable_I I, F
 @}
 
 static void
-ccname_iface_method(my_printable_I, my_coords_t, print_pol) (my_printable_I I, FILE * stream)
+ccname_trait_method(my_printable_T, my_coords_t, print_pol) (my_printable_T I, FILE * stream)
 @{
   CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
   double        RHO   = hypot(S->X, S->Y);
@@ -1732,19 +1731,19 @@ ccname_iface_method(my_printable_I, my_coords_t, print_pol) (my_printable_I I, F
   fprintf(stream, "RHO=%f, THETA=%f\n", RHO, THETA);
 @}
 
-static ccname_iface_table_type(my_printable_I) const ccname_iface_table(my_printable_I, my_coords_t) = @{
-  .print_rec    = ccname_iface_method(my_printable_I, my_coords_t, print_rec),
-  .print_pol    = ccname_iface_method(my_printable_I, my_coords_t, print_pol)
+static ccname_trait_table_type(my_printable_T) const ccname_trait_table(my_printable_T, my_coords_t) = @{
+  .print_rec    = ccname_trait_method(my_printable_T, my_coords_t, print_rec),
+  .print_pol    = ccname_trait_method(my_printable_T, my_coords_t, print_pol)
 @};
 
-my_printable_I
-ccname_iface_new(my_printable_I, my_coords_t) (my_coords_t * S)
+my_printable_T
+ccname_trait_new(my_printable_T, my_coords_t) (my_coords_t * S)
 @{
-  return my_printable_new(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t));
+  return my_printable_new(ccstructs_core(S), &ccname_trait_table(my_printable_T, my_coords_t));
 @}
 @end smallexample
 
-We can use the interface as follows:
+We can use the trait as follows:
 
 @smallexample
 int
@@ -1752,13 +1751,13 @@ main (void)
 @{
   cce_location_t        L[1];
   my_coords_t *         S;
-  my_printable_I        I;
+  my_printable_T        I;
 
   if (cce_location(L)) @{
     cce_run_catch_handlers_final(L);
   @} else @{
     S = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    I = ccname_iface_new(my_printable_I, my_coords_t)(S);
+    I = ccname_trait_new(my_printable_T, my_coords_t)(S);
 
     my_printable_print_rec(I, stdout);
     my_printable_print_pol(I, stdout);

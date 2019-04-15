@@ -5,7 +5,7 @@
 
   Abstract
 
-	This  module interfaces  CCExceptions's exception  handlers with  CCStructs's
+	This  module  traits  CCExceptions's   exception  handlers  with  CCStructs's
 	destructor traits.
 
   Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
@@ -38,14 +38,14 @@
  ** ----------------------------------------------------------------- */
 
 void
-ccstructs_init_and_register_clean_handler (cce_location_t * L, ccstructs_clean_handler_t * I_H, ccstructs_dtor_I I)
+ccstructs_init_and_register_clean_handler (cce_location_t * L, ccstructs_clean_handler_t * I_H, ccstructs_dtor_T I)
 {
   cce_init_and_register_handler(L, ccstructs_handler_handler(I_H), cce_default_clean_handler_function,
 				cce_resource_pointer(I.self), (cce_resource_destructor_fun_t *)I.destroy);
 }
 
 void
-ccstructs_init_and_register_error_handler (cce_location_t * L, ccstructs_error_handler_t * I_H, ccstructs_dtor_I I)
+ccstructs_init_and_register_error_handler (cce_location_t * L, ccstructs_error_handler_t * I_H, ccstructs_dtor_T I)
 {
   cce_init_and_register_handler(L, ccstructs_handler_handler(I_H), cce_default_error_handler_function,
 				cce_resource_pointer(I.self), (cce_resource_destructor_fun_t *)I.destroy);

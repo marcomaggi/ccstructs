@@ -6,10 +6,10 @@
   Abstract
 
 	This test program checks the behaviour of the API of the struct "my_coords_t"
-	and shows how to use the implemented interfaces.
+	and shows how to use the implemented traits.
 
 	The  "struct-no-methods" example  shows how  to implement  a struct  using no
-	methods table for the struct-specific interface constructors.
+	methods table for the struct-specific trait constructors.
 
   Copyright (C) 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -86,13 +86,13 @@ test_1_1 (cce_destination_t upper_L)
 {
   cce_location_t	L[1];
   my_coords_t		A[1];
-  my_printable_I	PA;
+  my_printable_T	PA;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccname_init(my_coords_t, rec)(A, 1.0, 2.0);
-    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    PA = ccname_trait_new(my_printable_T, my_coords_t)(A);
     /* If this call raises an exception: we may have a resource leakage. */
     my_printable_print_rec(L, PA, stderr);
     ccname_final(my_coords_t)(A);
@@ -111,13 +111,13 @@ test_2_1 (cce_destination_t upper_L)
 {
   cce_location_t	L[1];
   my_coords_t const *	A;
-  my_printable_I	PA;
+  my_printable_T	PA;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     A  = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    PA = ccname_trait_new(my_printable_T, my_coords_t)(A);
     /* If this call raises an exception: we may have a resource leakage. */
     my_printable_print_rec(L, PA, stderr);
     ccname_delete(my_coords_t)(A);
@@ -140,7 +140,7 @@ test_3_1 (cce_destination_t upper_L)
   cce_error_handler_t	FE_H[1];
   my_coords_t		A[1];
   cce_clean_handler_t	A_H[1];
-  my_printable_I	PA;
+  my_printable_T	PA;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
@@ -151,7 +151,7 @@ test_3_1 (cce_destination_t upper_L)
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    PA = ccname_trait_new(my_printable_T, my_coords_t)(A);
     my_printable_print_rec(L, PA, stderr);
     cce_run_body_handlers(L);
   }
@@ -167,7 +167,7 @@ test_3_2 (cce_destination_t upper_L)
   cce_error_handler_t	FE_H[1];
   my_coords_t		A[1];
   cce_error_handler_t	A_H[1];
-  my_printable_I	PA;
+  my_printable_T	PA;
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
@@ -182,7 +182,7 @@ test_3_2 (cce_destination_t upper_L)
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    PA = ccname_trait_new(my_printable_T, my_coords_t)(A);
     my_printable_print_rec(L, PA, stderr);
     cce_raise(L, cctests_condition_new_signal_1());
     cce_run_body_handlers(L);
@@ -204,7 +204,7 @@ test_4_1 (cce_destination_t upper_L)
   cce_error_handler_t	FE_H[1];
   my_coords_t const *	A;
   cce_clean_handler_t	A_H[1];
-  my_printable_I	PA;
+  my_printable_T	PA;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
@@ -215,7 +215,7 @@ test_4_1 (cce_destination_t upper_L)
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    PA = ccname_trait_new(my_printable_T, my_coords_t)(A);
     my_printable_print_rec(L, PA, stderr);
     cce_run_body_handlers(L);
   }
@@ -231,7 +231,7 @@ test_4_2 (cce_destination_t upper_L)
   cce_error_handler_t	FE_H[1];
   my_coords_t const *	A;
   cce_error_handler_t	A_H[1];
-  my_printable_I	PA;
+  my_printable_T	PA;
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
@@ -246,7 +246,7 @@ test_4_2 (cce_destination_t upper_L)
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    PA = ccname_trait_new(my_printable_T, my_coords_t)(A);
     my_printable_print_rec(L, PA, stderr);
     cce_raise(L, cctests_condition_new_signal_1());
     cce_run_body_handlers(L);
@@ -255,31 +255,31 @@ test_4_2 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Allocation on the stack, "ccstructs_dtor_I" handlers.
+ ** Allocation on the stack, "ccstructs_dtor_T" handlers.
  ** ----------------------------------------------------------------- */
 
 void
 test_5_1 (cce_destination_t upper_L)
 /* Allocate the  struct on  the stack,  then destroy  it with  a "clean"
-   handler using the "embedded" "ccstructs_dtor_I" interface. */
+   handler using the "embedded" "ccstructs_dtor_T" trait. */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
   cce_error_handler_t		FE_H[1];
   my_coords_t			A[1];
   ccstructs_clean_handler_t	A_H[1];
-  my_printable_I		PA;
+  my_printable_T		PA;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccname_init(my_coords_t, rec)(A, 1.0, 2.0);
-    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_trait_new(ccstructs_dtor_T, my_coords_t, embedded)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    PA = ccname_trait_new(my_printable_T, my_coords_t)(A);
     my_printable_print_rec(L, PA, stderr);
     cce_run_body_handlers(L);
   }
@@ -288,14 +288,14 @@ test_5_1 (cce_destination_t upper_L)
 void
 test_5_2 (cce_destination_t upper_L)
 /* Allocate the  struct on the  stack, then  destroy it with  an "error"
-   handler using the "embedded" "ccstructs_dtor_I" interface. */
+   handler using the "embedded" "ccstructs_dtor_T" trait. */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
   cce_error_handler_t		FE_H[1];
   my_coords_t			A[1];
   ccstructs_error_handler_t	A_H[1];
-  my_printable_I		PA;
+  my_printable_T		PA;
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
@@ -305,12 +305,12 @@ test_5_2 (cce_destination_t upper_L)
     }
   } else {
     ccname_init(my_coords_t, rec)(A, 1.0, 2.0);
-    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_trait_new(ccstructs_dtor_T, my_coords_t, embedded)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    PA = ccname_trait_new(my_printable_T, my_coords_t)(A);
     my_printable_print_rec(L, PA, stderr);
     cce_raise(L, cctests_condition_new_signal_1());
     cce_run_body_handlers(L);
@@ -319,31 +319,31 @@ test_5_2 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Allocation on the heap, "ccstructs_dtor_I" handlers.
+ ** Allocation on the heap, "ccstructs_dtor_T" handlers.
  ** ----------------------------------------------------------------- */
 
 void
 test_6_1 (cce_destination_t upper_L)
 /* Allocate  the struct  on the  heap, then  destroy it  with a  "clean"
-   handler using the "standalone" "ccstructs_dtor_I" interface. */
+   handler using the "standalone" "ccstructs_dtor_T" trait. */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
   cce_error_handler_t		FE_H[1];
   my_coords_t const *		A;
   ccstructs_clean_handler_t	A_H[1];
-  my_printable_I		PA;
+  my_printable_T		PA;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_trait_new(ccstructs_dtor_T, my_coords_t, standalone)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    PA = ccname_trait_new(my_printable_T, my_coords_t)(A);
     my_printable_print_rec(L, PA, stderr);
     cce_run_body_handlers(L);
   }
@@ -352,14 +352,14 @@ test_6_1 (cce_destination_t upper_L)
 void
 test_6_2 (cce_destination_t upper_L)
 /* Allocate the  struct on  the heap,  then destroy  it with  an "error"
-   handler using the "standalone" "ccstructs_dtor_I" interface. */
+   handler using the "standalone" "ccstructs_dtor_T" trait. */
 {
   cce_location_t		L[1];
   cce_clean_handler_t		FC_H[1];
   cce_error_handler_t		FE_H[1];
   my_coords_t const *		A;
   ccstructs_error_handler_t	A_H[1];
-  my_printable_I		PA;
+  my_printable_T		PA;
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
@@ -369,12 +369,12 @@ test_6_2 (cce_destination_t upper_L)
     }
   } else {
     A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_trait_new(ccstructs_dtor_T, my_coords_t, standalone)(A));
 
     flag_register_clean_handler(L, FC_H);
     flag_register_error_handler(L, FE_H);
 
-    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    PA = ccname_trait_new(my_printable_T, my_coords_t)(A);
     my_printable_print_rec(L, PA, stderr);
     cce_raise(L, cctests_condition_new_signal_1());
     cce_run_body_handlers(L);
@@ -383,7 +383,7 @@ test_6_2 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Interface "my_printable_I".
+ ** Trait "my_printable_T".
  ** ----------------------------------------------------------------- */
 
 void
@@ -392,15 +392,15 @@ test_7_1 (cce_destination_t upper_L)
   cce_location_t		L[1];
   my_coords_t const *		A;
   ccstructs_clean_handler_t	A_H[1];
-  my_printable_I		PA;
+  my_printable_T		PA;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_trait_new(ccstructs_dtor_T, my_coords_t, standalone)(A));
 
-    PA = ccname_iface_new(my_printable_I, my_coords_t)(A);
+    PA = ccname_trait_new(my_printable_T, my_coords_t)(A);
 
     my_printable_print_rec(L, PA, stdout);
     my_printable_print_pol(L, PA, stdout);
@@ -410,7 +410,7 @@ test_7_1 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_dumpable_I".
+ ** Trait "ccstructs_dumpable_T".
  ** ----------------------------------------------------------------- */
 
 void
@@ -419,15 +419,15 @@ test_8_1 (cce_destination_t upper_L)
   cce_location_t		L[1];
   my_coords_t const *		A;
   ccstructs_clean_handler_t	A_H[1];
-  ccstructs_dumpable_I		WA;
+  ccstructs_dumpable_T		WA;
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_trait_new(ccstructs_dtor_T, my_coords_t, standalone)(A));
 
-    WA = ccname_iface_new(ccstructs_dumpable_I, my_coords_t)(A);
+    WA = ccname_trait_new(ccstructs_dumpable_T, my_coords_t)(A);
 
     ccstructs_dumpable_dump(L, WA);
     cce_run_body_handlers(L);
@@ -436,7 +436,7 @@ test_8_1 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** Interfaces "ccstructs_serialiserd_I" and "ccstructs_deserialiser_I".
+ ** Traits "ccstructs_serialiserd_T" and "ccstructs_deserialiser_T".
  ** ----------------------------------------------------------------- */
 
 void
@@ -454,11 +454,11 @@ test_9_1 (cce_destination_t upper_L)
   } else {
     /* Build the struct to be serialised. */
     A = ccname_new(my_coords_t, rec)(L, 1.0, 2.0);
-    ccstructs_init_and_register_handler(L, A_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone)(A));
+    ccstructs_init_and_register_handler(L, A_H, ccname_trait_new(ccstructs_dtor_T, my_coords_t, standalone)(A));
 
     {
-      /* Build the "serialise" interface. */
-      ccstructs_serialiser_I IS = ccname_iface_new(ccstructs_serialiser_I, my_coords_t)(A);
+      /* Build the "serialise" trait. */
+      ccstructs_serialiser_T IS = ccname_trait_new(ccstructs_serialiser_T, my_coords_t)(A);
 
       /* Allocate memory for the serialisation. */
       M = ccmem_block_malloc_guarded(L, M_H, ccmem_standard_allocator, ccstructs_serialiser_required_size(IS));
@@ -470,10 +470,10 @@ test_9_1 (cce_destination_t upper_L)
     {
       /* Build a struct to be target of deserialisation. */
       B = ccname_new(my_coords_t, deserialisable)(L);
-      ccstructs_init_and_register_handler(L, B_H, ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone)(B));
+      ccstructs_init_and_register_handler(L, B_H, ccname_trait_new(ccstructs_dtor_T, my_coords_t, standalone)(B));
 
-      /* Build the "deserialise" interface. */
-      ccstructs_deserialiser_I ID = ccname_iface_new(ccstructs_deserialiser_I, my_coords_t)(B);
+      /* Build the "deserialise" trait. */
+      ccstructs_deserialiser_T ID = ccname_trait_new(ccstructs_deserialiser_T, my_coords_t)(B);
 
       /* Deserialise the struct. */
       M_leftover = ccstructs_deserialiser_read(L, ID, M);
@@ -492,7 +492,7 @@ test_9_1 (cce_destination_t upper_L)
 int
 main (void)
 {
-  cctests_init("tests for interfaces on struct without methods table in the subject struct");
+  cctests_init("tests for traits on struct without methods table in the subject struct");
   {
     cctests_begin_group("allocation on the stack, no handlers");
     {
@@ -534,19 +534,19 @@ main (void)
     }
     cctests_end_group();
 
-    cctests_begin_group("printable interface");
+    cctests_begin_group("printable trait");
     {
       cctests_run(test_7_1);
     }
     cctests_end_group();
 
-    cctests_begin_group("dumpable interface");
+    cctests_begin_group("dumpable trait");
     {
       cctests_run(test_8_1);
     }
     cctests_end_group();
 
-    cctests_begin_group("serialise/deserialise interface");
+    cctests_begin_group("serialise/deserialise trait");
     {
       cctests_run(test_9_1);
     }

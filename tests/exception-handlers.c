@@ -66,10 +66,10 @@ ccname_final(one_t) (one_t * S)
 static ccstructs_core_destructor_fun_t	one_destructor;
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccstructs_dtor_I
-ccname_iface_new(ccstructs_dtor_I, one_t) (one_t const * const S)
+static inline ccstructs_dtor_T
+ccname_trait_new(ccstructs_dtor_T, one_t) (one_t const * const S)
 {
-  return ccname_new(ccstructs_dtor_I)(ccstructs_core(S), one_destructor);
+  return ccname_new(ccstructs_dtor_T)(ccstructs_core(S), one_destructor);
 }
 
 void
@@ -96,7 +96,7 @@ test_1_1 (cce_destination_t upper_L)
     one_t	S = {
       .pointer	= ccmem_std_malloc(L, 256)
     };
-    ccstructs_init_and_register_handler(L, I_H, ccname_iface_new(ccstructs_dtor_I, one_t)(&S));
+    ccstructs_init_and_register_handler(L, I_H, ccname_trait_new(ccstructs_dtor_T, one_t)(&S));
 
     memset(S.pointer, 123, 256);
     cce_run_body_handlers(L);
@@ -120,7 +120,7 @@ test_1_2 (cce_destination_t upper_L)
     one_t	S = {
       .pointer	= ccmem_std_malloc(L, 256)
     };
-    ccstructs_init_and_register_handler(L, I_H, ccname_iface_new(ccstructs_dtor_I, one_t)(&S));
+    ccstructs_init_and_register_handler(L, I_H, ccname_trait_new(ccstructs_dtor_T, one_t)(&S));
 
     memset(S.pointer, 123, 256);
     cce_raise(L, cctests_condition_new_signal_1());
@@ -171,10 +171,10 @@ ccname_delete(two_t) (two_t * S)
 static ccstructs_core_destructor_fun_t	two_destructor;
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccstructs_dtor_I
-ccname_iface_new(ccstructs_dtor_I, two_t) (two_t const * const S)
+static inline ccstructs_dtor_T
+ccname_trait_new(ccstructs_dtor_T, two_t) (two_t const * const S)
 {
-  return ccname_new(ccstructs_dtor_I)(ccstructs_core(S), two_destructor);
+  return ccname_new(ccstructs_dtor_T)(ccstructs_core(S), two_destructor);
 }
 
 void
@@ -192,7 +192,7 @@ two_t *
 ccname_new(two_t, guarded_clean) (cce_destination_t L, ccstructs_clean_handler_t * I_H, int init)
 {
   two_t * S = ccname_new(two_t)(L, init);
-  ccstructs_init_and_register_handler(L, I_H, ccname_iface_new(ccstructs_dtor_I, two_t)(S));
+  ccstructs_init_and_register_handler(L, I_H, ccname_trait_new(ccstructs_dtor_T, two_t)(S));
   return S;
 }
 
@@ -200,7 +200,7 @@ two_t *
 ccname_new(two_t, guarded_error) (cce_destination_t L, ccstructs_error_handler_t * I_H, int init)
 {
   two_t * S = ccname_new(two_t)(L, init);
-  ccstructs_init_and_register_handler(L, I_H, ccname_iface_new(ccstructs_dtor_I, two_t)(S));
+  ccstructs_init_and_register_handler(L, I_H, ccname_trait_new(ccstructs_dtor_T, two_t)(S));
   return S;
 }
 
@@ -222,7 +222,7 @@ test_2_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     two_t * S = ccname_new(two_t)(L, 123);
-    ccstructs_init_and_register_handler(L, I_H, ccname_iface_new(ccstructs_dtor_I, two_t)(S));
+    ccstructs_init_and_register_handler(L, I_H, ccname_trait_new(ccstructs_dtor_T, two_t)(S));
 
     cce_run_body_handlers(L);
   }
@@ -243,7 +243,7 @@ test_2_2 (cce_destination_t upper_L)
     }
   } else {
     two_t * S = ccname_new(two_t)(L, 123);
-    ccstructs_init_and_register_handler(L, I_H, ccname_iface_new(ccstructs_dtor_I, two_t)(S));
+    ccstructs_init_and_register_handler(L, I_H, ccname_trait_new(ccstructs_dtor_T, two_t)(S));
 
     cce_raise(L, cctests_condition_new_signal_1());
     cce_run_body_handlers(L);

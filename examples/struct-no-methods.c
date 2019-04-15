@@ -5,12 +5,12 @@
 
   Abstract
 
-	This  body   file  implements  functions   and  interfaces  for   the  struct
+	This  body   file  implements  functions   and  traits  for   the  struct
 	"my_coords_t".  "my_coords_t"  is a  simple struct  with embedded  fields, no
 	pointers to external memory blocks.
 
 	The  "struct-no-methods" example  shows how  to implement  a struct  using no
-	methods table for the struct-specific interface constructors.
+	methods table for the struct-specific trait constructors.
 
   Copyright (C) 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -234,15 +234,15 @@ my_coords_register_error_handler_delete (cce_destination_t L, cce_error_handler_
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_dtor_I": implementation for embedded "my_coords_t".
+ ** Trait "ccstructs_dtor_T": implementation for embedded "my_coords_t".
  ** ----------------------------------------------------------------- */
 
 static ccstructs_core_destructor_fun_t	my_coords_embedded_destructor;
 
-ccstructs_dtor_I
-ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded) (my_coords_t const * const self)
+ccstructs_dtor_T
+ccname_trait_new(ccstructs_dtor_T, my_coords_t, embedded) (my_coords_t const * const self)
 {
-  return ccname_new(ccstructs_dtor_I)(ccstructs_core(self), my_coords_embedded_destructor);
+  return ccname_new(ccstructs_dtor_T)(ccstructs_core(self), my_coords_embedded_destructor);
 }
 
 /* ------------------------------------------------------------------ */
@@ -258,15 +258,15 @@ my_coords_embedded_destructor (ccstructs_core_t * S)
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_dtor_I": implementation for standalone "my_coords_t".
+ ** Trait "ccstructs_dtor_T": implementation for standalone "my_coords_t".
  ** ----------------------------------------------------------------- */
 
 static ccstructs_core_destructor_fun_t	my_coords_standalone_destructor;
 
-ccstructs_dtor_I
-ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone) (my_coords_t const * const self)
+ccstructs_dtor_T
+ccname_trait_new(ccstructs_dtor_T, my_coords_t, standalone) (my_coords_t const * const self)
 {
-  return ccname_new(ccstructs_dtor_I)(ccstructs_core(self), my_coords_standalone_destructor);
+  return ccname_new(ccstructs_dtor_T)(ccstructs_core(self), my_coords_standalone_destructor);
 }
 
 /* ------------------------------------------------------------------ */
@@ -282,23 +282,23 @@ my_coords_standalone_destructor (ccstructs_core_t * S)
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_dumpable_I": implementation for "my_coords_t".
+ ** Trait "ccstructs_dumpable_T": implementation for "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_dumpable_I, dump)  ccname_iface_method(ccstructs_dumpable_I, my_coords_t, dump);
+static ccname_trait_method_type(ccstructs_dumpable_T, dump)  ccname_trait_method(ccstructs_dumpable_T, my_coords_t, dump);
 
-static ccname_iface_table_type(ccstructs_dumpable_I) const ccname_iface_table(ccstructs_dumpable_I, my_coords_t) = {
-  .dump	= ccname_iface_method(ccstructs_dumpable_I, my_coords_t, dump)
+static ccname_trait_table_type(ccstructs_dumpable_T) const ccname_trait_table(ccstructs_dumpable_T, my_coords_t) = {
+  .dump	= ccname_trait_method(ccstructs_dumpable_T, my_coords_t, dump)
 };
 
-ccstructs_dumpable_I
-ccname_iface_new(ccstructs_dumpable_I, my_coords_t) (my_coords_t const * S)
+ccstructs_dumpable_T
+ccname_trait_new(ccstructs_dumpable_T, my_coords_t) (my_coords_t const * S)
 {
-  return ccname_new(ccstructs_dumpable_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_dumpable_I, my_coords_t));
+  return ccname_new(ccstructs_dumpable_T)(ccstructs_core(S), &ccname_trait_table(ccstructs_dumpable_T, my_coords_t));
 }
 
 void
-ccname_iface_method(ccstructs_dumpable_I, my_coords_t, dump) (cce_destination_t L, ccstructs_dumpable_I I)
+ccname_trait_method(ccstructs_dumpable_T, my_coords_t, dump) (cce_destination_t L, ccstructs_dumpable_T I)
 {
   CCSTRUCTS_PC(my_coords_t, S, ccstructs_dumpable_self(I));
   int	rv;
@@ -312,41 +312,41 @@ ccname_iface_method(ccstructs_dumpable_I, my_coords_t, dump) (cce_destination_t 
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_serialise_I": implementation for "my_coords_t".
+ ** Trait "ccstructs_serialise_T": implementation for "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_serialiser_I, required_size)
-  ccname_iface_method(ccstructs_serialiser_I, my_coords_t, required_size);
-static ccname_iface_method_type(ccstructs_serialiser_I, write)
-  ccname_iface_method(ccstructs_serialiser_I, my_coords_t, write);
+static ccname_trait_method_type(ccstructs_serialiser_T, required_size)
+  ccname_trait_method(ccstructs_serialiser_T, my_coords_t, required_size);
+static ccname_trait_method_type(ccstructs_serialiser_T, write)
+  ccname_trait_method(ccstructs_serialiser_T, my_coords_t, write);
 
-/* Interface  table  of  methods.    Implementation  of  "ccstructs_serialiser_I"  for
+/* Trait  table  of  methods.    Implementation  of  "ccstructs_serialiser_T"  for
    "my_coords_t". */
-static ccname_iface_table_type(ccstructs_serialiser_I) const ccname_iface_table(ccstructs_serialiser_I, my_coords_t) = {
-  .required_size = ccname_iface_method(ccstructs_serialiser_I, my_coords_t, required_size),
-  .write         = ccname_iface_method(ccstructs_serialiser_I, my_coords_t, write),
+static ccname_trait_table_type(ccstructs_serialiser_T) const ccname_trait_table(ccstructs_serialiser_T, my_coords_t) = {
+  .required_size = ccname_trait_method(ccstructs_serialiser_T, my_coords_t, required_size),
+  .write         = ccname_trait_method(ccstructs_serialiser_T, my_coords_t, write),
 };
 
-ccstructs_serialiser_I
-ccname_iface_new(ccstructs_serialiser_I, my_coords_t) (my_coords_t const * S)
-/* Interface   constructor.   Build   an  instance   of  "ccstructs_serialiser_I"   as
+ccstructs_serialiser_T
+ccname_trait_new(ccstructs_serialiser_T, my_coords_t) (my_coords_t const * S)
+/* Trait   constructor.   Build   an  instance   of  "ccstructs_serialiser_T"   as
    implemented by "my_coords_t". */
 {
-  return ccname_new(ccstructs_serialiser_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_serialiser_I, my_coords_t));
+  return ccname_new(ccstructs_serialiser_T)(ccstructs_core(S), &ccname_trait_table(ccstructs_serialiser_T, my_coords_t));
 }
 
 /* ------------------------------------------------------------------ */
 
 size_t
-ccname_iface_method(ccstructs_serialiser_I, my_coords_t, required_size) (ccstructs_serialiser_I I CCSTRUCTS_UNUSED)
+ccname_trait_method(ccstructs_serialiser_T, my_coords_t, required_size) (ccstructs_serialiser_T I CCSTRUCTS_UNUSED)
 {
   return sizeof(serialised_my_coords_t);
 }
 
 ccmem_block_t
-ccname_iface_method(ccstructs_serialiser_I, my_coords_t,
-		    write) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialiser_I I, ccmem_block_t B)
-/* Interface  method implementation.   Serialise an  instance of  "my_coords_t" in  the
+ccname_trait_method(ccstructs_serialiser_T, my_coords_t,
+		    write) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialiser_T I, ccmem_block_t B)
+/* Trait  method implementation.   Serialise an  instance of  "my_coords_t" in  the
    memory block "B". */
 {
   CCSTRUCTS_PC(my_coords_t const, S, ccstructs_serialiser_self(I));
@@ -363,33 +363,33 @@ ccname_iface_method(ccstructs_serialiser_I, my_coords_t,
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_deserialise_I": implementation for "my_coords_t".
+ ** Trait "ccstructs_deserialise_T": implementation for "my_coords_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_deserialiser_I, required_size)
-  ccname_iface_method(ccstructs_deserialiser_I, my_coords_t, required_size);
-static ccname_iface_method_type(ccstructs_deserialiser_I, read)
-  ccname_iface_method(ccstructs_deserialiser_I, my_coords_t, read);
+static ccname_trait_method_type(ccstructs_deserialiser_T, required_size)
+  ccname_trait_method(ccstructs_deserialiser_T, my_coords_t, required_size);
+static ccname_trait_method_type(ccstructs_deserialiser_T, read)
+  ccname_trait_method(ccstructs_deserialiser_T, my_coords_t, read);
 
-/* Interface  table  of  methods.  Implementation  of  "ccstructs_deserialiser_I"  for
+/* Trait  table  of  methods.  Implementation  of  "ccstructs_deserialiser_T"  for
    "my_coords_t". */
-static ccname_iface_table_type(ccstructs_deserialiser_I) const ccname_iface_table(ccstructs_deserialiser_I, my_coords_t) = {
-  .required_size = ccname_iface_method(ccstructs_deserialiser_I, my_coords_t, required_size),
-  .read          = ccname_iface_method(ccstructs_deserialiser_I, my_coords_t, read)
+static ccname_trait_table_type(ccstructs_deserialiser_T) const ccname_trait_table(ccstructs_deserialiser_T, my_coords_t) = {
+  .required_size = ccname_trait_method(ccstructs_deserialiser_T, my_coords_t, required_size),
+  .read          = ccname_trait_method(ccstructs_deserialiser_T, my_coords_t, read)
 };
 
-ccstructs_deserialiser_I
-ccname_iface_new(ccstructs_deserialiser_I, my_coords_t) (my_coords_t * S)
-/* Interface  constructor.    Build  an  instance  of   "ccstructs_deserialiser_I"  as
+ccstructs_deserialiser_T
+ccname_trait_new(ccstructs_deserialiser_T, my_coords_t) (my_coords_t * S)
+/* Trait  constructor.    Build  an  instance  of   "ccstructs_deserialiser_T"  as
    implemented by "my_coords_t". */
 {
-  return ccname_new(ccstructs_deserialiser_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_deserialiser_I, my_coords_t));
+  return ccname_new(ccstructs_deserialiser_T)(ccstructs_core(S), &ccname_trait_table(ccstructs_deserialiser_T, my_coords_t));
 }
 
 /* ------------------------------------------------------------------ */
 
 size_t
-ccname_iface_method(ccstructs_deserialiser_I, my_coords_t, required_size) (ccstructs_deserialiser_I I CCSTRUCTS_UNUSED)
+ccname_trait_method(ccstructs_deserialiser_T, my_coords_t, required_size) (ccstructs_deserialiser_T I CCSTRUCTS_UNUSED)
 /* Return the minimum number of bytes  required to hold the serialised representation
    of "my_coords_t".*/
 {
@@ -397,9 +397,9 @@ ccname_iface_method(ccstructs_deserialiser_I, my_coords_t, required_size) (ccstr
 }
 
 ccmem_block_t
-ccname_iface_method(ccstructs_deserialiser_I, my_coords_t,
-		    read) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_deserialiser_I I, ccmem_block_t B)
-/* Interface method implementation.  Dedeserialise  an instance of "my_coords_t" from
+ccname_trait_method(ccstructs_deserialiser_T, my_coords_t,
+		    read) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_deserialiser_T I, ccmem_block_t B)
+/* Trait method implementation.  Dedeserialise  an instance of "my_coords_t" from
    the memory block "B". */
 {
   CCSTRUCTS_PC(my_coords_t, S, ccstructs_deserialiser_self(I));
@@ -416,24 +416,24 @@ ccname_iface_method(ccstructs_deserialiser_I, my_coords_t,
 
 
 /** --------------------------------------------------------------------
- ** Interface "my_printable_I": implementation for "my_coords_t".
+ ** Trait "my_printable_T": implementation for "my_coords_t".
  ** ----------------------------------------------------------------- */
 
 static void my_printable_fprintf (cce_destination_t L, FILE * stream, char const * format, ...)
   __attribute__((__format__(printf,3,4)));
 
-static ccname_iface_method_type(my_printable_I, print)  ccname_iface_method(my_printable_I, my_coords_t, print_rec);
-static ccname_iface_method_type(my_printable_I, print)  ccname_iface_method(my_printable_I, my_coords_t, print_pol);
+static ccname_trait_method_type(my_printable_T, print)  ccname_trait_method(my_printable_T, my_coords_t, print_rec);
+static ccname_trait_method_type(my_printable_T, print)  ccname_trait_method(my_printable_T, my_coords_t, print_pol);
 
-static ccname_iface_table_type(my_printable_I) const ccname_iface_table(my_printable_I, my_coords_t) = {
-  .print_rec	= ccname_iface_method(my_printable_I, my_coords_t, print_rec),
-  .print_pol	= ccname_iface_method(my_printable_I, my_coords_t, print_pol)
+static ccname_trait_table_type(my_printable_T) const ccname_trait_table(my_printable_T, my_coords_t) = {
+  .print_rec	= ccname_trait_method(my_printable_T, my_coords_t, print_rec),
+  .print_pol	= ccname_trait_method(my_printable_T, my_coords_t, print_pol)
 };
 
-my_printable_I
-ccname_iface_new(my_printable_I, my_coords_t) (my_coords_t const * S)
+my_printable_T
+ccname_trait_new(my_printable_T, my_coords_t) (my_coords_t const * S)
 {
-  return ccname_new(my_printable_I)(ccstructs_core(S), &ccname_iface_table(my_printable_I, my_coords_t));
+  return ccname_new(my_printable_T)(ccstructs_core(S), &ccname_trait_table(my_printable_T, my_coords_t));
 }
 
 void
@@ -454,7 +454,7 @@ my_printable_fprintf (cce_destination_t L, FILE * stream, char const * format, .
 }
 
 void
-ccname_iface_method(my_printable_I, my_coords_t, print_rec) (cce_destination_t L, my_printable_I I, FILE * stream)
+ccname_trait_method(my_printable_T, my_coords_t, print_rec) (cce_destination_t L, my_printable_T I, FILE * stream)
 {
   CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
 
@@ -462,7 +462,7 @@ ccname_iface_method(my_printable_I, my_coords_t, print_rec) (cce_destination_t L
 }
 
 void
-ccname_iface_method(my_printable_I, my_coords_t, print_pol) (cce_destination_t L, my_printable_I I, FILE * stream)
+ccname_trait_method(my_printable_T, my_coords_t, print_pol) (cce_destination_t L, my_printable_T I, FILE * stream)
 {
   CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
   double	RHO   = hypot(S->X, S->Y);

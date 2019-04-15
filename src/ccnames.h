@@ -38,8 +38,8 @@
 extern "C" {
 #endif
 
-/* The  macro  CCNAMES_UNUSED  indicates  that a  function,  function
-   argument or variable may potentially be unused. Usage examples:
+/* The macro CCNAMES_UNUSED indicates that  a function, function argument or variable
+   may potentially be unused. Usage examples:
 
    static int unused_function (char arg) CCNAMES_UNUSED;
    int foo (char unused_argument CCNAMES_UNUSED);
@@ -56,8 +56,8 @@ extern "C" {
  ** Variadic macros mechanism.
  ** ----------------------------------------------------------------- */
 
-/* The  following  macros are  adapted  from  Stack Overflow  (URL  last
- * accessed Jan 2, 2019):
+/* The following  macros are adapted  from Stack Overflow  (URL last accessed  Jan 2,
+ * 2019):
  *
  *   <https://stackoverflow.com/a/26408195>
  */
@@ -107,49 +107,43 @@ extern "C" {
  ** Construction of automatically generated names.
  ** ----------------------------------------------------------------- */
 
-/* Given   a  struct   type  name   and  a   (possibly  empty)   variant
-   specification: expand into the name of the API function "new()". */
+/* Given a struct type name and a (possibly empty) variant specification: expand into
+   the name of the API function "new()". */
 #define _CCNAME_NEW(STRUCT_TYPE, VARIANT)	STRUCT_TYPE ## __ ## VARIANT ## __new
 
-/* Given a  struct type name: expand  into the name of  the API function
-   "delete()". */
+/* Given a struct type name: expand into the name of the API function "delete()". */
 #define _CCNAME_DELETE(STRUCT_TYPE)		STRUCT_TYPE ## __delete
 
-/* Given   a  struct   type  name   and  a   (possibly  empty)   variant
-   specification: expand into the name of the API function "init()". */
+/* Given a struct type name and a (possibly empty) variant specification: expand into
+   the name of the API function "init()". */
 #define _CCNAME_INIT(STRUCT_TYPE, VARIANT)	STRUCT_TYPE ## __ ## VARIANT ## __init
 
-/* Given a  struct type name: expand  into the name of  the API function
-   "final()". */
+/* Given a struct type name: expand into the name of the API function "final()". */
 #define _CCNAME_FINAL(STRUCT_TYPE)		STRUCT_TYPE ## __final
 
 /* Given a struct type name and a (possibly empty) variant specification: expand into
    the name of the API function "alloc()". */
 #define _CCNAME_ALLOC(STRUCT_TYPE, VARIANT)	STRUCT_TYPE ## __ ## VARIANT ## __alloc
 
-/* Given a  struct type name: expand  into the name of  the API function
-   "release()". */
+/* Given a struct type name: expand into the name of the API function "release()". */
 #define _CCNAME_RELEASE(STRUCT_TYPE)		STRUCT_TYPE ## __release
 
-/* Given a struct type name an a (possibly empty) variant specification:
-   expand  into the  name  of  the methods  table  type  for the  struct
-   type. */
+/* Given a struct type name an  a (possibly empty) variant specification: expand into
+   the name of the methods table type for the struct type. */
 #define _CCNAME_TABLE_TYPE(STRUCT_TYPE, VARIANT) STRUCT_TYPE ## __ ## VARIANT ## __methods_table_t
 
-/* Given   a  struct   type  name   and  a   (possibly  empty)   variant
-   specification: expand  into the  name of the  methods table  for that
-   type. */
+/* Given a struct type name and a (possibly empty) variant specification: expand into
+   the name of the methods table for that type. */
 #define _CCNAME_TABLE(STRUCT_TYPE, VARIANT)	STRUCT_TYPE ## __ ## VARIANT ## __methods_table
 
-/* Given a struct  type name, a (possibly  empty) variant specification,
-   and a method name:  expand into the type name of  that variant of the
-   method function for the struct type. */
+/* Given a struct  type name, a (possibly empty) variant  specification, and a method
+   name: expand  into the type name  of that variant  of the method function  for the
+   struct type. */
 #define _CCNAME_METHOD_TYPE(STRUCT_TYPE, VARIANT, METHOD_NAME)	\
   STRUCT_TYPE ## __ ## VARIANT ## __method__ ## METHOD_NAME ## __fun_t
 
-/* Given a struct  type name, a (possibly  empty) variant specification,
-   and  a method  name: expand  into  the name  of the  method for  that
-   type. */
+/* Given a struct  type name, a (possibly empty) variant  specification, and a method
+   name: expand into the name of the method for that type. */
 #define _CCNAME_METHOD(STRUCT_TYPE, VARIANT, METHOD_NAME) STRUCT_TYPE ## __ ## VARIANT ## __method__ ## METHOD_NAME
 
 
@@ -157,8 +151,8 @@ extern "C" {
  ** Automatically generated names API: data structs.
  ** ----------------------------------------------------------------- */
 
-/* Given  a struct  type  name and  an  optional variant  specification:
-   expand into the name of the API function "new()". */
+/* Given a  struct type name and  an optional variant specification:  expand into the
+   name of the API function "new()". */
 #define ccname_new_1(STRUCT_TYPE)				\
   _CCNAME_NEW(STRUCT_TYPE, )
 #define ccname_new_2(STRUCT_TYPE, VARIANT)			\
@@ -170,12 +164,11 @@ extern "C" {
 #define ccname_new(...)						\
   _CCNAMES_VFUNC(ccname_new, __VA_ARGS__)
 
-/* Given a  struct type name: expand  into the name of  the API function
-   "delete()". */
+/* Given a struct type name: expand into the name of the API function "delete()". */
 #define ccname_delete(STRUCT_TYPE)		_CCNAME_DELETE(STRUCT_TYPE)
 
-/* Given  a struct  type  name and  an  optional variant  specification:
-   expand into the name of the API function "init()". */
+/* Given a  struct type name and  an optional variant specification:  expand into the
+   name of the API function "init()". */
 #define ccname_init_1(STRUCT_TYPE)				\
   _CCNAME_INIT(STRUCT_TYPE, )
 #define ccname_init_2(STRUCT_TYPE, VARIANT)			\
@@ -187,8 +180,7 @@ extern "C" {
 #define ccname_init(...)					\
   _CCNAMES_VFUNC(ccname_init, __VA_ARGS__)
 
-/* Given a  struct type name: expand  into the name of  the API function
-   "final()". */
+/* Given a struct type name: expand into the name of the API function "final()". */
 #define ccname_final(STRUCT_TYPE)		_CCNAME_FINAL(STRUCT_TYPE)
 
 /* Given a  struct type name and  an optional variant specification:  expand into the
@@ -197,8 +189,7 @@ extern "C" {
 #define ccname_alloc_2(STRUCT_TYPE, VARIANT)	_CCNAME_ALLOC(STRUCT_TYPE, VARIANT)
 #define ccname_alloc(...)			_CCNAMES_VFUNC(ccname_alloc, __VA_ARGS__)
 
-/* Given a  struct type name: expand  into the name of  the API function
-   "release()". */
+/* Given a struct type name: expand into the name of the API function "release()". */
 #define ccname_release(STRUCT_TYPE)		_CCNAME_RELEASE(STRUCT_TYPE)
 
 
@@ -206,123 +197,116 @@ extern "C" {
  ** Automatically generated names API: methods table for data structs.
  ** ----------------------------------------------------------------- */
 
-/* Given a struct  type name: expand into the name  of the methods table
-   type for the struct type. */
+/* Given a struct type  name: expand into the name of the methods  table type for the
+   struct type. */
 #define ccname_table_type_1(STRUCT_TYPE)	_CCNAME_TABLE_TYPE(STRUCT_TYPE, )
 #define ccname_table_type_2(STRUCT_TYPE, VARIANT) _CCNAME_TABLE_TYPE(STRUCT_TYPE, VARIANT)
 #define ccname_table_type(...)			_CCNAMES_VFUNC(ccname_table_type, __VA_ARGS__)
 
-/* Given  a struct  type  name and  an  optional variant  specification:
-   expand into the name of the methods table for that type. */
+/* Given a  struct type name and  an optional variant specification:  expand into the
+   name of the methods table for that type. */
 #define ccname_table_1(STRUCT_TYPE)		_CCNAME_TABLE(STRUCT_TYPE, )
 #define ccname_table_2(STRUCT_TYPE, VARIANT)	_CCNAME_TABLE(STRUCT_TYPE, VARIANT)
 #define ccname_table(...)			_CCNAMES_VFUNC(ccname_table, __VA_ARGS__)
 
-/* Given a  struct type name,  an optional variant specification,  and a
-   method name: expand into the type  name of that variant of the method
-   function for the struct type. */
+/* Given a  struct type name, an  optional variant specification, and  a method name:
+   expand into the  type name of that  variant of the method function  for the struct
+   type. */
 #define ccname_method_type_2(STRUCT_TYPE,          METHOD_NAME)	_CCNAME_METHOD_TYPE(STRUCT_TYPE,        , METHOD_NAME)
 #define ccname_method_type_3(STRUCT_TYPE, VARIANT, METHOD_NAME)	_CCNAME_METHOD_TYPE(STRUCT_TYPE, VARIANT, METHOD_NAME)
 #define ccname_method_type(...)			_CCNAMES_VFUNC(ccname_method_type, __VA_ARGS__)
 
-/* Given a  struct type name,  an optional variant specification,  and a
-   method name: expand into the name of the method for that type. */
+/* Given a  struct type name, an  optional variant specification, and  a method name:
+   expand into the name of the method for that type. */
 #define ccname_method_2(STRUCT_TYPE,          METHOD_NAME)	_CCNAME_METHOD(STRUCT_TYPE,        , METHOD_NAME)
 #define ccname_method_3(STRUCT_TYPE, VARIANT, METHOD_NAME)	_CCNAME_METHOD(STRUCT_TYPE, VARIANT, METHOD_NAME)
 #define ccname_method(...)					_CCNAMES_VFUNC(ccname_method, __VA_ARGS__)
 
 
 /** --------------------------------------------------------------------
- ** Automatically generated names API: interface structs.
+ ** Automatically generated names API: trait structs.
  ** ----------------------------------------------------------------- */
 
-/* Given an  interface type name,  a (possibly empty) struct  type name,
-   and  a  (possibly  empty)  variant  specification:  expand  into  the
-   function  type  of the  selected  variant  of interface  constructors
-   implemented by the struct type. */
-#define _CCNAME_IFACE_NEW_TYPE(IFACE_TYPE, STRUCT_TYPE, VARIANT)	\
-  IFACE_TYPE ## __ ## STRUCT_TYPE ## __ ## VARIANT ## __new__fun_t
+/* Given an  trait type name,  a (possibly empty) struct  type name, and  a (possibly
+   empty)  variant specification:  expand  into  the function  type  of the  selected
+   variant of trait constructors implemented by the struct type. */
+#define _CCNAME_TRAIT_NEW_TYPE(TRAIT_TYPE, STRUCT_TYPE, VARIANT)	\
+  TRAIT_TYPE ## __ ## STRUCT_TYPE ## __ ## VARIANT ## __new__fun_t
 
-/* Given an  interface type name,  a struct  type name, and  a (possibly
-   empty)  variant  specification:  expand  into the  name  of  the  API
-   function "new()"  used to instantiate  that variant of  the interface
-   type for that struct type. */
-#define _CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, VARIANT)	\
-  _CCNAME_NEW(IFACE_TYPE ## __ ## STRUCT_TYPE, VARIANT)
+/* Given an  trait type  name, a  struct type  name, and  a (possibly  empty) variant
+   specification:  expand  into  the  name  of  the  API  function  "new()"  used  to
+   instantiate that variant of the trait type for that struct type. */
+#define _CCNAME_TRAIT_NEW(TRAIT_TYPE, STRUCT_TYPE, VARIANT)	\
+  _CCNAME_NEW(TRAIT_TYPE ## __ ## STRUCT_TYPE, VARIANT)
 
-/* Given an interface  type name and an  optional variant specification:
-   expand into  the name  of the  methods table  type for  the interface
-   type. */
-#define _CCNAME_IFACE_TABLE_TYPE(IFACE_TYPE, VARIANT)		\
-  _CCNAME_TABLE_TYPE(IFACE_TYPE, VARIANT)
+/* Given an  trait type name and  an optional variant specification:  expand into the
+   name of the methods table type for the trait type. */
+#define _CCNAME_TRAIT_TABLE_TYPE(TRAIT_TYPE, VARIANT)		\
+  _CCNAME_TABLE_TYPE(TRAIT_TYPE, VARIANT)
 
-/* Given an  interface type name,  a struct  type name, and  a (possibly
-   empty) variant  specification: expand  into the  name of  the methods
-   table for that variant of the interface implementation for the struct
-   type. */
-#define _CCNAME_IFACE_TABLE(IFACE_TYPE, STRUCT_TYPE, VARIANT)	\
-  _CCNAME_TABLE(IFACE_TYPE ## __ ## STRUCT_TYPE, VARIANT)
+/* Given an  trait type  name, a  struct type  name, and  a (possibly  empty) variant
+   specification: expand into the  name of the methods table for  that variant of the
+   trait implementation for the struct type. */
+#define _CCNAME_TRAIT_TABLE(TRAIT_TYPE, STRUCT_TYPE, VARIANT)	\
+  _CCNAME_TABLE(TRAIT_TYPE ## __ ## STRUCT_TYPE, VARIANT)
 
-/* Given   an  interface   type   name,  a   (possibly  empty)   variant
-   specification, and  a method name: expand  into the type name  of the
-   method function for that variant of the interface implementation. */
-#define _CCNAME_IFACE_METHOD_TYPE(IFACE_TYPE, VARIANT, METHOD_NAME)	\
-  IFACE_TYPE ## __ ## VARIANT ## __method__ ## METHOD_NAME ## __fun_t
+/* Given an trait  type name, a (possibly empty) variant  specification, and a method
+   name: expand  into the type name  of the method  function for that variant  of the
+   trait implementation. */
+#define _CCNAME_TRAIT_METHOD_TYPE(TRAIT_TYPE, VARIANT, METHOD_NAME)	\
+  TRAIT_TYPE ## __ ## VARIANT ## __method__ ## METHOD_NAME ## __fun_t
 
-/* Given an interface type name, a  struct type name, a (possibly empty)
-   variant specification, and a method name: expand into the name of the
-   method function for that variant  of the interface implementation for
-   the struct type. */
-#define _CCNAME_IFACE_METHOD(IFACE_TYPE, STRUCT_TYPE, VARIANT, METHOD_NAME)	\
-  IFACE_TYPE ## __ ## STRUCT_TYPE ## __ ## VARIANT ## __method__ ## METHOD_NAME
+/* Given  an  trait  type name,  a  struct  type  name,  a (possibly  empty)  variant
+   specification, and a method name: expand into  the name of the method function for
+   that variant of the trait implementation for the struct type. */
+#define _CCNAME_TRAIT_METHOD(TRAIT_TYPE, STRUCT_TYPE, VARIANT, METHOD_NAME)	\
+  TRAIT_TYPE ## __ ## STRUCT_TYPE ## __ ## VARIANT ## __method__ ## METHOD_NAME
 
 /* ------------------------------------------------------------------ */
 
-/* Given an  interface type name,  an optional  struct type name  and an
-   optional  variant specification:  expand  into the  function type  of
-   interface implementation constructors. */
-#define ccname_iface_new_type_1(IFACE_TYPE)				_CCNAME_IFACE_NEW_TYPE(IFACE_TYPE,,)
-#define ccname_iface_new_type_2(IFACE_TYPE, STRUCT_TYPE)		_CCNAME_IFACE_NEW_TYPE(IFACE_TYPE, STRUCT_TYPE,)
-#define ccname_iface_new_type_3(IFACE_TYPE, STRUCT_TYPE, VARIANT)	_CCNAME_IFACE_NEW_TYPE(IFACE_TYPE, STRUCT_TYPE, VARIANT)
-#define ccname_iface_new_type(...)					_CCNAMES_VFUNC(ccname_iface_new_type, __VA_ARGS__)
+/* Given an  trait type name,  an optional struct type  name and an  optional variant
+   specification:   expand   into  the   function   type   of  trait   implementation
+   constructors. */
+#define ccname_trait_new_type_1(TRAIT_TYPE)				_CCNAME_TRAIT_NEW_TYPE(TRAIT_TYPE,,)
+#define ccname_trait_new_type_2(TRAIT_TYPE, STRUCT_TYPE)		_CCNAME_TRAIT_NEW_TYPE(TRAIT_TYPE, STRUCT_TYPE,)
+#define ccname_trait_new_type_3(TRAIT_TYPE, STRUCT_TYPE, VARIANT)	_CCNAME_TRAIT_NEW_TYPE(TRAIT_TYPE, STRUCT_TYPE, VARIANT)
+#define ccname_trait_new_type(...)					_CCNAMES_VFUNC(ccname_trait_new_type, __VA_ARGS__)
 
-/* Given an interface type name, a struct type name, an optional variant
-   specification: expand into the name  of the API function "new()" that
-   instantiates that variant of the interface for the struct. */
-#define ccname_iface_new_2(IFACE_TYPE, STRUCT_TYPE)		_CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, )
-#define ccname_iface_new_3(IFACE_TYPE, STRUCT_TYPE, VARIANT)	_CCNAME_IFACE_NEW(IFACE_TYPE, STRUCT_TYPE, VARIANT)
-#define ccname_iface_new(...)					_CCNAMES_VFUNC(ccname_iface_new, __VA_ARGS__)
+/* Given an trait  type name, a struct type name,  an optional variant specification:
+   expand into the name of the API function "new()" that instantiates that variant of
+   the trait for the struct. */
+#define ccname_trait_new_2(TRAIT_TYPE, STRUCT_TYPE)		_CCNAME_TRAIT_NEW(TRAIT_TYPE, STRUCT_TYPE, )
+#define ccname_trait_new_3(TRAIT_TYPE, STRUCT_TYPE, VARIANT)	_CCNAME_TRAIT_NEW(TRAIT_TYPE, STRUCT_TYPE, VARIANT)
+#define ccname_trait_new(...)					_CCNAMES_VFUNC(ccname_trait_new, __VA_ARGS__)
 
-/* Given an interface  type name and an  optional variant specification:
-   expand into  the name  of the  methods table  type for  the interface
-   type. */
-#define ccname_iface_table_type_1(IFACE_TYPE)		_CCNAME_IFACE_TABLE_TYPE(IFACE_TYPE, )
-#define ccname_iface_table_type_2(IFACE_TYPE, VARIANT)	_CCNAME_IFACE_TABLE_TYPE(IFACE_TYPE, VARIANT)
-#define ccname_iface_table_type(...)			_CCNAMES_VFUNC(ccname_iface_table_type, __VA_ARGS__)
+/* Given an  trait type name and  an optional variant specification:  expand into the
+   name of the methods table type for the trait type. */
+#define ccname_trait_table_type_1(TRAIT_TYPE)		_CCNAME_TRAIT_TABLE_TYPE(TRAIT_TYPE, )
+#define ccname_trait_table_type_2(TRAIT_TYPE, VARIANT)	_CCNAME_TRAIT_TABLE_TYPE(TRAIT_TYPE, VARIANT)
+#define ccname_trait_table_type(...)			_CCNAMES_VFUNC(ccname_trait_table_type, __VA_ARGS__)
 
-/* Given an  interface type name,  a struct  type name, and  an optional
-   variant specification: expand into the  name of the methods table for
-   that variant of the interface implementation for the struct type. */
-#define ccname_iface_table_2(IFACE_TYPE, STRUCT_TYPE)		_CCNAME_IFACE_TABLE(IFACE_TYPE, STRUCT_TYPE, )
-#define ccname_iface_table_3(IFACE_TYPE, STRUCT_TYPE, VARIANT)	_CCNAME_IFACE_TABLE(IFACE_TYPE, STRUCT_TYPE, VARIANT)
-#define ccname_iface_table(...)					_CCNAMES_VFUNC(ccname_iface_table, __VA_ARGS__)
+/* Given  an  trait  type  name,  a   struct  type  name,  and  an  optional  variant
+   specification: expand into the  name of the methods table for  that variant of the
+   trait implementation for the struct type. */
+#define ccname_trait_table_2(TRAIT_TYPE, STRUCT_TYPE)		_CCNAME_TRAIT_TABLE(TRAIT_TYPE, STRUCT_TYPE, )
+#define ccname_trait_table_3(TRAIT_TYPE, STRUCT_TYPE, VARIANT)	_CCNAME_TRAIT_TABLE(TRAIT_TYPE, STRUCT_TYPE, VARIANT)
+#define ccname_trait_table(...)					_CCNAMES_VFUNC(ccname_trait_table, __VA_ARGS__)
 
-/* Given an interface type name,  an optional variant specification, and
-   a method name:  expand into the type name of  the method function for
-   that variant of the interface implementation. */
-#define ccname_iface_method_type_2(IFACE_TYPE,          METHOD_NAME)	_CCNAME_IFACE_METHOD_TYPE(IFACE_TYPE,        , METHOD_NAME)
-#define ccname_iface_method_type_3(IFACE_TYPE, VARIANT, METHOD_NAME)	_CCNAME_IFACE_METHOD_TYPE(IFACE_TYPE, VARIANT, METHOD_NAME)
-#define ccname_iface_method_type(...)				_CCNAMES_VFUNC(ccname_iface_method_type, __VA_ARGS__)
+/* Given an  trait type name, an  optional variant specification, and  a method name:
+   expand into  the type name of  the method function  for that variant of  the trait
+   implementation. */
+#define ccname_trait_method_type_2(TRAIT_TYPE,          METHOD_NAME)	_CCNAME_TRAIT_METHOD_TYPE(TRAIT_TYPE,        , METHOD_NAME)
+#define ccname_trait_method_type_3(TRAIT_TYPE, VARIANT, METHOD_NAME)	_CCNAME_TRAIT_METHOD_TYPE(TRAIT_TYPE, VARIANT, METHOD_NAME)
+#define ccname_trait_method_type(...)				_CCNAMES_VFUNC(ccname_trait_method_type, __VA_ARGS__)
 
-/* Given an interface type name, a struct type name, an optional variant
-   specification, and a method name: expand  into the name of the method
-   function for  that variant  of the  interface implementation  for the
-   struct type. */
-#define ccname_iface_method_3(IFACE_TYPE, STRUCT_TYPE, METHOD_NAME)		\
-  _CCNAME_IFACE_METHOD(IFACE_TYPE, STRUCT_TYPE,        , METHOD_NAME)
-#define ccname_iface_method_4(IFACE_TYPE, STRUCT_TYPE, VARIANT, METHOD_NAME)	\
-  _CCNAME_IFACE_METHOD(IFACE_TYPE, STRUCT_TYPE, VARIANT, METHOD_NAME)
-#define ccname_iface_method(...)				_CCNAMES_VFUNC(ccname_iface_method, __VA_ARGS__)
+/* Given an trait  type name, a struct type name,  an optional variant specification,
+   and a method name: expand into the name of the method function for that variant of
+   the trait implementation for the struct type. */
+#define ccname_trait_method_3(TRAIT_TYPE, STRUCT_TYPE, METHOD_NAME)		\
+  _CCNAME_TRAIT_METHOD(TRAIT_TYPE, STRUCT_TYPE,        , METHOD_NAME)
+#define ccname_trait_method_4(TRAIT_TYPE, STRUCT_TYPE, VARIANT, METHOD_NAME)	\
+  _CCNAME_TRAIT_METHOD(TRAIT_TYPE, STRUCT_TYPE, VARIANT, METHOD_NAME)
+#define ccname_trait_method(...)				_CCNAMES_VFUNC(ccname_trait_method, __VA_ARGS__)
 
 
 /** --------------------------------------------------------------------

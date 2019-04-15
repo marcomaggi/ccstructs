@@ -56,12 +56,12 @@ libccstructs_la_SOURCES		= \
 
 check_PROGRAMS	= \
 	tests/version			\
-	tests/dtor-interface		\
+	tests/dtor-trait		\
 	tests/exception-handlers	\
-	tests/dumpable-interface	\
-	tests/serialisable-interface	\
+	tests/dumpable-trait		\
+	tests/serialisable-trait	\
 	tests/pathname-representation	\
-	tests/pathname-interface
+	tests/pathname-trait
 
 if MMUX_TESTING_ENABLED
 TESTS				= $(check_PROGRAMS)
@@ -77,29 +77,29 @@ tests_version_CPPFLAGS			= $(ccstructs_tests_cppflags)
 tests_version_CFLAGS			= $(ccstructs_tests_cflags)
 tests_version_LDADD			= $(ccstructs_tests_ldadd)
 
-tests_dtor_interface_CPPFLAGS		= $(ccstructs_tests_cppflags)
-tests_dtor_interface_CFLAGS		= $(ccstructs_tests_cflags)
-tests_dtor_interface_LDADD		= $(ccstructs_tests_ldadd)
+tests_dtor_trait_CPPFLAGS		= $(ccstructs_tests_cppflags)
+tests_dtor_trait_CFLAGS			= $(ccstructs_tests_cflags)
+tests_dtor_trait_LDADD			= $(ccstructs_tests_ldadd)
 
 tests_exception_handlers_CPPFLAGS	= $(ccstructs_tests_cppflags)
 tests_exception_handlers_CFLAGS		= $(ccstructs_tests_cflags)
 tests_exception_handlers_LDADD		= $(ccstructs_tests_ldadd)
 
-tests_dumpable_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
-tests_dumpable_interface_CFLAGS		= $(ccstructs_tests_cflags)
-tests_dumpable_interface_LDADD		= $(ccstructs_tests_ldadd)
+tests_dumpable_trait_CPPFLAGS		= $(ccstructs_tests_cppflags)
+tests_dumpable_trait_CFLAGS		= $(ccstructs_tests_cflags)
+tests_dumpable_trait_LDADD		= $(ccstructs_tests_ldadd)
 
-tests_serialisable_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
-tests_serialisable_interface_CFLAGS	= $(ccstructs_tests_cflags)
-tests_serialisable_interface_LDADD	= $(ccstructs_tests_ldadd)
+tests_serialisable_trait_CPPFLAGS	= $(ccstructs_tests_cppflags)
+tests_serialisable_trait_CFLAGS		= $(ccstructs_tests_cflags)
+tests_serialisable_trait_LDADD		= $(ccstructs_tests_ldadd)
 
 tests_pathname_representation_CPPFLAGS	= $(ccstructs_tests_cppflags)
 tests_pathname_representation_CFLAGS	= $(ccstructs_tests_cflags)
 tests_pathname_representation_LDADD	= $(ccstructs_tests_ldadd)
 
-tests_pathname_interface_CPPFLAGS	= $(ccstructs_tests_cppflags)
-tests_pathname_interface_CFLAGS		= $(ccstructs_tests_cflags)
-tests_pathname_interface_LDADD		= $(ccstructs_tests_ldadd)
+tests_pathname_trait_CPPFLAGS		= $(ccstructs_tests_cppflags)
+tests_pathname_trait_CFLAGS		= $(ccstructs_tests_cflags)
+tests_pathname_trait_LDADD		= $(ccstructs_tests_ldadd)
 
 ## --------------------------------------------------------------------
 
@@ -131,7 +131,7 @@ examples: $(noinst_PROGRAMS)
 ## --------------------------------------------------------------------
 
 examples_test_struct_no_methods_SOURCES =	\
-	examples/printable-interface.h		\
+	examples/printable-trait.h		\
 	examples/struct-no-methods.h		\
 	examples/struct-no-methods.c		\
 	examples/test-struct-no-methods.c
@@ -145,7 +145,7 @@ $(examples_test_struct_no_methods_OBJECTS): libccstructs.la
 ## --------------------------------------------------------------------
 
 examples_test_struct_with_methods_SOURCES =	\
-	examples/printable-interface.h		\
+	examples/printable-trait.h		\
 	examples/struct-with-methods.h		\
 	examples/struct-with-methods.c		\
 	examples/test-struct-with-methods.c

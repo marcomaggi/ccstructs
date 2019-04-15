@@ -50,13 +50,13 @@ test_1_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccname_init(ccstructs_pathname_t, from_chars)(L, ptn, P);
-    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -83,13 +83,13 @@ test_1_2 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccname_init(ccstructs_pathname_t, from_asciiz)(L, ptn, B);
-    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -115,13 +115,13 @@ test_1_3 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccname_init(ccstructs_pathname_t, from_ascii)(L, ptn, B);
-    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -149,13 +149,13 @@ test_2_1 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
-    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -181,13 +181,13 @@ test_2_2 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_asciiz)(L, B);
-    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -213,13 +213,13 @@ test_2_3 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_ascii)(L, B);
-    ccstructs_init_and_register_handler(L, ptn_H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn));
+    ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -248,11 +248,11 @@ test_3_1 (cce_destination_t upper_L)
   } else {
     ccname_init(ccstructs_pathname_t, from_chars, guarded, clean)(L, ptn_H, ptn, P);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -279,11 +279,11 @@ test_3_2 (cce_destination_t upper_L)
   } else {
     ccname_init(ccstructs_pathname_t, from_asciiz, guarded, clean)(L, ptn_H, ptn, B);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -310,11 +310,11 @@ test_3_3 (cce_destination_t upper_L)
   } else {
     ccname_init(ccstructs_pathname_t, from_ascii, guarded, clean)(L, ptn_H, ptn, B);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -343,11 +343,11 @@ test_4_1 (cce_destination_t upper_L)
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_chars, guarded, clean)(L, ptn_H, P);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -374,11 +374,11 @@ test_4_2 (cce_destination_t upper_L)
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_asciiz, guarded, clean)(L, ptn_H, B);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -405,11 +405,11 @@ test_4_3 (cce_destination_t upper_L)
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_ascii, guarded, clean)(L, ptn_H, B);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -442,11 +442,11 @@ test_5_1 (cce_destination_t upper_L)
   } else {
     ccname_init(ccstructs_pathname_t, from_chars, guarded, error)(L, ptn_H, ptn, P);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -477,11 +477,11 @@ test_5_2 (cce_destination_t upper_L)
   } else {
     ccname_init(ccstructs_pathname_t, from_asciiz, guarded, error)(L, ptn_H, ptn, B);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -512,11 +512,11 @@ test_5_3 (cce_destination_t upper_L)
   } else {
     ccname_init(ccstructs_pathname_t, from_ascii, guarded, error)(L, ptn_H, ptn, B);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -549,11 +549,11 @@ test_6_1 (cce_destination_t upper_L)
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_chars, guarded, error)(L, ptn_H, P);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -584,11 +584,11 @@ test_6_2 (cce_destination_t upper_L)
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_asciiz, guarded, error)(L, ptn_H, B);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -619,11 +619,11 @@ test_6_3 (cce_destination_t upper_L)
   } else {
     ptn = ccname_new(ccstructs_pathname_t, from_ascii, guarded, error)(L, ptn_H, B);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -653,11 +653,11 @@ test_7_1 (cce_destination_t upper_L)
     ccname_init(ccstructs_pathname_t, from_chars, guarded, clean)(L, ptn_H, ptn, P);
     ccname_init(ccstructs_pathname_t, copy,       guarded, clean)(L, ptn_copy_H, ptn_copy, ptn);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn_copy);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn_copy);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -685,11 +685,11 @@ test_7_2 (cce_destination_t upper_L)
     ccname_init(ccstructs_pathname_t, from_asciiz, guarded, clean)(L, ptn_H, ptn, B);
     ccname_init(ccstructs_pathname_t, copy,       guarded, clean)(L, ptn_copy_H, ptn_copy, ptn);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn_copy);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn_copy);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -717,11 +717,11 @@ test_7_3 (cce_destination_t upper_L)
     ccname_init(ccstructs_pathname_t, from_ascii, guarded, clean)(L, ptn_H, ptn, B);
     ccname_init(ccstructs_pathname_t, copy,       guarded, clean)(L, ptn_copy_H, ptn_copy, ptn);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn_copy);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn_copy);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -751,11 +751,11 @@ test_8_1 (cce_destination_t upper_L)
     ptn      = ccname_new(ccstructs_pathname_t, from_chars, guarded, clean)(L, ptn_H, P);
     ptn_copy = ccname_new(ccstructs_pathname_t, copy,       guarded, clean)(L, ptn_copy_H, ptn);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn_copy);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn_copy);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -783,11 +783,11 @@ test_8_2 (cce_destination_t upper_L)
     ptn      = ccname_new(ccstructs_pathname_t, from_asciiz, guarded, clean)(L, ptn_H, B);
     ptn_copy = ccname_new(ccstructs_pathname_t, copy,        guarded, clean)(L, ptn_copy_H, ptn);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn_copy);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn_copy);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -815,11 +815,11 @@ test_8_3 (cce_destination_t upper_L)
     ptn      = ccname_new(ccstructs_pathname_t, from_ascii, guarded, clean)(L, ptn_H, B);
     ptn_copy = ccname_new(ccstructs_pathname_t, copy,       guarded, clean)(L, ptn_copy_H, ptn);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn_copy);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn_copy);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -853,11 +853,11 @@ test_9_1 (cce_destination_t upper_L)
     ccname_init(ccstructs_pathname_t, from_chars, guarded, error)(L, ptn_H, ptn, P);
     ccname_init(ccstructs_pathname_t, copy,       guarded, error)(L, ptn_copy_H, ptn_copy, ptn);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn_copy);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn_copy);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -889,11 +889,11 @@ test_9_2 (cce_destination_t upper_L)
     ccname_init(ccstructs_pathname_t, from_asciiz, guarded, error)(L, ptn_H, ptn, B);
     ccname_init(ccstructs_pathname_t, copy,        guarded, error)(L, ptn_copy_H, ptn_copy, ptn);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn_copy);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn_copy);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -925,11 +925,11 @@ test_9_3 (cce_destination_t upper_L)
     ccname_init(ccstructs_pathname_t, from_ascii, guarded, error)(L, ptn_H, ptn, B);
     ccname_init(ccstructs_pathname_t, copy,       guarded, error)(L, ptn_copy_H, ptn_copy, ptn);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn_copy);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn_copy);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -963,11 +963,11 @@ test_10_1 (cce_destination_t upper_L)
     ptn      = ccname_new(ccstructs_pathname_t, from_chars, guarded, error)(L, ptn_H, P);
     ptn_copy = ccname_new(ccstructs_pathname_t, copy,       guarded, error)(L, ptn_copy_H, ptn);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn_copy);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn_copy);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -999,11 +999,11 @@ test_10_2 (cce_destination_t upper_L)
     ptn      = ccname_new(ccstructs_pathname_t, from_asciiz, guarded, error)(L, ptn_H, B);
     ptn_copy = ccname_new(ccstructs_pathname_t, copy,        guarded, error)(L, ptn_copy_H, ptn);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn_copy);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn_copy);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);
@@ -1035,11 +1035,11 @@ test_10_3 (cce_destination_t upper_L)
     ptn      = ccname_new(ccstructs_pathname_t, from_ascii, guarded, error)(L, ptn_H, B);
     ptn_copy = ccname_new(ccstructs_pathname_t, copy,       guarded, error)(L, ptn_copy_H, ptn);
     {
-      ccstructs_dumpable_I	W = ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn_copy);
       ccstructs_dumpable_dump(L, W);
     }
     {
-      ccstructs_pathname_I	I   = ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t)(ptn_copy);
+      ccstructs_pathname_T	I   = ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)(ptn_copy);
       ccmem_asciiz_t		rep = ccstructs_pathname_asciiz(L, I);
       cctests_assert_equal_size(L, strlen(P), rep.len);
       cctests_assert_asciiz(L, P, rep.ptr);

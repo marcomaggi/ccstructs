@@ -1,6 +1,6 @@
 /*
   Part of: CCStructs
-  Contents: tests for the dumpable interface
+  Contents: tests for the dumpable trait
   Date: Sat Sep 22, 2018
 
   Abstract
@@ -34,7 +34,7 @@
 
 
 /** --------------------------------------------------------------------
- ** Dumpable interface: dump method.
+ ** Dumpable trait: dump method.
  ** ----------------------------------------------------------------- */
 
 typedef struct one_one_t	one_one_t;
@@ -45,7 +45,7 @@ struct one_one_t {
 };
 
 static void
-ccname_iface_method(ccstructs_dumpable_I, one_one_t, dump) (cce_destination_t L, ccstructs_dumpable_I I)
+ccname_trait_method(ccstructs_dumpable_T, one_one_t, dump) (cce_destination_t L, ccstructs_dumpable_T I)
 {
   CCSTRUCTS_PC(one_one_t const, S, ccstructs_dumpable_self(I));
   int	rv;
@@ -57,15 +57,15 @@ ccname_iface_method(ccstructs_dumpable_I, one_one_t, dump) (cce_destination_t L,
   }
 }
 
-static ccname_iface_table_type(ccstructs_dumpable_I) const ccname_iface_table(ccstructs_dumpable_I, one_one_t) = {
-  .dump = ccname_iface_method(ccstructs_dumpable_I, one_one_t, dump)
+static ccname_trait_table_type(ccstructs_dumpable_T) const ccname_trait_table(ccstructs_dumpable_T, one_one_t) = {
+  .dump = ccname_trait_method(ccstructs_dumpable_T, one_one_t, dump)
 };
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccstructs_dumpable_I
-ccname_iface_new(ccstructs_dumpable_I, one_one_t) (one_one_t const * S)
+static inline ccstructs_dumpable_T
+ccname_trait_new(ccstructs_dumpable_T, one_one_t) (one_one_t const * S)
 {
-  return ccname_new(ccstructs_dumpable_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_dumpable_I, one_one_t));
+  return ccname_new(ccstructs_dumpable_T)(ccstructs_core(S), &ccname_trait_table(ccstructs_dumpable_T, one_one_t));
 }
 
 void
@@ -80,7 +80,7 @@ test_1_1 (cce_destination_t upper_L)
       .alpha	= 1,
       .beta	= 2
     };
-    ccstructs_dumpable_I	I = ccname_iface_new(ccstructs_dumpable_I, one_one_t)(&S);
+    ccstructs_dumpable_T	I = ccname_trait_new(ccstructs_dumpable_T, one_one_t)(&S);
 
     ccstructs_dumpable_dump(L, I);
 
@@ -92,7 +92,7 @@ test_1_1 (cce_destination_t upper_L)
 int
 main (void)
 {
-  cctests_init("tests dumpable interface");
+  cctests_init("tests dumpable trait");
   {
     cctests_begin_group("dump method");
     {

@@ -1,16 +1,16 @@
 /*
   Part of: CCStructs
-  Contents: simple implementations of pathname interfaces
+  Contents: simple implementations of pathname traits
   Date: Mon Oct  8, 2018
 
   Abstract
 
 	This  file   defines  a  simple   implementation  of  file   system  pathname
 	representation: "ccstructs_pathname_t".  It is  vastly incomplete in terms of
-	features.   This pathname  struct implements  the "ccstructs_dtor_I"  and the
-	"ccstructs_pathname_I" interfaces.
+	features.   This pathname  struct implements  the "ccstructs_dtor_T"  and the
+	"ccstructs_pathname_T" traits.
 
-	There are two "ccstruct_dtor_I" implementations: one for structs allocated on
+	There are two "ccstruct_dtor_T" implementations: one for structs allocated on
 	the  stack or  embedded into  enclosing structs;  one for  standalone structs
 	allocated on the heap.
 
@@ -47,13 +47,13 @@
  ** Type definitions.
  ** ----------------------------------------------------------------- */
 
-/* Function  prototype  of  the   constructor  of  "ccstruct_dtor_I"  implemented  by
+/* Function  prototype  of  the   constructor  of  "ccstruct_dtor_T"  implemented  by
    "ccstructs_pathname_t" for embedded structs. */
-static ccname_iface_new_type(ccstructs_dtor_I, ccstructs_pathname_t) ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded);
+static ccname_trait_new_type(ccstructs_dtor_T, ccstructs_pathname_t) ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, embedded);
 
-/* Function  prototype  of  the   constructor  of  "ccstruct_dtor_I"  implemented  by
+/* Function  prototype  of  the   constructor  of  "ccstruct_dtor_T"  implemented  by
    "ccstructs_pathname_t" for standalone structs. */
-static ccname_iface_new_type(ccstructs_dtor_I, ccstructs_pathname_t) ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone);
+static ccname_trait_new_type(ccstructs_dtor_T, ccstructs_pathname_t) ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, standalone);
 
 typedef struct ccstructs_serialised_pathname_t	ccstructs_serialised_pathname_t;
 
@@ -70,7 +70,7 @@ struct ccstructs_serialised_pathname_t {
 
 /* Type  of  method function  for  "ccstructs_pathname_t".   Functions of  this  type
    implement the method "new_dtor". */
-typedef ccstructs_dtor_I ccname_method_type(ccstructs_pathname_t, new_dtor) (ccstructs_pathname_t const * ptn);
+typedef ccstructs_dtor_T ccname_method_type(ccstructs_pathname_t, new_dtor) (ccstructs_pathname_t const * ptn);
 
 /* Type of methods table for instances of "ccstructs_pathnamt_t". */
 struct ccname_table_type(ccstructs_pathname_t) {
@@ -91,12 +91,12 @@ static ccname_table_type(ccstructs_pathname_t) const ccname_table(ccstructs_path
   .new_dtor	= ccname_method(ccstructs_pathname_t, embedded, new_dtor)
 };
 
-ccstructs_dtor_I
+ccstructs_dtor_T
 ccname_method(ccstructs_pathname_t, embedded, new_dtor) (ccstructs_pathname_t const * ptn)
 /* Implementation    of    method    "new_dtor"    for    embedded    instances    of
    "ccstructs_pathname_t". */
 {
-  return ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(ptn);
+  return ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, embedded)(ptn);
 }
 
 
@@ -113,12 +113,12 @@ static ccname_table_type(ccstructs_pathname_t) const ccname_table(ccstructs_path
   .new_dtor	= ccname_method(ccstructs_pathname_t, standalone, new_dtor)
 };
 
-ccstructs_dtor_I
+ccstructs_dtor_T
 ccname_method(ccstructs_pathname_t, standalone, new_dtor) (ccstructs_pathname_t const * ptn)
 /* Implementation    of   method    "new_dtor"    for    standalone   instances    of
    "ccstructs_pathname_t". */
 {
-  return ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(ptn);
+  return ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, standalone)(ptn);
 }
 
 
@@ -278,7 +278,7 @@ ccname_delete(ccstructs_pathname_t) (ccstructs_pathname_t * const ptn)
    owned by the fields.  Release the memory allocated for the struct.
 
    This function  is marked  as unused  because we  are meant  to use  the destructor
-   interface to finalise instances of "ccstructs_pathname_t". */
+   trait to finalise instances of "ccstructs_pathname_t". */
 {
   ccname_final(ccstructs_pathname_t)(ptn);
   ccname_release(ccstructs_pathname_t)(ptn);
@@ -299,7 +299,7 @@ ccname_init(ccstructs_pathname_t, from_asciiz, guarded, clean) (cce_destination_
    the handler H. */
 {
   ccname_init(ccstructs_pathname_t, from_asciiz)(L, ptn, rep);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(ptn));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, embedded)(ptn));
 }
 
 void
@@ -311,7 +311,7 @@ ccname_init(ccstructs_pathname_t, from_asciiz, guarded, error) (cce_destination_
    the handler H. */
 {
   ccname_init(ccstructs_pathname_t, from_asciiz)(L, ptn, rep);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(ptn));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, embedded)(ptn));
 }
 
 /* ------------------------------------------------------------------ */
@@ -325,7 +325,7 @@ ccname_init(ccstructs_pathname_t, from_ascii, guarded, clean) (cce_destination_t
    the handler H. */
 {
   ccname_init(ccstructs_pathname_t, from_ascii)(L, ptn, rep);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(ptn));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, embedded)(ptn));
 }
 
 void
@@ -337,7 +337,7 @@ ccname_init(ccstructs_pathname_t, from_ascii, guarded, error) (cce_destination_t
    the handler H. */
 {
   ccname_init(ccstructs_pathname_t, from_ascii)(L, ptn, rep);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(ptn));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, embedded)(ptn));
 }
 
 /* ------------------------------------------------------------------ */
@@ -351,7 +351,7 @@ ccname_init(ccstructs_pathname_t, from_chars, guarded, clean) (cce_destination_t
    finalisation with the handler H. */
 {
   ccname_init(ccstructs_pathname_t, from_chars)(L, ptn, P);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(ptn));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, embedded)(ptn));
 }
 
 void
@@ -363,7 +363,7 @@ ccname_init(ccstructs_pathname_t, from_chars, guarded, error) (cce_destination_t
    finalisation with the handler H. */
 {
   ccname_init(ccstructs_pathname_t, from_chars)(L, ptn, P);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(ptn));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, embedded)(ptn));
 }
 
 /* ------------------------------------------------------------------ */
@@ -377,7 +377,7 @@ ccname_init(ccstructs_pathname_t, copy, guarded, clean) (cce_destination_t L, cc
    instance for finalisation with the handler H. */
 {
   ccname_init(ccstructs_pathname_t, copy)(L, dst, src);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(dst));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, embedded)(dst));
 }
 
 void
@@ -389,7 +389,7 @@ ccname_init(ccstructs_pathname_t, copy, guarded, error) (cce_destination_t L, cc
    instance for finalisation with the handler H. */
 {
   ccname_init(ccstructs_pathname_t, copy)(L, dst, src);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded)(dst));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, embedded)(dst));
 }
 
 /* ------------------------------------------------------------------ */
@@ -402,7 +402,7 @@ ccname_new(ccstructs_pathname_t, from_asciiz, guarded, clean) (cce_destination_t
    the instance for finalisation with the handler H. */
 {
   ccstructs_pathname_t const	* ptn = ccname_new(ccstructs_pathname_t, from_asciiz)(L, rep);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(ptn));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, standalone)(ptn));
   return ptn;
 }
 
@@ -414,7 +414,7 @@ ccname_new(ccstructs_pathname_t, from_asciiz, guarded, error) (cce_destination_t
    the instance for finalisation with the handler H. */
 {
   ccstructs_pathname_t const	* ptn = ccname_new(ccstructs_pathname_t, from_asciiz)(L, rep);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(ptn));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, standalone)(ptn));
   return ptn;
 }
 
@@ -428,7 +428,7 @@ ccname_new(ccstructs_pathname_t, from_ascii, guarded, clean) (cce_destination_t 
    instance for finalisation with the handler H. */
 {
   ccstructs_pathname_t const	* ptn = ccname_new(ccstructs_pathname_t, from_ascii)(L, rep);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(ptn));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, standalone)(ptn));
   return ptn;
 }
 
@@ -440,7 +440,7 @@ ccname_new(ccstructs_pathname_t, from_ascii, guarded, error) (cce_destination_t 
    instance for finalisation with the handler H. */
 {
   ccstructs_pathname_t const	* ptn = ccname_new(ccstructs_pathname_t, from_ascii)(L, rep);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(ptn));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, standalone)(ptn));
   return ptn;
 }
 
@@ -454,7 +454,7 @@ ccname_new(ccstructs_pathname_t, from_chars, guarded, clean) (cce_destination_t 
    Register the instance for finalisation with the handler H. */
 {
   ccstructs_pathname_t const	* ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(ptn));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, standalone)(ptn));
   return ptn;
 }
 
@@ -466,7 +466,7 @@ ccname_new(ccstructs_pathname_t, from_chars, guarded, error) (cce_destination_t 
    Register the instance for finalisation with the handler H. */
 {
   ccstructs_pathname_t const	* ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(ptn));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, standalone)(ptn));
   return ptn;
 }
 
@@ -480,7 +480,7 @@ ccname_new(ccstructs_pathname_t, copy, guarded, clean) (cce_destination_t L, ccs
    the instance for finalisation with the handler H. */
 {
   ccstructs_pathname_t const	* dst = ccname_new(ccstructs_pathname_t, copy)(L, src);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(dst));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, standalone)(dst));
   return dst;
 }
 
@@ -492,23 +492,23 @@ ccname_new(ccstructs_pathname_t, copy, guarded, error) (cce_destination_t L, ccs
    the instance for finalisation with the handler H. */
 {
   ccstructs_pathname_t const	* dst = ccname_new(ccstructs_pathname_t, copy)(L, src);
-  ccstructs_init_and_register_handler(L, H, ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone)(dst));
+  ccstructs_init_and_register_handler(L, H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, standalone)(dst));
   return dst;
 }
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_dtor_I": implementation for embedded "ccstructs_pathname_t".
+ ** Trait "ccstructs_dtor_T": implementation for embedded "ccstructs_pathname_t".
  ** ----------------------------------------------------------------- */
 
 static ccstructs_core_destructor_fun_t ccstructs_embedded_pathname_destructor;
 
-ccstructs_dtor_I
-ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, embedded) (ccstructs_pathname_t const * const ptn)
-/* Interface constructor.   Build and  return a  new interface  "ccstructs_dtor_I" as
+ccstructs_dtor_T
+ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, embedded) (ccstructs_pathname_t const * const ptn)
+/* Trait constructor.   Build and  return a  new trait  "ccstructs_dtor_T" as
    implemented by "ccstructs_pathname_t".  This is for embedded instances. */
 {
-  return ccname_new(ccstructs_dtor_I)(ccstructs_core(ptn), ccstructs_embedded_pathname_destructor);
+  return ccname_new(ccstructs_dtor_T)(ccstructs_core(ptn), ccstructs_embedded_pathname_destructor);
 }
 
 /* ------------------------------------------------------------------ */
@@ -523,17 +523,17 @@ ccstructs_embedded_pathname_destructor (ccstructs_core_t * S)
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_dtor_I": implementation for standalone "ccstructs_pathname_t".
+ ** Trait "ccstructs_dtor_T": implementation for standalone "ccstructs_pathname_t".
  ** ----------------------------------------------------------------- */
 
 static ccstructs_core_destructor_fun_t ccstructs_standalone_pathname_destructor;
 
-ccstructs_dtor_I
-ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t, standalone) (ccstructs_pathname_t const * const ptn)
-/* Interface constructor.   Build and  return a  new interface  "ccstructs_dtor_I" as
+ccstructs_dtor_T
+ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, standalone) (ccstructs_pathname_t const * const ptn)
+/* Trait constructor.   Build and  return a  new trait  "ccstructs_dtor_T" as
    implemented by "ccstructs_pathname_t".  This is for standalone instances. */
 {
-  return ccname_new(ccstructs_dtor_I)(ccstructs_core(ptn), ccstructs_standalone_pathname_destructor);
+  return ccname_new(ccstructs_dtor_T)(ccstructs_core(ptn), ccstructs_standalone_pathname_destructor);
 }
 
 /* ------------------------------------------------------------------ */
@@ -548,206 +548,206 @@ ccstructs_standalone_pathname_destructor (ccstructs_core_t * S)
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_pathname_I": implementation for "ccstructs_pathname_t".
+ ** Trait "ccstructs_pathname_T": implementation for "ccstructs_pathname_t".
  ** ----------------------------------------------------------------- */
 
 /* Method  function prototype.   This  function implements  the  method "asciiz"  for
-   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   instances     of     type     "ccstructs_pathname_T"     as     implemented     by
    "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, asciiz)
-  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, asciiz);
+static ccname_trait_method_type(ccstructs_pathname_T, asciiz)
+  ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, asciiz);
 
 /* Method function  prototype.  This function  implements the method  "is_static" for
-   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   instances     of     type     "ccstructs_pathname_T"     as     implemented     by
    "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, is_static)
-  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_static);
+static ccname_trait_method_type(ccstructs_pathname_T, is_static)
+  ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_static);
 
 /* Method function prototype.  This function  implements the method "is_absolute" for
-   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   instances     of     type     "ccstructs_pathname_T"     as     implemented     by
    "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, is_absolute)
-  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_absolute);
+static ccname_trait_method_type(ccstructs_pathname_T, is_absolute)
+  ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_absolute);
 
 /* Method function prototype.  This function  implements the method "is_relative" for
-   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   instances     of     type     "ccstructs_pathname_T"     as     implemented     by
    "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, is_relative)
-  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_relative);
+static ccname_trait_method_type(ccstructs_pathname_T, is_relative)
+  ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_relative);
 
 /* Method function  prototype.  This  function implements the  method "is_normalised"
-   for    instances    of    type   "ccstructs_pathname_I"    as    implemented    by
+   for    instances    of    type   "ccstructs_pathname_T"    as    implemented    by
    "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, is_normalised)
-  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_normalised);
+static ccname_trait_method_type(ccstructs_pathname_T, is_normalised)
+  ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_normalised);
 
 /* Method function prototype.  This function  implements the method "is_realpath" for
-   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   instances     of     type     "ccstructs_pathname_T"     as     implemented     by
    "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, is_realpath)
-  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_realpath);
+static ccname_trait_method_type(ccstructs_pathname_T, is_realpath)
+  ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_realpath);
 
 /* Method  function  prototype.   This  function implements  the  method  "dtor"  for
-   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   instances     of     type     "ccstructs_pathname_T"     as     implemented     by
    "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, dtor)
-  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor);
+static ccname_trait_method_type(ccstructs_pathname_T, dtor)
+  ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, dtor);
 
 /* Method function  prototype.  This  function implements  the method  "dumpable" for
-   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   instances     of     type     "ccstructs_pathname_T"     as     implemented     by
    "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, dumpable)
-  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dumpable);
+static ccname_trait_method_type(ccstructs_pathname_T, dumpable)
+  ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, dumpable);
 
 /* Method function prototype.   This function implements the  method "serialiser" for
-   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   instances     of     type     "ccstructs_pathname_T"     as     implemented     by
    "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, serialiser)
-  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, serialiser);
+static ccname_trait_method_type(ccstructs_pathname_T, serialiser)
+  ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, serialiser);
 
 /* Method function prototype.  This function implements the method "deserialiser" for
-   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   instances     of     type     "ccstructs_pathname_T"     as     implemented     by
    "ccstructs_pathname_t". */
-static ccname_iface_method_type(ccstructs_pathname_I, deserialiser)
-  ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, deserialiser);
+static ccname_trait_method_type(ccstructs_pathname_T, deserialiser)
+  ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, deserialiser);
 
-/* Interface  methods  table.  This  struct  implements  the  methods table  for  the
-   interface "ccstructs_pathname_I" as implemented by "ccstructs_pathname_t". */
-static ccname_iface_table_type(ccstructs_pathname_I) const ccname_iface_table(ccstructs_pathname_I, ccstructs_pathname_t) = {
-  .asciiz	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, asciiz),
-  .is_static	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_static),
-  .is_absolute	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_absolute),
-  .is_relative	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_relative),
-  .is_normalised= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_normalised),
-  .is_realpath	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_realpath),
+/* Trait  methods  table.  This  struct  implements  the  methods table  for  the
+   trait "ccstructs_pathname_T" as implemented by "ccstructs_pathname_t". */
+static ccname_trait_table_type(ccstructs_pathname_T) const ccname_trait_table(ccstructs_pathname_T, ccstructs_pathname_t) = {
+  .asciiz	= ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, asciiz),
+  .is_static	= ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_static),
+  .is_absolute	= ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_absolute),
+  .is_relative	= ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_relative),
+  .is_normalised= ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_normalised),
+  .is_realpath	= ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_realpath),
 
-  .dtor		= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor),
-  .dumpable	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dumpable),
-  .serialiser	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, serialiser),
-  .deserialiser	= ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, deserialiser)
+  .dtor		= ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, dtor),
+  .dumpable	= ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, dumpable),
+  .serialiser	= ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, serialiser),
+  .deserialiser	= ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, deserialiser)
 };
 
 /* ------------------------------------------------------------------ */
 
 ccmem_asciiz_t
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, asciiz) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, asciiz) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_T I)
 /* Method implementation  function.  Implement the  method "asciiz" for  instances of
-   type "ccstructs_pathname_I" as implemented by "ccstructs_pathname_t". */
+   type "ccstructs_pathname_T" as implemented by "ccstructs_pathname_t". */
 {
   CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
   return ptn->rep;
 }
 
 bool
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_static) (ccstructs_pathname_I I CCSTRUCTS_UNUSED)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_static) (ccstructs_pathname_T I CCSTRUCTS_UNUSED)
 /* Method implementation function.  Implement the method "is_static" for instances of
-   type "ccstructs_pathname_I" as implemented by "ccstructs_pathname_t". */
+   type "ccstructs_pathname_T" as implemented by "ccstructs_pathname_t". */
 {
   return false;
 }
 
 bool
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_absolute) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_absolute) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_T I)
 /* Method implementation function.  Implement  the method "is_absolute" for instances
-   of type "ccstructs_pathname_I" as implemented by "ccstructs_pathname_t". */
+   of type "ccstructs_pathname_T" as implemented by "ccstructs_pathname_t". */
 {
   CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
   return ('/' == ptn->rep.ptr[0])? true : false;
 }
 
 bool
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_relative) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_relative) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_T I)
 /* Method implementation function.  Implement  the method "is_relative" for instances
-   of type "ccstructs_pathname_I" as implemented by "ccstructs_pathname_t". */
+   of type "ccstructs_pathname_T" as implemented by "ccstructs_pathname_t". */
 {
   CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
   return ('/' == ptn->rep.ptr[0])? false : true;
 }
 
 bool
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_normalised) (cce_destination_t L, ccstructs_pathname_I I CCSTRUCTS_UNUSED)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_normalised) (cce_destination_t L, ccstructs_pathname_T I CCSTRUCTS_UNUSED)
 /* Method  implementation   function.   Implement  the  method   "is_normalised"  for
-   instances     of     type     "ccstructs_pathname_I"     as     implemented     by
+   instances     of     type     "ccstructs_pathname_T"     as     implemented     by
    "ccstructs_pathname_t". */
 {
   cce_raise(L, cce_condition_new_unimplemented());
 }
 
 bool
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, is_realpath) (cce_destination_t L, ccstructs_pathname_I I CCSTRUCTS_UNUSED)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_realpath) (cce_destination_t L, ccstructs_pathname_T I CCSTRUCTS_UNUSED)
 /* Method implementation function.  Implement  the method "is_realpath" for instances
-   of type "ccstructs_pathname_I" as implemented by "ccstructs_pathname_t". */
+   of type "ccstructs_pathname_T" as implemented by "ccstructs_pathname_t". */
 {
   cce_raise(L, cce_condition_new_unimplemented());
 }
 
 /* ------------------------------------------------------------------ */
 
-ccstructs_dtor_I
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dtor) (ccstructs_pathname_I I)
+ccstructs_dtor_T
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, dtor) (ccstructs_pathname_T I)
 /* Method implementation function.  Implement the method "dtor" for instances of type
-   "ccstructs_pathname_I"  as implemented  by  "ccstructs_pathname_t".  The  returned
+   "ccstructs_pathname_T"  as implemented  by  "ccstructs_pathname_t".  The  returned
    destructor will work for both embedded and standalone instances. */
 {
   CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
 
-  return ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t)(ptn);
+  return ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn);
 }
 
-ccstructs_dumpable_I
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, dumpable) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
+ccstructs_dumpable_T
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, dumpable) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_T I)
 /* Method implementation function.  Implement the  method "dumpable" for instances of
-   type  "ccstructs_pathname_I"   as  implemented  by   "ccstructs_pathname_t".   The
+   type  "ccstructs_pathname_T"   as  implemented  by   "ccstructs_pathname_t".   The
    returned destructor will work for both embedded and standalone instances. */
 {
   CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
 
-  return ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t)(ptn);
+  return ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
 }
 
-ccstructs_serialiser_I
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, serialiser) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
+ccstructs_serialiser_T
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, serialiser) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_T I)
 /* Method implementation  function.  Implement the method  "serialiser" for instances
-   of  type "ccstructs_pathname_I"  as  implemented  by "ccstructs_pathname_t".   The
+   of  type "ccstructs_pathname_T"  as  implemented  by "ccstructs_pathname_t".   The
    returned destructor will work for both embedded and standalone instances. */
 {
   CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
 
-  return ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t)(ptn);
+  return ccname_trait_new(ccstructs_serialiser_T, ccstructs_pathname_t)(ptn);
 }
 
-ccstructs_deserialiser_I
-ccname_iface_method(ccstructs_pathname_I, ccstructs_pathname_t, deserialiser) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_I I)
+ccstructs_deserialiser_T
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, deserialiser) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_T I)
 /* Method implementation function.  Implement the method "deserialiser" for instances
-   of  type "ccstructs_pathname_I"  as  implemented  by "ccstructs_pathname_t".   The
+   of  type "ccstructs_pathname_T"  as  implemented  by "ccstructs_pathname_t".   The
    returned destructor will work for both embedded and standalone instances. */
 {
   CCSTRUCTS_PC(ccstructs_pathname_t, ptn, ccstructs_pathname_self(I));
 
-  return ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t)(ptn);
+  return ccname_trait_new(ccstructs_deserialiser_T, ccstructs_pathname_t)(ptn);
 }
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_serialiser_I": implementation for "ccstructs_pathname_t".
+ ** Trait "ccstructs_serialiser_T": implementation for "ccstructs_pathname_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_serialiser_I, required_size)
-  ccname_iface_method(ccstructs_serialiser_I, ccstructs_pathname_t, required_size);
-static ccname_iface_method_type(ccstructs_serialiser_I, write)
-  ccname_iface_method(ccstructs_serialiser_I, ccstructs_pathname_t, write);
+static ccname_trait_method_type(ccstructs_serialiser_T, required_size)
+  ccname_trait_method(ccstructs_serialiser_T, ccstructs_pathname_t, required_size);
+static ccname_trait_method_type(ccstructs_serialiser_T, write)
+  ccname_trait_method(ccstructs_serialiser_T, ccstructs_pathname_t, write);
 
-/* Interface  table  of  methods.    Implementation  of  "ccstructs_serialiser_I"  for
+/* Trait  table  of  methods.    Implementation  of  "ccstructs_serialiser_T"  for
    "ccstructs_pathname_t". */
-static ccname_iface_table_type(ccstructs_serialiser_I) const ccname_iface_table(ccstructs_serialiser_I, ccstructs_pathname_t) = {
-  .required_size = ccname_iface_method(ccstructs_serialiser_I, ccstructs_pathname_t, required_size),
-  .write         = ccname_iface_method(ccstructs_serialiser_I, ccstructs_pathname_t, write),
+static ccname_trait_table_type(ccstructs_serialiser_T) const ccname_trait_table(ccstructs_serialiser_T, ccstructs_pathname_t) = {
+  .required_size = ccname_trait_method(ccstructs_serialiser_T, ccstructs_pathname_t, required_size),
+  .write         = ccname_trait_method(ccstructs_serialiser_T, ccstructs_pathname_t, write),
 };
 
 /* ------------------------------------------------------------------ */
 
 size_t
-ccname_iface_method(ccstructs_serialiser_I, ccstructs_pathname_t, required_size) (ccstructs_serialiser_I I)
+ccname_trait_method(ccstructs_serialiser_T, ccstructs_pathname_t, required_size) (ccstructs_serialiser_T I)
 /* Return the minimum number of bytes  required to hold the serialised representation
    of "ccstructs_pathname_t".*/
 {
@@ -757,9 +757,9 @@ ccname_iface_method(ccstructs_serialiser_I, ccstructs_pathname_t, required_size)
 }
 
 ccmem_block_t
-ccname_iface_method(ccstructs_serialiser_I, ccstructs_pathname_t,
-		    write) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialiser_I I, ccmem_block_t B)
-/* Interface method implementation.  Serialise  an instance of "ccstructs_pathname_t"
+ccname_trait_method(ccstructs_serialiser_T, ccstructs_pathname_t,
+		    write) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialiser_T I, ccmem_block_t B)
+/* Trait method implementation.  Serialise  an instance of "ccstructs_pathname_t"
    in the memory block "B". */
 {
   CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_serialiser_self(I));
@@ -776,25 +776,25 @@ ccname_iface_method(ccstructs_serialiser_I, ccstructs_pathname_t,
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_deserialiser_I": implementation for "ccstructs_pathname_t".
+ ** Trait "ccstructs_deserialiser_T": implementation for "ccstructs_pathname_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_deserialiser_I, required_size)
-  ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t, required_size);
-static ccname_iface_method_type(ccstructs_deserialiser_I, read)
-  ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t, read);
+static ccname_trait_method_type(ccstructs_deserialiser_T, required_size)
+  ccname_trait_method(ccstructs_deserialiser_T, ccstructs_pathname_t, required_size);
+static ccname_trait_method_type(ccstructs_deserialiser_T, read)
+  ccname_trait_method(ccstructs_deserialiser_T, ccstructs_pathname_t, read);
 
-/* Interface  table  of  methods.  Implementation  of  "ccstructs_deserialiser_I"  for
+/* Trait  table  of  methods.  Implementation  of  "ccstructs_deserialiser_T"  for
    "ccstructs_pathname_t". */
-static ccname_iface_table_type(ccstructs_deserialiser_I) const ccname_iface_table(ccstructs_deserialiser_I, ccstructs_pathname_t) = {
-  .required_size = ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t, required_size),
-  .read          = ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t, read)
+static ccname_trait_table_type(ccstructs_deserialiser_T) const ccname_trait_table(ccstructs_deserialiser_T, ccstructs_pathname_t) = {
+  .required_size = ccname_trait_method(ccstructs_deserialiser_T, ccstructs_pathname_t, required_size),
+  .read          = ccname_trait_method(ccstructs_deserialiser_T, ccstructs_pathname_t, read)
 };
 
 /* ------------------------------------------------------------------ */
 
 size_t
-ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t, required_size) (ccstructs_deserialiser_I I)
+ccname_trait_method(ccstructs_deserialiser_T, ccstructs_pathname_t, required_size) (ccstructs_deserialiser_T I)
 /* Return the minimum number of bytes  required to hold the serialised representation
    of "ccstructs_pathname_t".*/
 {
@@ -804,9 +804,9 @@ ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t, required_siz
 }
 
 ccmem_block_t
-ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t,
-		    read) (cce_destination_t L, ccstructs_deserialiser_I I, ccmem_block_t B)
-/* Interface method implementation.  Dedeserialise  an instance of "ccstructs_pathname_t" from
+ccname_trait_method(ccstructs_deserialiser_T, ccstructs_pathname_t,
+		    read) (cce_destination_t L, ccstructs_deserialiser_T I, ccmem_block_t B)
+/* Trait method implementation.  Dedeserialise  an instance of "ccstructs_pathname_t" from
    the memory block "B". */
 {
   CCSTRUCTS_PC(ccstructs_pathname_t, ptn, ccstructs_deserialiser_self(I));
@@ -825,19 +825,19 @@ ccname_iface_method(ccstructs_deserialiser_I, ccstructs_pathname_t,
 
 
 /** --------------------------------------------------------------------
- ** Interface "ccstructs_dumpable_I": implementation for "ccstructs_pathname_t".
+ ** Trait "ccstructs_dumpable_T": implementation for "ccstructs_pathname_t".
  ** ----------------------------------------------------------------- */
 
-static ccname_iface_method_type(ccstructs_dumpable_I, dump)  ccname_iface_method(ccstructs_dumpable_I, ccstructs_pathname_t, dump);
+static ccname_trait_method_type(ccstructs_dumpable_T, dump)  ccname_trait_method(ccstructs_dumpable_T, ccstructs_pathname_t, dump);
 
-static ccname_iface_table_type(ccstructs_dumpable_I) const ccname_iface_table(ccstructs_dumpable_I, ccstructs_pathname_t) = {
-  .dump	= ccname_iface_method(ccstructs_dumpable_I, ccstructs_pathname_t, dump)
+static ccname_trait_table_type(ccstructs_dumpable_T) const ccname_trait_table(ccstructs_dumpable_T, ccstructs_pathname_t) = {
+  .dump	= ccname_trait_method(ccstructs_dumpable_T, ccstructs_pathname_t, dump)
 };
 
 /* ------------------------------------------------------------------ */
 
 void
-ccname_iface_method(ccstructs_dumpable_I, ccstructs_pathname_t, dump) (cce_destination_t L, ccstructs_dumpable_I I)
+ccname_trait_method(ccstructs_dumpable_T, ccstructs_pathname_t, dump) (cce_destination_t L, ccstructs_dumpable_T I)
 {
   CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_dumpable_self(I));
   int	rv;
@@ -851,48 +851,48 @@ ccname_iface_method(ccstructs_dumpable_I, ccstructs_pathname_t, dump) (cce_desti
 
 
 /** --------------------------------------------------------------------
- ** Data struct "ccstructs_pathname_t": implemented interfaces constructors.
+ ** Data struct "ccstructs_pathname_t": implemented traits constructors.
  ** ----------------------------------------------------------------- */
 
-ccstructs_dtor_I
-ccname_iface_new(ccstructs_dtor_I, ccstructs_pathname_t) (ccstructs_pathname_t const * const ptn)
-/* Interface constructor.  Build  and return a new  "ccstructs_dtor_I" implemented by
-   "ccstructs_pathname_t".  Make  use of  the interface  constructor selected  by the
+ccstructs_dtor_T
+ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t) (ccstructs_pathname_t const * const ptn)
+/* Trait constructor.  Build  and return a new  "ccstructs_dtor_T" implemented by
+   "ccstructs_pathname_t".  Make  use of  the trait  constructor selected  by the
    data struct's methods table.*/
 {
   return ptn->methods->new_dtor(ptn);
 }
 
-ccstructs_pathname_I
-ccname_iface_new(ccstructs_pathname_I, ccstructs_pathname_t) (ccstructs_pathname_t const * const ptn)
-/* Interface constructor.  Build and  return a new "ccstructs_pathname_I" implemented
+ccstructs_pathname_T
+ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t) (ccstructs_pathname_t const * const ptn)
+/* Trait constructor.  Build and  return a new "ccstructs_pathname_T" implemented
    by "ccstructs_pathname_t". */
 {
-  return ccname_new(ccstructs_pathname_I)(ccstructs_core(ptn), &ccname_iface_table(ccstructs_pathname_I, ccstructs_pathname_t));
+  return ccname_new(ccstructs_pathname_T)(ccstructs_core(ptn), &ccname_trait_table(ccstructs_pathname_T, ccstructs_pathname_t));
 }
 
-ccstructs_serialiser_I
-ccname_iface_new(ccstructs_serialiser_I, ccstructs_pathname_t) (ccstructs_pathname_t const * S)
-/* Interface   constructor.   Build   an  instance   of  "ccstructs_serialiser_I"   as
+ccstructs_serialiser_T
+ccname_trait_new(ccstructs_serialiser_T, ccstructs_pathname_t) (ccstructs_pathname_t const * S)
+/* Trait   constructor.   Build   an  instance   of  "ccstructs_serialiser_T"   as
    implemented by "ccstructs_pathname_t". */
 {
-  return ccname_new(ccstructs_serialiser_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_serialiser_I, ccstructs_pathname_t));
+  return ccname_new(ccstructs_serialiser_T)(ccstructs_core(S), &ccname_trait_table(ccstructs_serialiser_T, ccstructs_pathname_t));
 }
 
-ccstructs_deserialiser_I
-ccname_iface_new(ccstructs_deserialiser_I, ccstructs_pathname_t) (ccstructs_pathname_t * S)
-/* Interface  constructor.    Build  an  instance  of   "ccstructs_deserialiser_I"  as
+ccstructs_deserialiser_T
+ccname_trait_new(ccstructs_deserialiser_T, ccstructs_pathname_t) (ccstructs_pathname_t * S)
+/* Trait  constructor.    Build  an  instance  of   "ccstructs_deserialiser_T"  as
    implemented by "ccstructs_pathname_t". */
 {
-  return ccname_new(ccstructs_deserialiser_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_deserialiser_I, ccstructs_pathname_t));
+  return ccname_new(ccstructs_deserialiser_T)(ccstructs_core(S), &ccname_trait_table(ccstructs_deserialiser_T, ccstructs_pathname_t));
 }
 
-ccstructs_dumpable_I
-ccname_iface_new(ccstructs_dumpable_I, ccstructs_pathname_t) (ccstructs_pathname_t const * S)
-/* Interface constructor.  Build an instance of "ccstructs_dumpable_I" as implemented
+ccstructs_dumpable_T
+ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t) (ccstructs_pathname_t const * S)
+/* Trait constructor.  Build an instance of "ccstructs_dumpable_T" as implemented
    by "ccstructs_pathname_t". */
 {
-  return ccname_new(ccstructs_dumpable_I)(ccstructs_core(S), &ccname_iface_table(ccstructs_dumpable_I, ccstructs_pathname_t));
+  return ccname_new(ccstructs_dumpable_T)(ccstructs_core(S), &ccname_trait_table(ccstructs_dumpable_T, ccstructs_pathname_t));
 }
 
 /* end of file */

@@ -6,11 +6,11 @@
   Abstract
 
 	This header file defines the struct  "my_coords_t" and shows how to implement
-	the  interfaces for  it.   "my_coords_t"  is a  simple  struct with  embedded
-	fields, no pointers to external memory blocks.
+	the traits for it.  "my_coords_t" is a simple struct with embedded fields, no
+	pointers to external memory blocks.
 
 	The  "struct-no-methods" example  shows how  to implement  a struct  using no
-	methods table for the struct-specific interface constructors.
+	methods table for the struct-specific trait constructors.
 
   Copyright (C) 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -50,7 +50,7 @@
 #include <ccnames.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "printable-interface.h"
+#include "printable-trait.h"
 
 
 /** --------------------------------------------------------------------
@@ -156,43 +156,43 @@ ccstructs_decl void my_coords_register_error_handler_delete (cce_destination_t L
 
 
 /** --------------------------------------------------------------------
- ** Data struct "my_coords_t": implemented interfaces constructors.
+ ** Data struct "my_coords_t": implemented traits constructors.
  ** ----------------------------------------------------------------- */
 
-/* Constructor for  a "ccstructs_dtor_I" interface that  destroys instances allocated
+/* Constructor for  a "ccstructs_dtor_T" trait that  destroys instances allocated
    on the stack or embedded into enclosing structs. */
-ccstructs_decl ccstructs_dtor_I ccname_iface_new(ccstructs_dtor_I, my_coords_t, embedded) (my_coords_t const * self)
+ccstructs_decl ccstructs_dtor_T ccname_trait_new(ccstructs_dtor_T, my_coords_t, embedded) (my_coords_t const * self)
   __attribute__((__nonnull__(1)));
 
-/* Constructor for a "ccstructs_dtor_I"  interface that destroys standalone instances
+/* Constructor for a "ccstructs_dtor_T"  trait that destroys standalone instances
    dynamically allocated on the heap. */
-ccstructs_decl ccstructs_dtor_I ccname_iface_new(ccstructs_dtor_I, my_coords_t, standalone) (my_coords_t const * self)
+ccstructs_decl ccstructs_dtor_T ccname_trait_new(ccstructs_dtor_T, my_coords_t, standalone) (my_coords_t const * self)
   __attribute__((__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-/* Constructor  for   a  "ccstructs_dumpable_I"   interface  that  prints   a  struct
+/* Constructor  for   a  "ccstructs_dumpable_T"   trait  that  prints   a  struct
    representation on some output channel. */
-ccstructs_decl ccstructs_dumpable_I ccname_iface_new(ccstructs_dumpable_I, my_coords_t) (my_coords_t const * S)
+ccstructs_decl ccstructs_dumpable_T ccname_trait_new(ccstructs_dumpable_T, my_coords_t) (my_coords_t const * S)
   __attribute__((__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-/* Constructor for a "ccstructs_serialiser_I" interface that serialises an instance of
+/* Constructor for a "ccstructs_serialiser_T" trait that serialises an instance of
    "my_coords_t" into a memory block. */
-ccstructs_decl ccstructs_serialiser_I ccname_iface_new(ccstructs_serialiser_I, my_coords_t) (my_coords_t const * S)
+ccstructs_decl ccstructs_serialiser_T ccname_trait_new(ccstructs_serialiser_T, my_coords_t) (my_coords_t const * S)
   __attribute__((__nonnull__(1)));
 
-/* Constructor  for  a  "ccstructs_deserialiser_I"   interface  that  deserialises  an
+/* Constructor  for  a  "ccstructs_deserialiser_T"   trait  that  deserialises  an
    instance of "my_coords_t" from a memory block. */
-ccstructs_decl ccstructs_deserialiser_I ccname_iface_new(ccstructs_deserialiser_I, my_coords_t) (my_coords_t * S)
+ccstructs_decl ccstructs_deserialiser_T ccname_trait_new(ccstructs_deserialiser_T, my_coords_t) (my_coords_t * S)
   __attribute__((__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-/* Constructor for a  "my_printable_I" interface that prints  a struct representation
+/* Constructor for a  "my_printable_T" trait that prints  a struct representation
    on some output channel. */
-ccstructs_decl my_printable_I ccname_iface_new(my_printable_I, my_coords_t) (my_coords_t const * S)
+ccstructs_decl my_printable_T ccname_trait_new(my_printable_T, my_coords_t) (my_coords_t const * S)
   __attribute__((__nonnull__(1)));
 
 

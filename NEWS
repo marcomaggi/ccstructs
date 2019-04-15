@@ -22,6 +22,9 @@ The release series 0.3 is backwards incompatible with the previous one.
 
 * Added copy constructors for "ccstructs_pathname_t", plain and guarded.
 
+* Renamed "interfaces" to "traits", which is a more appropriate name for
+  the facilities.
+
 
 Revision 0.2.0-devel.4
 ----------------------

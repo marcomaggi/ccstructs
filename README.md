@@ -6,8 +6,8 @@
 
 ## Introduction
 
-This  package  installs  a  C11  language  library  implementing  common
-interfaces to handle C structs.
+This package installs a C11  language library implementing common traits
+to handle C structs.
 
 The  library  targets  POSIX  systems.   This  package  depends  on  the
 packages:  CCExceptions,  at least  version  0.9.0;  CCMemory, at  least
