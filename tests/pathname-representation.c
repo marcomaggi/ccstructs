@@ -142,13 +142,12 @@ test_2_1 (cce_destination_t upper_L)
 {
   static char const *		P = "/path/to/file.ext";
   cce_location_t		L[1];
-  ccstructs_pathname_t const *	ptn;
   ccstructs_clean_handler_t	ptn_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
+    ccstructs_pathname_t const *	ptn = ccname_new(ccstructs_pathname_t, from_chars)(L, P);
     ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
       ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
@@ -174,13 +173,12 @@ test_2_2 (cce_destination_t upper_L)
   static char const *		P = "/path/to/file.ext";
   ccmem_asciiz_t		B = ccmem_new_asciiz_from_str((char *)P);
   cce_location_t		L[1];
-  ccstructs_pathname_t const *	ptn;
   ccstructs_clean_handler_t	ptn_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    ptn = ccname_new(ccstructs_pathname_t, from_asciiz)(L, B);
+    ccstructs_pathname_t const *	ptn = ccname_new(ccstructs_pathname_t, from_asciiz)(L, B);
     ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
       ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
@@ -206,13 +204,12 @@ test_2_3 (cce_destination_t upper_L)
   static char const *		P = "/path/to/file.ext";
   ccmem_ascii_t			B = ccmem_new_ascii_from_str((char *)P);
   cce_location_t		L[1];
-  ccstructs_pathname_t const *	ptn;
   ccstructs_clean_handler_t	ptn_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    ptn = ccname_new(ccstructs_pathname_t, from_ascii)(L, B);
+    ccstructs_pathname_t const *	ptn = ccname_new(ccstructs_pathname_t, from_ascii)(L, B);
     ccstructs_init_and_register_handler(L, ptn_H, ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn));
     {
       ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
@@ -335,13 +332,12 @@ test_4_1 (cce_destination_t upper_L)
 {
   static char const *		P = "/path/to/file.ext";
   cce_location_t		L[1];
-  ccstructs_pathname_t const *	ptn;
   ccstructs_clean_handler_t	ptn_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    ptn = ccname_new(ccstructs_pathname_t, from_chars, guarded, clean)(L, ptn_H, P);
+    ccstructs_pathname_t const *	ptn = ccname_new(ccstructs_pathname_t, from_chars, guarded, clean)(L, ptn_H, P);
     {
       ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
@@ -366,13 +362,12 @@ test_4_2 (cce_destination_t upper_L)
   static char const *		P = "/path/to/file.ext";
   ccmem_asciiz_t		B = ccmem_new_asciiz_from_str((char *)P);
   cce_location_t		L[1];
-  ccstructs_pathname_t const *	ptn;
   ccstructs_clean_handler_t	ptn_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    ptn = ccname_new(ccstructs_pathname_t, from_asciiz, guarded, clean)(L, ptn_H, B);
+    ccstructs_pathname_t const *	ptn = ccname_new(ccstructs_pathname_t, from_asciiz, guarded, clean)(L, ptn_H, B);
     {
       ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
@@ -397,13 +392,12 @@ test_4_3 (cce_destination_t upper_L)
   static char const *		P = "/path/to/file.ext";
   ccmem_ascii_t			B = ccmem_new_ascii_from_str((char *)P);
   cce_location_t		L[1];
-  ccstructs_pathname_t const *	ptn;
   ccstructs_clean_handler_t	ptn_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    ptn = ccname_new(ccstructs_pathname_t, from_ascii, guarded, clean)(L, ptn_H, B);
+    ccstructs_pathname_t const * ptn = ccname_new(ccstructs_pathname_t, from_ascii, guarded, clean)(L, ptn_H, B);
     {
       ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
@@ -537,7 +531,6 @@ test_6_1 (cce_destination_t upper_L)
 {
   static char const *		P = "/path/to/file.ext";
   cce_location_t		L[1];
-  ccstructs_pathname_t const *	ptn;
   ccstructs_error_handler_t	ptn_H[1];
 
   if (cce_location(L)) {
@@ -547,7 +540,7 @@ test_6_1 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    ptn = ccname_new(ccstructs_pathname_t, from_chars, guarded, error)(L, ptn_H, P);
+    ccstructs_pathname_t const * ptn = ccname_new(ccstructs_pathname_t, from_chars, guarded, error)(L, ptn_H, P);
     {
       ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
@@ -572,7 +565,6 @@ test_6_2 (cce_destination_t upper_L)
   static char const *		P = "/path/to/file.ext";
   ccmem_asciiz_t		B = ccmem_new_asciiz_from_str((char *)P);
   cce_location_t		L[1];
-  ccstructs_pathname_t const *	ptn;
   ccstructs_error_handler_t	ptn_H[1];
 
   if (cce_location(L)) {
@@ -582,7 +574,7 @@ test_6_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    ptn = ccname_new(ccstructs_pathname_t, from_asciiz, guarded, error)(L, ptn_H, B);
+    ccstructs_pathname_t const * ptn = ccname_new(ccstructs_pathname_t, from_asciiz, guarded, error)(L, ptn_H, B);
     {
       ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
@@ -607,7 +599,6 @@ test_6_3 (cce_destination_t upper_L)
   static char const *		P = "/path/to/file.ext";
   ccmem_ascii_t			B = ccmem_new_ascii_from_str((char *)P);
   cce_location_t		L[1];
-  ccstructs_pathname_t const *	ptn;
   ccstructs_error_handler_t	ptn_H[1];
 
   if (cce_location(L)) {
@@ -617,7 +608,7 @@ test_6_3 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
-    ptn = ccname_new(ccstructs_pathname_t, from_ascii, guarded, error)(L, ptn_H, B);
+    ccstructs_pathname_t const * ptn = ccname_new(ccstructs_pathname_t, from_ascii, guarded, error)(L, ptn_H, B);
     {
       ccstructs_dumpable_T	W = ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
       ccstructs_dumpable_dump(L, W);
@@ -742,12 +733,13 @@ test_8_1 (cce_destination_t upper_L)
 {
   static char const *		P = "/path/to/file.ext";
   cce_location_t		L[1];
-  ccstructs_pathname_t const	*ptn, *ptn_copy;
   ccstructs_clean_handler_t	ptn_H[1], ptn_copy_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
+    ccstructs_pathname_t const	*ptn, *ptn_copy;
+
     ptn      = ccname_new(ccstructs_pathname_t, from_chars, guarded, clean)(L, ptn_H, P);
     ptn_copy = ccname_new(ccstructs_pathname_t, copy,       guarded, clean)(L, ptn_copy_H, ptn);
     {
@@ -774,12 +766,13 @@ test_8_2 (cce_destination_t upper_L)
   static char const *		P = "/path/to/file.ext";
   ccmem_asciiz_t		B = ccmem_new_asciiz_from_str((char *)P);
   cce_location_t		L[1];
-  ccstructs_pathname_t const	*ptn, *ptn_copy;
   ccstructs_clean_handler_t	ptn_H[1], ptn_copy_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
+    ccstructs_pathname_t const	*ptn, *ptn_copy;
+
     ptn      = ccname_new(ccstructs_pathname_t, from_asciiz, guarded, clean)(L, ptn_H, B);
     ptn_copy = ccname_new(ccstructs_pathname_t, copy,        guarded, clean)(L, ptn_copy_H, ptn);
     {
@@ -806,12 +799,13 @@ test_8_3 (cce_destination_t upper_L)
   static char const *		P = "/path/to/file.ext";
   ccmem_ascii_t			B = ccmem_new_ascii_from_str((char *)P);
   cce_location_t		L[1];
-  ccstructs_pathname_t const	*ptn, *ptn_copy;
   ccstructs_clean_handler_t	ptn_H[1], ptn_copy_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
+    ccstructs_pathname_t const	*ptn, *ptn_copy;
+
     ptn      = ccname_new(ccstructs_pathname_t, from_ascii, guarded, clean)(L, ptn_H, B);
     ptn_copy = ccname_new(ccstructs_pathname_t, copy,       guarded, clean)(L, ptn_copy_H, ptn);
     {
@@ -950,7 +944,6 @@ test_10_1 (cce_destination_t upper_L)
 {
   static char const *		P = "/path/to/file.ext";
   cce_location_t		L[1];
-  ccstructs_pathname_t const	*ptn, *ptn_copy;
   ccstructs_error_handler_t	ptn_H[1], ptn_copy_H[1];
 
   if (cce_location(L)) {
@@ -960,6 +953,8 @@ test_10_1 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
+    ccstructs_pathname_t const	*ptn, *ptn_copy;
+
     ptn      = ccname_new(ccstructs_pathname_t, from_chars, guarded, error)(L, ptn_H, P);
     ptn_copy = ccname_new(ccstructs_pathname_t, copy,       guarded, error)(L, ptn_copy_H, ptn);
     {
@@ -986,7 +981,6 @@ test_10_2 (cce_destination_t upper_L)
   static char const *		P = "/path/to/file.ext";
   ccmem_asciiz_t		B = ccmem_new_asciiz_from_str((char *)P);
   cce_location_t		L[1];
-  ccstructs_pathname_t const	*ptn, *ptn_copy;
   ccstructs_error_handler_t	ptn_H[1], ptn_copy_H[1];
 
   if (cce_location(L)) {
@@ -996,6 +990,8 @@ test_10_2 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
+    ccstructs_pathname_t const	*ptn, *ptn_copy;
+
     ptn      = ccname_new(ccstructs_pathname_t, from_asciiz, guarded, error)(L, ptn_H, B);
     ptn_copy = ccname_new(ccstructs_pathname_t, copy,        guarded, error)(L, ptn_copy_H, ptn);
     {
@@ -1022,7 +1018,6 @@ test_10_3 (cce_destination_t upper_L)
   static char const *		P = "/path/to/file.ext";
   ccmem_ascii_t			B = ccmem_new_ascii_from_str((char *)P);
   cce_location_t		L[1];
-  ccstructs_pathname_t const	*ptn, *ptn_copy;
   ccstructs_error_handler_t	ptn_H[1], ptn_copy_H[1];
 
   if (cce_location(L)) {
@@ -1032,6 +1027,8 @@ test_10_3 (cce_destination_t upper_L)
       cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
+    ccstructs_pathname_t const	*ptn, *ptn_copy;
+
     ptn      = ccname_new(ccstructs_pathname_t, from_ascii, guarded, error)(L, ptn_H, B);
     ptn_copy = ccname_new(ccstructs_pathname_t, copy,       guarded, error)(L, ptn_copy_H, ptn);
     {
