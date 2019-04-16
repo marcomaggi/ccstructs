@@ -174,7 +174,7 @@ extern "C" {
 #define ccname_init_2(STRUCT_TYPE, VARIANT)			\
   _CCNAME_INIT(STRUCT_TYPE, VARIANT)
 #define ccname_init_3(STRUCT_TYPE, VARIANT1, VARIANT2)		\
-  _CCNAME_INIT(STRUCT_TYPE, VARIANT1 ## __ ## VARIANT2)
+  _CCNAME_INIT(STRUCT_TYPE, VARIANT1 ## _ ## VARIANT2)
 #define ccname_init_4(STRUCT_TYPE, VARIANT1, VARIANT2, VARIANT3)\
   _CCNAME_INIT(STRUCT_TYPE, VARIANT1 ## _ ## VARIANT2 ## _ ## VARIANT3)
 #define ccname_init(...)					\

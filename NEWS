@@ -6,7 +6,7 @@
 Revision 0.3.0-devel.1
 ----------------------
 
-* ...
+* Fixed error in name generation for "ccname_init()" with 2 variants.
 
 
 Revision 0.3.0-devel.0
