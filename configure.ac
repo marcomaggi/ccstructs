@@ -2,7 +2,7 @@
 #
 
 AC_PREREQ([2.69])
-MMUX_PKG_VERSIONS([0],[3],[0],[devel.2])
+MMUX_PKG_VERSIONS([0],[3],[0],[devel.3])
 AC_INIT([CCStructs],[MMUX_PACKAGE_VERSION],
   [mrc.mgg@gmail.com],
   [ccstructs],[http://github.com/marcomaggi/ccstructs])
