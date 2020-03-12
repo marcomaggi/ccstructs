@@ -8,7 +8,7 @@
 	This  module  traits  CCExceptions's   exception  handlers  with  CCStructs's
 	destructor traits.
 
-  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
