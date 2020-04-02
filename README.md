@@ -10,9 +10,9 @@ This package installs a C11  language library implementing common traits
 to handle C structs.
 
 The  library  targets  POSIX  systems.   This  package  depends  on  the
-packages:  CCExceptions,  at least  version  0.9.0;  CCMemory, at  least
-version 0.2.2.   To run the  test suite:  this package depends  upon the
-package CCTests, at least version 0.4.1.
+packages:  CCExceptions, at  least  version 0.10.0;  CCMemory, at  least
+version 0.3.0.   To run the  test suite:  this package depends  upon the
+package CCTests, at least version 0.5.0.
 
 The package uses the GNU Autotools and it is tested, using Travis CI, on
 both Ubuntu GNU+Linux systems and OS X systems.
@@ -20,7 +20,7 @@ both Ubuntu GNU+Linux systems and OS X systems.
 
 ## License
 
-Copyright (c) 2018-2019 Marco Maggi <marco.maggi-ipsu@poste.it><br/>
+Copyright (c) 2018-2020 Marco Maggi <marco.maggi-ipsu@poste.it><br/>
 All rights reserved.
 
 This program is free software: you  can redistribute it and/or modify it
