@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2018, 2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2018, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -64,7 +64,7 @@ static ccname_trait_table_type(ccstructs_serialiser_T) const ccname_trait_table(
 };
 
 size_t
-ccname_trait_method(ccstructs_serialiser_T, one_one_t, required_size) (ccstructs_serialiser_T I CCSTRUCTS_UNUSED)
+ccname_trait_method(ccstructs_serialiser_T, one_one_t, required_size) (ccstructs_serialiser_T I CCLIB_UNUSED)
 /* Return the minimum number of bytes  required to hold the serialised representation
    of "serialised_one_one_t".*/
 {
@@ -73,12 +73,12 @@ ccname_trait_method(ccstructs_serialiser_T, one_one_t, required_size) (ccstructs
 
 ccmem_block_t
 ccname_trait_method(ccstructs_serialiser_T, one_one_t,
-		    write) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialiser_T I, ccmem_block_t B)
+		    write) (cce_destination_t L CCLIB_UNUSED, ccstructs_serialiser_T I, ccmem_block_t B)
 /* Trait  method implementation.   Serialise an  instance of  "one_one_t" in  the
    memory block "B". */
 {
-  CCSTRUCTS_PC(one_one_t const, S, ccstructs_serialiser_self(I));
-  CCSTRUCTS_PC(serialised_one_one_t, W, B.ptr);
+  CCLIB_PC(one_one_t const, S, ccstructs_serialiser_self(I));
+  CCLIB_PC(serialised_one_one_t, W, B.ptr);
   ccmem_block_t	N = {
     .ptr	= B.ptr + sizeof(serialised_one_one_t),
     .len	= B.len - sizeof(serialised_one_one_t)
@@ -89,7 +89,8 @@ ccname_trait_method(ccstructs_serialiser_T, one_one_t,
   return N;
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccstructs_serialiser_T
 ccname_trait_new(ccstructs_serialiser_T, one_one_t) (one_one_t * S)
 /* Trait  constructor.   Build  an   instance  of  "ccstructs_serialiser_t"  as
@@ -109,13 +110,13 @@ static ccname_trait_table_type(ccstructs_deserialiser_T) const ccname_trait_tabl
 };
 
 ccmem_block_t
-ccname_trait_method(ccstructs_deserialiser_T, one_one_t,
-		    read) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_deserialiser_T I, ccmem_block_t B)
+ccname_trait_method(ccstructs_deserialiser_T, one_one_t, read)
+  (cce_destination_t L CCLIB_UNUSED, ccstructs_deserialiser_T I, ccmem_block_t B)
 /* Trait method  implementation.  Dedeserialise  an instance of  "one_one_t" from
    the memory block "B". */
 {
-  CCSTRUCTS_PC(one_one_t, S, ccstructs_deserialiser_self(I));
-  CCSTRUCTS_PC(serialised_one_one_t const, W, B.ptr);
+  CCLIB_PC(one_one_t, S, ccstructs_deserialiser_self(I));
+  CCLIB_PC(serialised_one_one_t const, W, B.ptr);
   ccmem_block_t	N = {
     .ptr	= B.ptr + sizeof(serialised_one_one_t),
     .len	= B.len - sizeof(serialised_one_one_t)
@@ -126,7 +127,8 @@ ccname_trait_method(ccstructs_deserialiser_T, one_one_t,
   return N;
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccstructs_deserialiser_T
 ccname_trait_new(ccstructs_deserialiser_T, one_one_t) (one_one_t * S)
 /* Trait  constructor.   Build  an   instance  of  "ccstructs_deserialiser_t"  as

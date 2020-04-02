@@ -13,7 +13,7 @@
 	methods table for  the struct-specific trait constructors:  every instance of
 	the struct type holds a pointer to a struct implementing a methods table.
 
-  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019, 2020 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   The author  hereby grant permission to  use, copy, modify, distribute,  and license
   this  software  and its  documentation  for  any  purpose, provided  that  existing
@@ -83,36 +83,39 @@ struct my_coords_t {
 
 /* Initialisation  function  that  initialises  an already  allocated  struct.   This
    initialises from rectangular coordinates. */
-ccstructs_decl void ccname_init(my_coords_t, rec) (my_coords_t * S, double X, double Y)
-  __attribute__((__nonnull__(1)));
+cclib_decl void ccname_init(my_coords_t, rec) (my_coords_t * S, double X, double Y)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* Initialisation  function  that  initialises  an already  allocated  struct.   This
    initialises from polar coordinates. */
-ccstructs_decl void ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
-  __attribute__((__nonnull__(1)));
+cclib_decl void ccname_init(my_coords_t, pol) (my_coords_t * S, double RHO, double THETA)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* Initialisation  function  that  initialises  an already  allocated  struct.   This
    initialises in such a  way that it allows for both  finalisation and mutation from
    deserialisation. */
-ccstructs_decl void ccname_init(my_coords_t, deserlialisable) (my_coords_t * S)
-  __attribute__((__nonnull__(1)));
+cclib_decl void ccname_init(my_coords_t, deserlialisable) (my_coords_t * S)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
-ccstructs_decl my_coords_t const * ccname_new(my_coords_t, rec) (cce_destination_t L, double X, double Y)
-  __attribute__((__nonnull__(1),__returns_nonnull__));
+cclib_decl my_coords_t const * ccname_new(my_coords_t, rec) (cce_destination_t L, double X, double Y)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 /* Constructor function  that allocates  the struct  on the  heap using  the standard
    memory   allocator  implemented   by  CCMemory.    This  initialises   from  polar
    coordinates. */
-ccstructs_decl my_coords_t const * ccname_new(my_coords_t, pol) (cce_destination_t L, double RHO, double THETA)
-  __attribute__((__nonnull__(1),__returns_nonnull__));
+cclib_decl my_coords_t const * ccname_new(my_coords_t, pol) (cce_destination_t L, double RHO, double THETA)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 /* Constructor function  that allocates  the struct  on the  heap using  the standard
    memory allocator implemented by CCMemory.  This  initialises in such a way that it
    allows for both finalisation and mutation from deserialisation. */
-ccstructs_decl my_coords_t * ccname_new(my_coords_t, deserialisable) (cce_destination_t L)
-  __attribute__((__nonnull__(1),__returns_nonnull__));
+cclib_decl my_coords_t * ccname_new(my_coords_t, deserialisable) (cce_destination_t L)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 
 /** --------------------------------------------------------------------
@@ -120,34 +123,34 @@ ccstructs_decl my_coords_t * ccname_new(my_coords_t, deserialisable) (cce_destin
  ** ----------------------------------------------------------------- */
 
 /* Constructor for a "ccstructs_dtor_T" trait. */
-ccstructs_decl ccstructs_dtor_T ccname_trait_new(ccstructs_dtor_T, my_coords_t) (my_coords_t const * self)
-  __attribute__((__nonnull__(1)));
+cclib_decl ccstructs_dtor_T ccname_trait_new(ccstructs_dtor_T, my_coords_t) (my_coords_t const * self)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 /* Constructor  for   a  "ccstructs_dumpable_T"   trait  that  prints   a  struct
    representation on some output channel. */
-ccstructs_decl ccstructs_dumpable_T ccname_trait_new(ccstructs_dumpable_T, my_coords_t) (my_coords_t const * S)
-  __attribute__((__nonnull__(1)));
+cclib_decl ccstructs_dumpable_T ccname_trait_new(ccstructs_dumpable_T, my_coords_t) (my_coords_t const * S)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 /* Constructor for a "ccstructs_serialiser_T" trait that serialises an instance of
    "my_coords_t" into a memory block. */
-ccstructs_decl ccstructs_serialiser_T ccname_trait_new(ccstructs_serialiser_T, my_coords_t) (my_coords_t const * S)
-  __attribute__((__nonnull__(1)));
+cclib_decl ccstructs_serialiser_T ccname_trait_new(ccstructs_serialiser_T, my_coords_t) (my_coords_t const * S)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* Constructor  for  a  "ccstructs_deserialiser_T"   trait  that  deserialises  an
    instance of "my_coords_t" from a memory block. */
-ccstructs_decl ccstructs_deserialiser_T ccname_trait_new(ccstructs_deserialiser_T, my_coords_t) (my_coords_t * S)
-  __attribute__((__nonnull__(1)));
+cclib_decl ccstructs_deserialiser_T ccname_trait_new(ccstructs_deserialiser_T, my_coords_t) (my_coords_t * S)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
 /* Constructor for a  "my_printable_T" trait that prints  a struct representation
    on some output channel. */
-ccstructs_decl my_printable_T ccname_trait_new(my_printable_T, my_coords_t) (my_coords_t const * S)
-  __attribute__((__nonnull__(1)));
+cclib_decl my_printable_T ccname_trait_new(my_printable_T, my_coords_t) (my_coords_t const * S)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------

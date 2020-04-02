@@ -9,7 +9,7 @@
 	example programs.
 
 
-  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019, 2020 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   The author  hereby grant permission to  use, copy, modify, distribute,  and license
   this  software  and its  documentation  for  any  purpose, provided  that  existing
@@ -69,7 +69,8 @@ struct ccname_trait_table_type(my_printable_T) {
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static inline my_printable_T
 ccname_new(my_printable_T) (ccstructs_core_t const * S, ccname_trait_table_type(my_printable_T) const * M)
 {
@@ -80,21 +81,24 @@ ccname_new(my_printable_T) (ccstructs_core_t const * S, ccname_trait_table_type(
   return I;
 }
 
-__attribute__((__always_inline__,__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline ccstructs_core_t const *
 my_printable_self (my_printable_T I)
 {
   return I.self;
 }
 
-__attribute__((__always_inline__,__nonnull__(1,3)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,3)
 static inline void
 my_printable_print_rec (cce_destination_t L, my_printable_T I, FILE * stream)
 {
   I.methods->print_rec(L, I, stream);
 }
 
-__attribute__((__always_inline__,__nonnull__(1,3)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,3)
 static inline void
 my_printable_print_pol (cce_destination_t L, my_printable_T I, FILE * stream)
 {

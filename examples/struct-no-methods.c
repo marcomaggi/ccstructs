@@ -12,7 +12,7 @@
 	The  "struct-no-methods" example  shows how  to implement  a struct  using no
 	methods table for the struct-specific trait constructors.
 
-  Copyright (C) 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2019, 2020 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   The author  hereby grant permission to  use, copy, modify, distribute,  and license
   this  software  and its  documentation  for  any  purpose, provided  that  existing
@@ -155,22 +155,22 @@ ccname_delete(my_coords_t) (my_coords_t const * S)
  ** ----------------------------------------------------------------- */
 
 static void
-my_coords_clean_handler_final (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_clean_handler_t const * const H)
+my_coords_clean_handler_final (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 /* Destructor handler for embedded instances.  Release all the asynchronous resources
    associated to the struct instance; does not touch the struct itself. */
 {
-  CCSTRUCTS_PC(my_coords_t, self, cce_handler_resource_pointer(H));
+  CCLIB_PC(my_coords_t, self, cce_handler_resource_pointer(H));
 
   ccname_final(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: finalised by plain handler\n", __func__); }
 }
 
 static void
-my_coords_error_handler_final (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_error_handler_t const * const H)
+my_coords_error_handler_final (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
 /* Destructor handler for embedded instances.  Release all the asynchronous resources
    associated to the struct instance; does not touch the struct itself. */
 {
-  CCSTRUCTS_PC(my_coords_t, self, cce_handler_resource_pointer(H));
+  CCLIB_PC(my_coords_t, self, cce_handler_resource_pointer(H));
 
   ccname_final(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: finalised by plain handler\n", __func__); }
@@ -191,7 +191,7 @@ my_coords_register_error_handler_final (cce_destination_t L, cce_error_handler_t
 /* ------------------------------------------------------------------ */
 
 static void
-my_coords_clean_handler_delete (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_clean_handler_t const * const H)
+my_coords_clean_handler_delete (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * const H)
 /* Destructor  handler  for  standalone  instances.   Release  all  the  asynchronous
    aresources associated  to the struct  instance; release the memory  block allocated
    for  the  struct instance  using  the  standard  memory allocator  implemented  by
@@ -199,14 +199,14 @@ my_coords_clean_handler_delete (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_
 
    To be used to destroy instances dynamically allocated on the heap. */
 {
-  CCSTRUCTS_PC(my_coords_t, self, cce_handler_resource_pointer(H));
+  CCLIB_PC(my_coords_t, self, cce_handler_resource_pointer(H));
 
   ccname_delete(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: deleted by plain handler\n", __func__); }
 }
 
 static void
-my_coords_error_handler_delete (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_error_handler_t const * const H)
+my_coords_error_handler_delete (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * const H)
 /* Destructor  handler  for  standalone  instances.   Release  all  the  asynchronous
    aresources associated  to the struct  instance; release the memory  block allocated
    for  the  struct instance  using  the  standard  memory allocator  implemented  by
@@ -214,7 +214,7 @@ my_coords_error_handler_delete (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_
 
    To be used to destroy instances dynamically allocated on the heap. */
 {
-  CCSTRUCTS_PC(my_coords_t, self, cce_handler_resource_pointer(H));
+  CCLIB_PC(my_coords_t, self, cce_handler_resource_pointer(H));
 
   ccname_delete(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: deleted by plain handler\n", __func__); }
@@ -250,7 +250,7 @@ ccname_trait_new(ccstructs_dtor_T, my_coords_t, embedded) (my_coords_t const * c
 void
 my_coords_embedded_destructor (ccstructs_core_t * S)
 {
-  CCSTRUCTS_PC(my_coords_t, self, S);
+  CCLIB_PC(my_coords_t, self, S);
 
   ccname_final(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: finalised by dtor\n", __func__); }
@@ -274,7 +274,7 @@ ccname_trait_new(ccstructs_dtor_T, my_coords_t, standalone) (my_coords_t const *
 void
 my_coords_standalone_destructor (ccstructs_core_t * S)
 {
-  CCSTRUCTS_PC(my_coords_t, self, S);
+  CCLIB_PC(my_coords_t, self, S);
 
   ccname_delete(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
@@ -300,7 +300,7 @@ ccname_trait_new(ccstructs_dumpable_T, my_coords_t) (my_coords_t const * S)
 void
 ccname_trait_method(ccstructs_dumpable_T, my_coords_t, dump) (cce_destination_t L, ccstructs_dumpable_T I)
 {
-  CCSTRUCTS_PC(my_coords_t, S, ccstructs_dumpable_self(I));
+  CCLIB_PC(my_coords_t, S, ccstructs_dumpable_self(I));
   int	rv;
 
   errno = 0;
@@ -338,19 +338,19 @@ ccname_trait_new(ccstructs_serialiser_T, my_coords_t) (my_coords_t const * S)
 /* ------------------------------------------------------------------ */
 
 size_t
-ccname_trait_method(ccstructs_serialiser_T, my_coords_t, required_size) (ccstructs_serialiser_T I CCSTRUCTS_UNUSED)
+ccname_trait_method(ccstructs_serialiser_T, my_coords_t, required_size) (ccstructs_serialiser_T I CCLIB_UNUSED)
 {
   return sizeof(serialised_my_coords_t);
 }
 
 ccmem_block_t
 ccname_trait_method(ccstructs_serialiser_T, my_coords_t,
-		    write) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialiser_T I, ccmem_block_t B)
+		    write) (cce_destination_t L CCLIB_UNUSED, ccstructs_serialiser_T I, ccmem_block_t B)
 /* Trait  method implementation.   Serialise an  instance of  "my_coords_t" in  the
    memory block "B". */
 {
-  CCSTRUCTS_PC(my_coords_t const, S, ccstructs_serialiser_self(I));
-  CCSTRUCTS_PC(serialised_my_coords_t, W, B.ptr);
+  CCLIB_PC(my_coords_t const, S, ccstructs_serialiser_self(I));
+  CCLIB_PC(serialised_my_coords_t, W, B.ptr);
   ccmem_block_t	N = {
     .ptr	= B.ptr + sizeof(serialised_my_coords_t),
     .len	= B.len - sizeof(serialised_my_coords_t)
@@ -389,7 +389,7 @@ ccname_trait_new(ccstructs_deserialiser_T, my_coords_t) (my_coords_t * S)
 /* ------------------------------------------------------------------ */
 
 size_t
-ccname_trait_method(ccstructs_deserialiser_T, my_coords_t, required_size) (ccstructs_deserialiser_T I CCSTRUCTS_UNUSED)
+ccname_trait_method(ccstructs_deserialiser_T, my_coords_t, required_size) (ccstructs_deserialiser_T I CCLIB_UNUSED)
 /* Return the minimum number of bytes  required to hold the serialised representation
    of "my_coords_t".*/
 {
@@ -398,12 +398,12 @@ ccname_trait_method(ccstructs_deserialiser_T, my_coords_t, required_size) (ccstr
 
 ccmem_block_t
 ccname_trait_method(ccstructs_deserialiser_T, my_coords_t,
-		    read) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_deserialiser_T I, ccmem_block_t B)
+		    read) (cce_destination_t L CCLIB_UNUSED, ccstructs_deserialiser_T I, ccmem_block_t B)
 /* Trait method implementation.  Dedeserialise  an instance of "my_coords_t" from
    the memory block "B". */
 {
-  CCSTRUCTS_PC(my_coords_t, S, ccstructs_deserialiser_self(I));
-  CCSTRUCTS_PC(serialised_my_coords_t const, W, B.ptr);
+  CCLIB_PC(my_coords_t, S, ccstructs_deserialiser_self(I));
+  CCLIB_PC(serialised_my_coords_t const, W, B.ptr);
   ccmem_block_t	N = {
     .ptr	= B.ptr + sizeof(serialised_my_coords_t),
     .len	= B.len - sizeof(serialised_my_coords_t)
@@ -420,7 +420,7 @@ ccname_trait_method(ccstructs_deserialiser_T, my_coords_t,
  ** ----------------------------------------------------------------- */
 
 static void my_printable_fprintf (cce_destination_t L, FILE * stream, char const * format, ...)
-  __attribute__((__format__(printf,3,4)));
+  CCLIB_FUNC_ATTRIBUTE_FORMAT(printf,3,4);
 
 static ccname_trait_method_type(my_printable_T, print)  ccname_trait_method(my_printable_T, my_coords_t, print_rec);
 static ccname_trait_method_type(my_printable_T, print)  ccname_trait_method(my_printable_T, my_coords_t, print_pol);
@@ -456,7 +456,7 @@ my_printable_fprintf (cce_destination_t L, FILE * stream, char const * format, .
 void
 ccname_trait_method(my_printable_T, my_coords_t, print_rec) (cce_destination_t L, my_printable_T I, FILE * stream)
 {
-  CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
+  CCLIB_PC(my_coords_t, S, my_printable_self(I));
 
   my_printable_fprintf(L, stream, "X=%f, Y=%f\n", S->X, S->Y);
 }
@@ -464,7 +464,7 @@ ccname_trait_method(my_printable_T, my_coords_t, print_rec) (cce_destination_t L
 void
 ccname_trait_method(my_printable_T, my_coords_t, print_pol) (cce_destination_t L, my_printable_T I, FILE * stream)
 {
-  CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
+  CCLIB_PC(my_coords_t, S, my_printable_self(I));
   double	RHO   = hypot(S->X, S->Y);
   double	THETA = atan2(S->Y, S->X);
 

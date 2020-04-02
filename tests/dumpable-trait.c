@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2018, 2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2018, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -47,7 +47,7 @@ struct one_one_t {
 static void
 ccname_trait_method(ccstructs_dumpable_T, one_one_t, dump) (cce_destination_t L, ccstructs_dumpable_T I)
 {
-  CCSTRUCTS_PC(one_one_t const, S, ccstructs_dumpable_self(I));
+  CCLIB_PC(one_one_t const, S, ccstructs_dumpable_self(I));
   int	rv;
 
   errno = 0;
@@ -61,7 +61,8 @@ static ccname_trait_table_type(ccstructs_dumpable_T) const ccname_trait_table(cc
   .dump = ccname_trait_method(ccstructs_dumpable_T, one_one_t, dump)
 };
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccstructs_dumpable_T
 ccname_trait_new(ccstructs_dumpable_T, one_one_t) (one_one_t const * S)
 {

@@ -14,7 +14,7 @@
 	the  stack or  embedded into  enclosing structs;  one for  standalone structs
 	allocated on the heap.
 
-  Copyright (C) 2018, 2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2018, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -196,7 +196,7 @@ ccname_final(ccstructs_pathname_t) (ccstructs_pathname_t * ptn)
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static ccstructs_pathname_t *
 ccname_alloc(ccstructs_pathname_t) (cce_destination_t L)
 /* Allocate a  new instance on the  heap using the standard  allocator implemented by
@@ -272,7 +272,7 @@ ccname_new(ccstructs_pathname_t, deserialisable) (cce_destination_t L)
 
 /* ------------------------------------------------------------------ */
 
-static CCSTRUCTS_UNUSED void
+static CCLIB_UNUSED void
 ccname_delete(ccstructs_pathname_t) (ccstructs_pathname_t * const ptn)
 /* Instance destructor.  Finalise  a struct releasing all  the asynchronous resources
    owned by the fields.  Release the memory allocated for the struct.
@@ -516,7 +516,7 @@ ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, embedded) (ccstructs_pa
 void
 ccstructs_embedded_pathname_destructor (ccstructs_core_t * S)
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t, ptn, S);
+  CCLIB_PC(ccstructs_pathname_t, ptn, S);
 
   ccname_final(ccstructs_pathname_t)(ptn);
 }
@@ -541,7 +541,7 @@ ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t, standalone) (ccstructs_
 void
 ccstructs_standalone_pathname_destructor (ccstructs_core_t * S)
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t, ptn, S);
+  CCLIB_PC(ccstructs_pathname_t, ptn, S);
 
   ccname_delete(ccstructs_pathname_t)(ptn);
 }
@@ -630,16 +630,16 @@ static ccname_trait_table_type(ccstructs_pathname_T) const ccname_trait_table(cc
 /* ------------------------------------------------------------------ */
 
 ccmem_asciiz_t
-ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, asciiz) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_T I)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, asciiz) (cce_destination_t L CCLIB_UNUSED, ccstructs_pathname_T I)
 /* Method implementation  function.  Implement the  method "asciiz" for  instances of
    type "ccstructs_pathname_T" as implemented by "ccstructs_pathname_t". */
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
+  CCLIB_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
   return ptn->rep;
 }
 
 bool
-ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_static) (ccstructs_pathname_T I CCSTRUCTS_UNUSED)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_static) (ccstructs_pathname_T I CCLIB_UNUSED)
 /* Method implementation function.  Implement the method "is_static" for instances of
    type "ccstructs_pathname_T" as implemented by "ccstructs_pathname_t". */
 {
@@ -647,25 +647,25 @@ ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_static) (ccst
 }
 
 bool
-ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_absolute) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_T I)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_absolute) (cce_destination_t L CCLIB_UNUSED, ccstructs_pathname_T I)
 /* Method implementation function.  Implement  the method "is_absolute" for instances
    of type "ccstructs_pathname_T" as implemented by "ccstructs_pathname_t". */
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
+  CCLIB_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
   return ('/' == ptn->rep.ptr[0])? true : false;
 }
 
 bool
-ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_relative) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_T I)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_relative) (cce_destination_t L CCLIB_UNUSED, ccstructs_pathname_T I)
 /* Method implementation function.  Implement  the method "is_relative" for instances
    of type "ccstructs_pathname_T" as implemented by "ccstructs_pathname_t". */
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
+  CCLIB_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
   return ('/' == ptn->rep.ptr[0])? false : true;
 }
 
 bool
-ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_normalised) (cce_destination_t L, ccstructs_pathname_T I CCSTRUCTS_UNUSED)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_normalised) (cce_destination_t L, ccstructs_pathname_T I CCLIB_UNUSED)
 /* Method  implementation   function.   Implement  the  method   "is_normalised"  for
    instances     of     type     "ccstructs_pathname_T"     as     implemented     by
    "ccstructs_pathname_t". */
@@ -674,7 +674,7 @@ ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_normalised) (
 }
 
 bool
-ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_realpath) (cce_destination_t L, ccstructs_pathname_T I CCSTRUCTS_UNUSED)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, is_realpath) (cce_destination_t L, ccstructs_pathname_T I CCLIB_UNUSED)
 /* Method implementation function.  Implement  the method "is_realpath" for instances
    of type "ccstructs_pathname_T" as implemented by "ccstructs_pathname_t". */
 {
@@ -689,40 +689,40 @@ ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, dtor) (ccstructs
    "ccstructs_pathname_T"  as implemented  by  "ccstructs_pathname_t".  The  returned
    destructor will work for both embedded and standalone instances. */
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
+  CCLIB_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
 
   return ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)(ptn);
 }
 
 ccstructs_dumpable_T
-ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, dumpable) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_T I)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, dumpable) (cce_destination_t L CCLIB_UNUSED, ccstructs_pathname_T I)
 /* Method implementation function.  Implement the  method "dumpable" for instances of
    type  "ccstructs_pathname_T"   as  implemented  by   "ccstructs_pathname_t".   The
    returned destructor will work for both embedded and standalone instances. */
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
+  CCLIB_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
 
   return ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)(ptn);
 }
 
 ccstructs_serialiser_T
-ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, serialiser) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_T I)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, serialiser) (cce_destination_t L CCLIB_UNUSED, ccstructs_pathname_T I)
 /* Method implementation  function.  Implement the method  "serialiser" for instances
    of  type "ccstructs_pathname_T"  as  implemented  by "ccstructs_pathname_t".   The
    returned destructor will work for both embedded and standalone instances. */
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
+  CCLIB_PC(ccstructs_pathname_t const, ptn, ccstructs_pathname_self(I));
 
   return ccname_trait_new(ccstructs_serialiser_T, ccstructs_pathname_t)(ptn);
 }
 
 ccstructs_deserialiser_T
-ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, deserialiser) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_pathname_T I)
+ccname_trait_method(ccstructs_pathname_T, ccstructs_pathname_t, deserialiser) (cce_destination_t L CCLIB_UNUSED, ccstructs_pathname_T I)
 /* Method implementation function.  Implement the method "deserialiser" for instances
    of  type "ccstructs_pathname_T"  as  implemented  by "ccstructs_pathname_t".   The
    returned destructor will work for both embedded and standalone instances. */
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t, ptn, ccstructs_pathname_self(I));
+  CCLIB_PC(ccstructs_pathname_t, ptn, ccstructs_pathname_self(I));
 
   return ccname_trait_new(ccstructs_deserialiser_T, ccstructs_pathname_t)(ptn);
 }
@@ -751,19 +751,19 @@ ccname_trait_method(ccstructs_serialiser_T, ccstructs_pathname_t, required_size)
 /* Return the minimum number of bytes  required to hold the serialised representation
    of "ccstructs_pathname_t".*/
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_serialiser_self(I));
+  CCLIB_PC(ccstructs_pathname_t const, ptn, ccstructs_serialiser_self(I));
 
   return sizeof(ccstructs_serialised_pathname_t) + ptn->rep.len;
 }
 
 ccmem_block_t
 ccname_trait_method(ccstructs_serialiser_T, ccstructs_pathname_t,
-		    write) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialiser_T I, ccmem_block_t B)
+		    write) (cce_destination_t L CCLIB_UNUSED, ccstructs_serialiser_T I, ccmem_block_t B)
 /* Trait method implementation.  Serialise  an instance of "ccstructs_pathname_t"
    in the memory block "B". */
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_serialiser_self(I));
-  CCSTRUCTS_PC(ccstructs_serialised_pathname_t, W, B.ptr);
+  CCLIB_PC(ccstructs_pathname_t const, ptn, ccstructs_serialiser_self(I));
+  CCLIB_PC(ccstructs_serialised_pathname_t, W, B.ptr);
   ccmem_block_t	N = {
     .ptr	= B.ptr + sizeof(ccstructs_serialised_pathname_t) + ptn->rep.len,
     .len	= B.len - sizeof(ccstructs_serialised_pathname_t) - ptn->rep.len
@@ -798,7 +798,7 @@ ccname_trait_method(ccstructs_deserialiser_T, ccstructs_pathname_t, required_siz
 /* Return the minimum number of bytes  required to hold the serialised representation
    of "ccstructs_pathname_t".*/
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_deserialiser_self(I));
+  CCLIB_PC(ccstructs_pathname_t const, ptn, ccstructs_deserialiser_self(I));
 
   return sizeof(ccstructs_serialised_pathname_t) + ptn->rep.len;
 }
@@ -809,8 +809,8 @@ ccname_trait_method(ccstructs_deserialiser_T, ccstructs_pathname_t,
 /* Trait method implementation.  Dedeserialise  an instance of "ccstructs_pathname_t" from
    the memory block "B". */
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t, ptn, ccstructs_deserialiser_self(I));
-  CCSTRUCTS_PC(ccstructs_serialised_pathname_t const, W, B.ptr);
+  CCLIB_PC(ccstructs_pathname_t, ptn, ccstructs_deserialiser_self(I));
+  CCLIB_PC(ccstructs_serialised_pathname_t const, W, B.ptr);
   ccmem_block_t	N = {
     .ptr	= B.ptr + sizeof(ccstructs_serialised_pathname_t),
     .len	= B.len - sizeof(ccstructs_serialised_pathname_t)
@@ -839,7 +839,7 @@ static ccname_trait_table_type(ccstructs_dumpable_T) const ccname_trait_table(cc
 void
 ccname_trait_method(ccstructs_dumpable_T, ccstructs_pathname_t, dump) (cce_destination_t L, ccstructs_dumpable_T I)
 {
-  CCSTRUCTS_PC(ccstructs_pathname_t const, ptn, ccstructs_dumpable_self(I));
+  CCLIB_PC(ccstructs_pathname_t const, ptn, ccstructs_dumpable_self(I));
   int	rv;
 
   errno = 0;

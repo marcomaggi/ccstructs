@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2018, 2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2018, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -65,7 +65,8 @@ ccname_final(one_t) (one_t * S)
 
 static ccstructs_core_destructor_fun_t	one_destructor;
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccstructs_dtor_T
 ccname_trait_new(ccstructs_dtor_T, one_t) (one_t const * const S)
 {
@@ -75,7 +76,7 @@ ccname_trait_new(ccstructs_dtor_T, one_t) (one_t const * const S)
 void
 one_destructor (ccstructs_core_t * self)
 {
-  CCSTRUCTS_PC(one_t, S, self);
+  CCLIB_PC(one_t, S, self);
 
   ccname_final(one_t)(S);
   if (1) { fprintf(stderr, "%s: finalised by dtor\n", __func__); }
@@ -143,7 +144,8 @@ ccname_delete(two_t) (two_t * S)
 
 static ccstructs_core_destructor_fun_t	two_destructor;
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccstructs_dtor_T
 ccname_trait_new(ccstructs_dtor_T, two_t) (two_t const * const S)
 {
@@ -153,7 +155,7 @@ ccname_trait_new(ccstructs_dtor_T, two_t) (two_t const * const S)
 void
 two_destructor (ccstructs_core_t * self)
 {
-  CCSTRUCTS_PC(two_t, S, self);
+  CCLIB_PC(two_t, S, self);
 
   ccname_delete(two_t)(S);
   if (1) { fprintf(stderr, "%s: deleted by dtor\n", __func__); }

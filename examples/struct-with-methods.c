@@ -12,7 +12,7 @@
 	methods table for  the struct-specific trait constructors:  every instance of
 	the struct type holds a pointer to a struct implementing a methods table.
 
-  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019, 2020 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   The author  hereby grant permission to  use, copy, modify, distribute,  and license
   this  software  and its  documentation  for  any  purpose, provided  that  existing
@@ -123,7 +123,7 @@ ccname_init(my_coords_t, deserialisable) (my_coords_t * S)
 /* ------------------------------------------------------------------ */
 
 static void
-ccname_final(my_coords_t) (my_coords_t const * S CCSTRUCTS_UNUSED)
+ccname_final(my_coords_t) (my_coords_t const * S CCLIB_UNUSED)
 {
   if (1) { fprintf(stderr, "%-35s: finalised\n", __func__); }
 }
@@ -205,7 +205,7 @@ ccname_trait_new(ccstructs_dtor_T, my_coords_t, embedded) (my_coords_t const * c
 void
 my_coords_embedded_destructor (ccstructs_core_t * S)
 {
-  CCSTRUCTS_PC(my_coords_t, self, S);
+  CCLIB_PC(my_coords_t, self, S);
 
   ccname_final(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: finalised by dtor\n", __func__); }
@@ -229,7 +229,7 @@ ccname_trait_new(ccstructs_dtor_T, my_coords_t, standalone) (my_coords_t const *
 void
 my_coords_standalone_destructor (ccstructs_core_t * S)
 {
-  CCSTRUCTS_PC(my_coords_t, self, S);
+  CCLIB_PC(my_coords_t, self, S);
 
   ccname_delete(my_coords_t)(self);
   if (1) { fprintf(stderr, "%-35s: deleted by dtor\n", __func__); }
@@ -267,7 +267,7 @@ ccname_trait_new(ccstructs_dumpable_T, my_coords_t) (my_coords_t const * S)
 void
 ccname_trait_method(ccstructs_dumpable_T, my_coords_t, dump) (cce_destination_t L, ccstructs_dumpable_T I)
 {
-  CCSTRUCTS_PC(my_coords_t, S, ccstructs_dumpable_self(I));
+  CCLIB_PC(my_coords_t, S, ccstructs_dumpable_self(I));
   int	rv;
 
   errno = 0;
@@ -305,7 +305,7 @@ ccname_trait_new(ccstructs_serialiser_T, my_coords_t) (my_coords_t const * S)
 /* ------------------------------------------------------------------ */
 
 size_t
-ccname_trait_method(ccstructs_serialiser_T, my_coords_t, required_size) (ccstructs_serialiser_T I CCSTRUCTS_UNUSED)
+ccname_trait_method(ccstructs_serialiser_T, my_coords_t, required_size) (ccstructs_serialiser_T I CCLIB_UNUSED)
 /* Return the minimum number of bytes  required to hold the serialised representation
    of "my_coords_t".*/
 {
@@ -314,12 +314,12 @@ ccname_trait_method(ccstructs_serialiser_T, my_coords_t, required_size) (ccstruc
 
 ccmem_block_t
 ccname_trait_method(ccstructs_serialiser_T, my_coords_t,
-		    write) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_serialiser_T I, ccmem_block_t B)
+		    write) (cce_destination_t L CCLIB_UNUSED, ccstructs_serialiser_T I, ccmem_block_t B)
 /* Trait  method implementation.   Serialise an  instance of  "my_coords_t" in  the
    memory block "B". */
 {
-  CCSTRUCTS_PC(my_coords_t const, S, ccstructs_serialiser_self(I));
-  CCSTRUCTS_PC(serialised_my_coords_t, W, B.ptr);
+  CCLIB_PC(my_coords_t const, S, ccstructs_serialiser_self(I));
+  CCLIB_PC(serialised_my_coords_t, W, B.ptr);
   ccmem_block_t	N = {
     .ptr	= B.ptr + sizeof(serialised_my_coords_t),
     .len	= B.len - sizeof(serialised_my_coords_t)
@@ -358,7 +358,7 @@ ccname_trait_new(ccstructs_deserialiser_T, my_coords_t) (my_coords_t * S)
 /* ------------------------------------------------------------------ */
 
 size_t
-ccname_trait_method(ccstructs_deserialiser_T, my_coords_t, required_size) (ccstructs_deserialiser_T I CCSTRUCTS_UNUSED)
+ccname_trait_method(ccstructs_deserialiser_T, my_coords_t, required_size) (ccstructs_deserialiser_T I CCLIB_UNUSED)
 /* Return the minimum number of bytes  required to hold the serialised representation
    of "my_coords_t".*/
 {
@@ -367,12 +367,12 @@ ccname_trait_method(ccstructs_deserialiser_T, my_coords_t, required_size) (ccstr
 
 ccmem_block_t
 ccname_trait_method(ccstructs_deserialiser_T, my_coords_t,
-		    read) (cce_destination_t L CCSTRUCTS_UNUSED, ccstructs_deserialiser_T I, ccmem_block_t B)
+		    read) (cce_destination_t L CCLIB_UNUSED, ccstructs_deserialiser_T I, ccmem_block_t B)
 /* Trait method implementation.  Dedeserialise  an instance of "my_coords_t" from
    the memory block "B". */
 {
-  CCSTRUCTS_PC(my_coords_t, S, ccstructs_deserialiser_self(I));
-  CCSTRUCTS_PC(serialised_my_coords_t const, W, B.ptr);
+  CCLIB_PC(my_coords_t, S, ccstructs_deserialiser_self(I));
+  CCLIB_PC(serialised_my_coords_t const, W, B.ptr);
   ccmem_block_t	N = {
     .ptr	= B.ptr + sizeof(serialised_my_coords_t),
     .len	= B.len - sizeof(serialised_my_coords_t)
@@ -389,7 +389,7 @@ ccname_trait_method(ccstructs_deserialiser_T, my_coords_t,
  ** ----------------------------------------------------------------- */
 
 static void my_printable_fprintf (cce_destination_t L, FILE * stream, char const * format, ...)
-  __attribute__((__format__(printf,3,4)));
+  CCLIB_FUNC_ATTRIBUTE_FORMAT(printf,3,4);
 
 static ccname_trait_method_type(my_printable_T, print)  ccname_trait_method(my_printable_T, my_coords_t, print_rec);
 static ccname_trait_method_type(my_printable_T, print)  ccname_trait_method(my_printable_T, my_coords_t, print_pol);
@@ -425,7 +425,7 @@ my_printable_fprintf (cce_destination_t L, FILE * stream, char const * format, .
 void
 ccname_trait_method(my_printable_T, my_coords_t, print_rec) (cce_destination_t L, my_printable_T I, FILE * stream)
 {
-  CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
+  CCLIB_PC(my_coords_t, S, my_printable_self(I));
 
   my_printable_fprintf(L, stream, "X=%f, Y=%f\n", S->X, S->Y);
 }
@@ -433,7 +433,7 @@ ccname_trait_method(my_printable_T, my_coords_t, print_rec) (cce_destination_t L
 void
 ccname_trait_method(my_printable_T, my_coords_t, print_pol) (cce_destination_t L, my_printable_T I, FILE * stream)
 {
-  CCSTRUCTS_PC(my_coords_t, S, my_printable_self(I));
+  CCLIB_PC(my_coords_t, S, my_printable_self(I));
   double	RHO   = hypot(S->X, S->Y);
   double	THETA = atan2(S->Y, S->X);
 

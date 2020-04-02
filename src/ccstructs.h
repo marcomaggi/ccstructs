@@ -7,7 +7,7 @@
 
 	This file must be included in all the source files making use of CCStructs.
 
-  Copyright (C) 2018, 2019 Marco Maggi <mrc.mgg@gmail.com>
+  Copyright (C) 2018, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
   This program is free  software: you can redistribute it and/or  modify it under the
   terms of the  GNU Lesser General Public  License as published by  the Free Software
@@ -24,57 +24,8 @@
 #ifndef CCSTRUCTS_H
 #define CCSTRUCTS_H 1
 
-
-/** --------------------------------------------------------------------
- ** Preliminary definitions.
- ** ----------------------------------------------------------------- */
-
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-/* The  macro  CCSTRUCTS_UNUSED  indicates  that a  function,  function  argument  or
-   variable may potentially be unused. Usage examples:
-
-   static int unused_function (char arg) CCSTRUCTS_UNUSED;
-   int foo (char unused_argument CCSTRUCTS_UNUSED);
-   int unused_variable CCSTRUCTS_UNUSED;
-*/
-#ifdef __GNUC__
-#  define CCSTRUCTS_UNUSED		__attribute__((__unused__))
-#else
-#  define CCSTRUCTS_UNUSED		/* empty */
-#endif
-
-#ifndef __GNUC__
-#  define __attribute__(...)	/* empty */
-#endif
-
-/* I found  the following chunk on  the Net.  (Marco Maggi;  Sun Feb 26,
-   2012) */
-#if defined _WIN32 || defined __CYGWIN__
-#  ifdef BUILDING_DLL
-#    ifdef __GNUC__
-#      define ccstructs_decl		__attribute__((__dllexport__)) extern
-#    else
-#      define ccstructs_decl		__declspec(dllexport) extern
-#    endif
-#  else
-#    ifdef __GNUC__
-#      define ccstructs_decl		__attribute__((__dllimport__)) extern
-#    else
-#      define ccstructs_decl		__declspec(dllimport) extern
-#    endif
-#  endif
-#  define ccstructs_private_decl	extern
-#else
-#  if __GNUC__ >= 4
-#    define ccstructs_decl		__attribute__((__visibility__("default"))) extern
-#    define ccstructs_private_decl	__attribute__((__visibility__("hidden")))  extern
-#  else
-#    define ccstructs_decl		extern
-#    define ccstructs_private_decl	extern
-#  endif
 #endif
 
 
@@ -88,21 +39,13 @@ extern "C" {
 
 
 /** --------------------------------------------------------------------
- ** Constants and preprocessor macros.
- ** ----------------------------------------------------------------- */
-
-#define CCSTRUCTS_PC(POINTER_TYPE, POINTER_NAME, EXPRESSION)	\
-  POINTER_TYPE * POINTER_NAME = (POINTER_TYPE *) (EXPRESSION)
-
-
-/** --------------------------------------------------------------------
  ** Version functions.
  ** ----------------------------------------------------------------- */
 
-ccstructs_decl char const *	ccstructs_version_string		(void);
-ccstructs_decl int		ccstructs_version_interface_current	(void);
-ccstructs_decl int		ccstructs_version_interface_revision	(void);
-ccstructs_decl int		ccstructs_version_interface_age		(void);
+cclib_decl char const *	ccstructs_version_string		(void);
+cclib_decl int		ccstructs_version_interface_current	(void);
+cclib_decl int		ccstructs_version_interface_revision	(void);
+cclib_decl int		ccstructs_version_interface_age		(void);
 
 
 /** --------------------------------------------------------------------
@@ -114,7 +57,9 @@ typedef void ccstructs_core_destructor_fun_t (ccstructs_core_t * S);
 
 struct ccstructs_core_t;
 
-__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline ccstructs_core_t const *
 ccstructs_core (void const * S)
 {
@@ -135,7 +80,8 @@ struct ccstructs_dtor_T {
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static inline ccstructs_dtor_T
 ccname_new(ccstructs_dtor_T)(ccstructs_core_t const * S, ccstructs_core_destructor_fun_t * destroy)
 {
@@ -143,14 +89,15 @@ ccname_new(ccstructs_dtor_T)(ccstructs_core_t const * S, ccstructs_core_destruct
   return I;
 }
 
-__attribute__((__always_inline__,__pure__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
 static inline ccstructs_core_t const *
 ccstructs_dtor_self (ccstructs_dtor_T I)
 {
   return I.self;
 }
 
-__attribute__((__always_inline__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 static inline void
 ccstructs_dtor_destroy (ccstructs_dtor_T I)
 {
@@ -175,28 +122,36 @@ struct ccstructs_error_handler_t {
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline cce_clean_handler_t *
 ccstructs_clean_handler_handler (ccstructs_clean_handler_t * const H)
 {
   return &(H->handler);
 }
 
-__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline cce_error_handler_t *
 ccstructs_error_handler_handler (ccstructs_error_handler_t * const H)
 {
   return &(H->handler);
 }
 
-__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline cce_clean_handler_t const *
 ccstructs_const_clean_handler_handler (ccstructs_clean_handler_t const * const H)
 {
   return &(H->handler);
 }
 
-__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline cce_error_handler_t const *
 ccstructs_const_error_handler_handler (ccstructs_error_handler_t const * const H)
 {
@@ -212,11 +167,11 @@ ccstructs_const_error_handler_handler (ccstructs_error_handler_t const * const H
 
 /* ------------------------------------------------------------------ */
 
-ccstructs_decl void ccstructs_init_and_register_clean_handler (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_dtor_T I)
-  __attribute__((__nonnull__(1,2)));
+cclib_decl void ccstructs_init_and_register_clean_handler (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_dtor_T I)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
-ccstructs_decl void ccstructs_init_and_register_error_handler (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_dtor_T I)
-  __attribute__((__nonnull__(1,2)));
+cclib_decl void ccstructs_init_and_register_error_handler (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_dtor_T I)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 #define ccstructs_init_and_register_handler(L,S_H,S)			\
   _Generic((S_H),							\
@@ -246,7 +201,8 @@ struct ccname_trait_table_type(ccstructs_dumpable_T) {
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static inline ccstructs_dumpable_T
 ccname_new(ccstructs_dumpable_T) (ccstructs_core_t const * S, ccname_trait_table_type(ccstructs_dumpable_T) const * M)
 {
@@ -257,14 +213,16 @@ ccname_new(ccstructs_dumpable_T) (ccstructs_core_t const * S, ccname_trait_table
   return I;
 }
 
-__attribute__((__always_inline__,__pure__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
 static inline ccstructs_core_t const *
 ccstructs_dumpable_self (ccstructs_dumpable_T I)
 {
   return I.self;
 }
 
-__attribute__((__nonnull__(1),__always_inline__))
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 static inline void
 ccstructs_dumpable_dump (cce_destination_t L, ccstructs_dumpable_T const I)
 {
@@ -296,7 +254,8 @@ struct ccname_trait_table_type(ccstructs_serialiser_T) {
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static inline ccstructs_serialiser_T
 ccname_new(ccstructs_serialiser_T) (ccstructs_core_t const * const S, ccname_trait_table_type(ccstructs_serialiser_T) const * const M)
 {
@@ -307,21 +266,23 @@ ccname_new(ccstructs_serialiser_T) (ccstructs_core_t const * const S, ccname_tra
   return I;
 }
 
-__attribute__((__always_inline__,__pure__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
 static inline ccstructs_core_t const *
 ccstructs_serialiser_self (ccstructs_serialiser_T const I)
 {
   return I.self;
 }
 
-__attribute__((__always_inline__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 static inline size_t
 ccstructs_serialiser_required_size (ccstructs_serialiser_T const I)
 {
   return I.methods->required_size(I);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccmem_block_t
 ccstructs_serialiser_write (cce_destination_t L, ccstructs_serialiser_T const I, ccmem_block_t B)
 {
@@ -353,7 +314,8 @@ struct ccname_trait_table_type(ccstructs_deserialiser_T) {
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static inline ccstructs_deserialiser_T
 ccname_new(ccstructs_deserialiser_T) (ccstructs_core_t const * const S, ccname_trait_table_type(ccstructs_deserialiser_T) const * const M)
 {
@@ -364,21 +326,23 @@ ccname_new(ccstructs_deserialiser_T) (ccstructs_core_t const * const S, ccname_t
   return I;
 }
 
-__attribute__((__always_inline__,__pure__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
 static inline ccstructs_core_t const *
 ccstructs_deserialiser_self (ccstructs_deserialiser_T const I)
 {
   return I.self;
 }
 
-__attribute__((__always_inline__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 static inline size_t
 ccstructs_deserialiser_required_size (ccstructs_deserialiser_T const I)
 {
   return I.methods->required_size(I);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccmem_block_t
 ccstructs_deserialiser_read (cce_destination_t L, ccstructs_deserialiser_T const I, ccmem_block_t B)
 {
@@ -429,7 +393,8 @@ struct ccname_trait_table_type(ccstructs_pathname_T) {
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static inline ccstructs_pathname_T
 ccname_new(ccstructs_pathname_T) (ccstructs_core_t const * const S, ccname_trait_table_type(ccstructs_pathname_T) const * const M)
 {
@@ -440,49 +405,55 @@ ccname_new(ccstructs_pathname_T) (ccstructs_core_t const * const S, ccname_trait
   return I;
 }
 
-__attribute__((__always_inline__,__pure__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
 static inline ccstructs_core_t const *
 ccstructs_pathname_self (ccstructs_pathname_T const I)
 {
   return I.self;
 }
 
-__attribute__((__always_inline__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 static inline ccmem_asciiz_t
 ccstructs_pathname_asciiz (cce_destination_t L, ccstructs_pathname_T const I)
 {
   return I.methods->asciiz(L, I);
 }
 
-__attribute__((__always_inline__,__pure__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
 static inline bool
 ccstructs_pathname_is_static (ccstructs_pathname_T const I)
 {
   return I.methods->is_static(I);
 }
 
-__attribute__((__always_inline__,__pure__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
 static inline bool
 ccstructs_pathname_is_absolute (cce_destination_t L, ccstructs_pathname_T const I)
 {
   return I.methods->is_absolute(L, I);
 }
 
-__attribute__((__always_inline__,__pure__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
 static inline bool
 ccstructs_pathname_is_relative (cce_destination_t L, ccstructs_pathname_T const I)
 {
   return I.methods->is_relative(L, I);
 }
 
-__attribute__((__always_inline__,__pure__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
 static inline bool
 ccstructs_pathname_is_normalised (cce_destination_t L, ccstructs_pathname_T const I)
 {
   return I.methods->is_normalised(L, I);
 }
 
-__attribute__((__always_inline__,__pure__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
 static inline bool
 ccstructs_pathname_is_realpath (cce_destination_t L, ccstructs_pathname_T const I)
 {
@@ -491,28 +462,28 @@ ccstructs_pathname_is_realpath (cce_destination_t L, ccstructs_pathname_T const 
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 static inline ccstructs_dtor_T
 ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_T) (ccstructs_pathname_T const I)
 {
   return I.methods->dtor(I);
 }
 
-__attribute__((__always_inline__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 static inline ccstructs_dumpable_T
 ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_T) (cce_destination_t L, ccstructs_pathname_T const I)
 {
   return I.methods->dumpable(L, I);
 }
 
-__attribute__((__always_inline__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 static inline ccstructs_serialiser_T
 ccname_trait_new(ccstructs_serialiser_T, ccstructs_pathname_T) (cce_destination_t L, ccstructs_pathname_T const I)
 {
   return I.methods->serialiser(L, I);
 }
 
-__attribute__((__always_inline__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
 static inline ccstructs_deserialiser_T
 ccname_trait_new(ccstructs_deserialiser_T, ccstructs_pathname_T) (cce_destination_t L, ccstructs_pathname_T const I)
 {
@@ -534,112 +505,125 @@ struct ccstructs_pathname_t {
 
 /* ------------------------------------------------------------------ */
 
-ccstructs_decl void ccname_init(ccstructs_pathname_t, from_asciiz) (cce_destination_t L, ccstructs_pathname_t * ptn, ccmem_asciiz_t rep)
-  __attribute__((__nonnull__(1,2)));
+cclib_decl void ccname_init(ccstructs_pathname_t, from_asciiz) (cce_destination_t L, ccstructs_pathname_t * ptn, ccmem_asciiz_t rep)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
-ccstructs_decl void ccname_init(ccstructs_pathname_t, from_ascii)  (cce_destination_t L, ccstructs_pathname_t * ptn, ccmem_ascii_t  rep)
-  __attribute__((__nonnull__(1,2)));
+cclib_decl void ccname_init(ccstructs_pathname_t, from_ascii)  (cce_destination_t L, ccstructs_pathname_t * ptn, ccmem_ascii_t  rep)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
-ccstructs_decl void ccname_init(ccstructs_pathname_t, from_chars)  (cce_destination_t L, ccstructs_pathname_t * ptn, char const * P)
-  __attribute__((__nonnull__(1,2)));
+cclib_decl void ccname_init(ccstructs_pathname_t, from_chars)  (cce_destination_t L, ccstructs_pathname_t * ptn, char const * P)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
-ccstructs_decl void ccname_init(ccstructs_pathname_t, copy) (cce_destination_t L, ccstructs_pathname_t * dst,
+cclib_decl void ccname_init(ccstructs_pathname_t, copy) (cce_destination_t L, ccstructs_pathname_t * dst,
 							     ccstructs_pathname_t const * src)
-  __attribute__((__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 /* Initialisation  function  that  initialises  an already  allocated  struct.   This
    initialises in such a  way that it allows for both  finalisation and mutation from
    deserialisation. */
-ccstructs_decl void ccname_init(ccstructs_pathname_t, deserialisable) (ccstructs_pathname_t * ptn)
-  __attribute__((__nonnull__(1)));
+cclib_decl void ccname_init(ccstructs_pathname_t, deserialisable) (ccstructs_pathname_t * ptn)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
-ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_asciiz) (cce_destination_t L, ccmem_asciiz_t rep)
-  __attribute__((__nonnull__(1), __returns_nonnull__));
+cclib_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_asciiz) (cce_destination_t L, ccmem_asciiz_t rep)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_ascii)  (cce_destination_t L, ccmem_ascii_t rep)
-  __attribute__((__nonnull__(1), __returns_nonnull__));
+cclib_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_ascii)  (cce_destination_t L, ccmem_ascii_t rep)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_chars)  (cce_destination_t L, char const * P)
-  __attribute__((__nonnull__(1,2), __returns_nonnull__));
+cclib_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_chars)  (cce_destination_t L, char const * P)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, copy)  (cce_destination_t L, ccstructs_pathname_t const * src)
-  __attribute__((__nonnull__(1,2), __returns_nonnull__));
+cclib_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, copy)  (cce_destination_t L, ccstructs_pathname_t const * src)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 /* Constructor function  that allocates  the struct  on the  heap using  the standard
    memory allocator implemented by CCMemory.  This  initialises in such a way that it
    allows for both finalisation and mutation from deserialisation. */
-ccstructs_decl ccstructs_pathname_t * ccname_new(ccstructs_pathname_t, deserialisable) (cce_destination_t L)
-  __attribute__((__nonnull__(1),__returns_nonnull__));
+cclib_decl ccstructs_pathname_t * ccname_new(ccstructs_pathname_t, deserialisable) (cce_destination_t L)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 /* ------------------------------------------------------------------ */
 
-ccstructs_decl void ccname_init(ccstructs_pathname_t, from_asciiz, guarded, clean) \
+cclib_decl void ccname_init(ccstructs_pathname_t, from_asciiz, guarded, clean) \
   (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_pathname_t * const ptn, ccmem_asciiz_t const rep)
-  __attribute__((__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
-ccstructs_decl void ccname_init(ccstructs_pathname_t, from_asciiz, guarded, error) \
+cclib_decl void ccname_init(ccstructs_pathname_t, from_asciiz, guarded, error) \
   (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_pathname_t * const ptn, ccmem_asciiz_t const rep)
-  __attribute__((__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
-ccstructs_decl void ccname_init(ccstructs_pathname_t, from_ascii, guarded, clean) \
+cclib_decl void ccname_init(ccstructs_pathname_t, from_ascii, guarded, clean) \
   (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_pathname_t * const ptn, ccmem_ascii_t const rep)
-  __attribute__((__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
-ccstructs_decl void ccname_init(ccstructs_pathname_t, from_ascii, guarded, error) \
+cclib_decl void ccname_init(ccstructs_pathname_t, from_ascii, guarded, error) \
   (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_pathname_t * const ptn, ccmem_ascii_t const rep)
-  __attribute__((__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
-ccstructs_decl void ccname_init(ccstructs_pathname_t, from_chars, guarded, clean) \
+cclib_decl void ccname_init(ccstructs_pathname_t, from_chars, guarded, clean) \
   (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_pathname_t * const ptn, char const * const P)
-  __attribute__((__nonnull__(1,2,3,4)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3,4);
 
-ccstructs_decl void ccname_init(ccstructs_pathname_t, from_chars, guarded, error) \
+cclib_decl void ccname_init(ccstructs_pathname_t, from_chars, guarded, error) \
   (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_pathname_t * const ptn, char const * const P)
-  __attribute__((__nonnull__(1,2,3,4)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3,4);
 
-ccstructs_decl void ccname_init(ccstructs_pathname_t, copy, guarded, clean) \
+cclib_decl void ccname_init(ccstructs_pathname_t, copy, guarded, clean) \
   (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_pathname_t * const dst, ccstructs_pathname_t const * const src)
-  __attribute__((__nonnull__(1,2,3,4)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3,4);
 
-ccstructs_decl void ccname_init(ccstructs_pathname_t, copy, guarded, error) \
+cclib_decl void ccname_init(ccstructs_pathname_t, copy, guarded, error) \
   (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_pathname_t * const dst, ccstructs_pathname_t const * const src)
-  __attribute__((__nonnull__(1,2,3,4)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3,4);
 
 /* ------------------------------------------------------------------ */
 
-ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_asciiz, guarded, clean) \
+cclib_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_asciiz, guarded, clean) \
   (cce_destination_t L, ccstructs_clean_handler_t * H, ccmem_asciiz_t const rep)
-  __attribute__((__nonnull__(1,2), __returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_asciiz, guarded, error) \
+cclib_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_asciiz, guarded, error) \
   (cce_destination_t L, ccstructs_error_handler_t * H, ccmem_asciiz_t const rep)
-  __attribute__((__nonnull__(1,2), __returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_ascii, guarded, clean) \
+cclib_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_ascii, guarded, clean) \
   (cce_destination_t L, ccstructs_clean_handler_t * H, ccmem_ascii_t const rep)
-  __attribute__((__nonnull__(1,2), __returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_ascii, guarded, error) \
+cclib_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_ascii, guarded, error) \
   (cce_destination_t L, ccstructs_error_handler_t * H, ccmem_ascii_t const rep)
-  __attribute__((__nonnull__(1,2), __returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_chars, guarded, clean) \
+cclib_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_chars, guarded, clean) \
   (cce_destination_t L, ccstructs_clean_handler_t * H, char const * const P)
-  __attribute__((__nonnull__(1,2,3), __returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_chars, guarded, error) \
+cclib_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, from_chars, guarded, error) \
   (cce_destination_t L, ccstructs_error_handler_t * H, char const * const P)
-  __attribute__((__nonnull__(1,2,3), __returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, copy, guarded, clean) \
+cclib_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, copy, guarded, clean) \
   (cce_destination_t L, ccstructs_clean_handler_t * H, ccstructs_pathname_t const * const src)
-  __attribute__((__nonnull__(1,2,3), __returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccstructs_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, copy, guarded, error) \
+cclib_decl ccstructs_pathname_t const * ccname_new(ccstructs_pathname_t, copy, guarded, error) \
   (cce_destination_t L, ccstructs_error_handler_t * H, ccstructs_pathname_t const * const src)
-  __attribute__((__nonnull__(1,2,3), __returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 /* ------------------------------------------------------------------ */
 
@@ -650,8 +634,8 @@ typedef ccstructs_dtor_T ccname_trait_new_type(ccstructs_dtor_T, ccstructs_pathn
 /* Trait    constructor     for    "ccstructs_dtor_T"    as     implemented    by
    "ccstructs_pathname_t".   The returned  destructor  trait will  work for  both
    embedded and standalone instances of "ccstructs_pathname_t". */
-ccstructs_decl ccname_trait_new_type(ccstructs_dtor_T, ccstructs_pathname_t) ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)
-  __attribute__((__nonnull__(1)));
+cclib_decl ccname_trait_new_type(ccstructs_dtor_T, ccstructs_pathname_t) ccname_trait_new(ccstructs_dtor_T, ccstructs_pathname_t)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
@@ -661,8 +645,8 @@ typedef ccstructs_pathname_T ccname_trait_new_type(ccstructs_pathname_T, ccstruc
 
 /* Trait    constructor   for    "ccstructs_pathname_T"    as   implemented    by
    "ccstructs_pathname_t". */
-ccstructs_decl ccname_trait_new_type(ccstructs_pathname_T, ccstructs_pathname_t) ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)
-  __attribute__((__nonnull__(1)));
+cclib_decl ccname_trait_new_type(ccstructs_pathname_T, ccstructs_pathname_t) ccname_trait_new(ccstructs_pathname_T, ccstructs_pathname_t)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
@@ -672,8 +656,8 @@ typedef ccstructs_dumpable_T ccname_trait_new_type(ccstructs_dumpable_T, ccstruc
 
 /* Constructor  for   a  "ccstructs_dumpable_T"   trait  that  prints   a  struct
    representation on some output channel. */
-ccstructs_decl ccname_trait_new_type(ccstructs_dumpable_T, ccstructs_pathname_t) ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)
-  __attribute__((__nonnull__(1)));
+cclib_decl ccname_trait_new_type(ccstructs_dumpable_T, ccstructs_pathname_t) ccname_trait_new(ccstructs_dumpable_T, ccstructs_pathname_t)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
@@ -687,15 +671,15 @@ typedef ccstructs_deserialiser_T ccname_trait_new_type(ccstructs_deserialiser_T,
 
 /* Constructor for a "ccstructs_serialiser_T" trait that serialises an instance of
    "ccstructs_pathname_t" into a memory block. */
-ccstructs_decl ccname_trait_new_type(ccstructs_serialiser_T, ccstructs_pathname_t)
+cclib_decl ccname_trait_new_type(ccstructs_serialiser_T, ccstructs_pathname_t)
   ccname_trait_new(ccstructs_serialiser_T, ccstructs_pathname_t)
-  __attribute__((__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* Constructor  for  a  "ccstructs_deserialiser_T"   trait  that  deserialises  an
    instance of "ccstructs_pathname_t" from a memory block. */
-ccstructs_decl ccname_trait_new_type(ccstructs_deserialiser_T, ccstructs_pathname_t)
+cclib_decl ccname_trait_new_type(ccstructs_deserialiser_T, ccstructs_pathname_t)
   ccname_trait_new(ccstructs_deserialiser_T, ccstructs_pathname_t)
-  __attribute__((__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------

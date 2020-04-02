@@ -12,7 +12,7 @@
 	methods table for  the struct-specific trait constructors:  every instance of
 	the struct type holds a pointer to a struct implementing a methods table.
 
-  Copyright (C) 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2018, 2019, 2020 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   The author  hereby grant permission to  use, copy, modify, distribute,  and license
   this  software  and its  documentation  for  any  purpose, provided  that  existing
@@ -52,7 +52,7 @@
 
 /* This handler is used to signal that the "clean" handlers have been executed. */
 static void
-flag_clean_handler (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_clean_handler_t const * H CCSTRUCTS_UNUSED)
+flag_clean_handler (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * H CCLIB_UNUSED)
 {
   fprintf(stderr, "%-35s: clean handler fired\n", __func__);
 }
@@ -67,7 +67,7 @@ flag_register_clean_handler (cce_destination_t L, cce_clean_handler_t * H)
 
 /* This handler is used to signal that the "error" handlers have been executed. */
 static void
-flag_error_handler (cce_condition_t const * C CCSTRUCTS_UNUSED, cce_error_handler_t const * H CCSTRUCTS_UNUSED)
+flag_error_handler (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * H CCLIB_UNUSED)
 {
   fprintf(stderr, "%-35s: error handler fired\n", __func__);
 }
