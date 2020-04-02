@@ -2,12 +2,12 @@
 #
 
 AC_PREREQ([2.69])
-MMUX_PKG_VERSIONS([0],[3],[0],[devel.3])
+MMUX_PKG_VERSIONS([0],[4],[0],[devel.0])
 AC_INIT([CCStructs],[MMUX_PACKAGE_VERSION],
   [mrc.mgg@gmail.com],
   [ccstructs],[http://github.com/marcomaggi/ccstructs])
 MMUX_INIT
-MMUX_LIBTOOL_LIBRARY_VERSIONS([ccstructs],3,0,0)
+MMUX_LIBTOOL_LIBRARY_VERSIONS([ccstructs],4,0,0)
 AC_REVISION([0.1])
 AC_COPYRIGHT([Copyright (c) 2018, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
 
